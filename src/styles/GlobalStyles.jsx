@@ -11,7 +11,6 @@ body, html, #root {
   #root {
     max-width: 600px;
     margin: 0 auto;
-    border: 1px red solid;
   }
 `;
 export default GlobalStyles;
