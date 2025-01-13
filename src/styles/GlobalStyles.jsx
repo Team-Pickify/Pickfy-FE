@@ -2,6 +2,10 @@ import { createGlobalStyle } from "styled-components";
 import "../styles/fonts.css";
 
 const GlobalStyles = createGlobalStyle`
+a {
+  text-decoration: none;
+  color: inherit;
+}
 *{
   box-sizing: border-box;
 }
