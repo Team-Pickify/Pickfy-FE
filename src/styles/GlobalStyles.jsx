@@ -2,6 +2,9 @@ import { createGlobalStyle } from "styled-components";
 import "../styles/fonts.css";
 
 const GlobalStyles = createGlobalStyle`
+*{
+  box-sizing: border-box;
+}
 body, html, #root {
     height: 100%;
     margin: 0;
