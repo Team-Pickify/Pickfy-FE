@@ -1,10 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import GlobalStyles from "./styles/GlobalStyles";
-import Main from "./pages/main/index";
 import Navbar from "./layouts/navbar";
-import Signup from "./pages/signin/signup";
-import MyPlaceList from "./pages/placelist/index";
-import Setting from "./pages/setting/index";
+import routes from "./navigator/routes";
 
 function App() {
   return (
@@ -12,10 +9,9 @@ function App() {
       <GlobalStyles />
       <Navbar />
       <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/myplacelist" element={<MyPlaceList />} />
-        <Route path="/setting" element={<Setting />} />
+        {routes.map((route) => (
+          <Route key={route.path} path={route.path} element={route.element} />
+        ))}
       </Routes>
     </>
   );
