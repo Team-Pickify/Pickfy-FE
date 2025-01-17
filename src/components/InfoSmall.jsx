@@ -20,16 +20,30 @@ const Img = styled.img`
   height: 6.75rem;
   border-radius: 0.25rem;
 `;
-function InfoSmall() {
+function InfoSmall({ places }) {
+  console.log(places);
   return (
     <>
-      <Info />
-      <Imgcontainer>
-        <Img src={cafe1}></Img>
-        <Img src={cafe1}></Img>
-        <Img src={cafe1}></Img>
-        <Img src={cafe1}></Img>
-      </Imgcontainer>
+      {places.map((place) => (
+        <div key={place.id}>
+          <Info
+            name={place.name}
+            category={place.category}
+            shortDescription={place.short_description}
+            instagramLink={place.instagram_link}
+            naverPlaceLink={place.naverplace_link}
+          />
+          <Imgcontainer>
+            {place.images.map((image) => (
+              <Img
+                key={image.id}
+                src={image.url}
+                alt={`${place.name} 이미지`}
+              />
+            ))}
+          </Imgcontainer>
+        </div>
+      ))}
     </>
   );
 }
