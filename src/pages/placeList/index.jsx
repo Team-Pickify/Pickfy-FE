@@ -1,7 +1,9 @@
+import Info from "../../components/Info";
+
 function MyPlaceList() {
   return (
     <>
-      <div>마이 플레이스 리스트</div>
+      <Info />
     </>
   );
 }
