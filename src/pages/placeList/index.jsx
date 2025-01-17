@@ -1,10 +1,13 @@
-import Info from "../../components/Info";
-
+import styled from "styled-components";
+import InfoSmall from "../../components/InfoSmall";
+const Wrapper = styled.div`
+  margin: 1rem;
+`;
 function MyPlaceList() {
   return (
-    <>
-      <Info />
-    </>
+    <Wrapper>
+      <InfoSmall />
+    </Wrapper>
   );
 }
 export default MyPlaceList;

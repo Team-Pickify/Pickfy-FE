@@ -4,7 +4,6 @@ import { theme } from "../styles/themes";
 const InfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0.5rem;
 `;
 const InfoLine = styled.div`
   display: flex;
@@ -14,8 +13,8 @@ const InfoLine = styled.div`
 const TextContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
-  gap: 0.375rem;
+  align-items: flex-end;
+  gap: 0.5rem;
 `;
 const TitleText = styled.div`
   font-size: 1.25rem;
@@ -50,6 +49,9 @@ const LinkContainer = styled.div`
 const LinkConnect = styled.div`
   display: flex;
   gap: 0.375rem;
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-underline-position: from-font;
 `;
 
 const ButtonContainer = styled.div`
@@ -71,7 +73,7 @@ function Info() {
           <TitleText>플레이스명</TitleText>
           <CategoryText>카테고리명</CategoryText>
         </TextContainer>
-        <LineIntro>한줄 소개입니당당</LineIntro>
+        <LineIntro>한줄 소개--------------</LineIntro>
       </InfoLine>
 
       <AdditionContainer>
