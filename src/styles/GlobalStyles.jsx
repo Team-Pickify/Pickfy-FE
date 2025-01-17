@@ -9,6 +9,9 @@ a {
 *{
   box-sizing: border-box;
 }
+body{
+  background-color: #d0d0d0;
+}
 body, html, #root {
     height: 100%;
     margin: 0;
@@ -18,6 +21,7 @@ body, html, #root {
   #root {
     max-width: 600px;
     margin: 0 auto;
+    background-color: white;
   }
 `;
 export default GlobalStyles;
