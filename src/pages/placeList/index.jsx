@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import InfoSmall from "../../components/InfoSmall";
 import cafe1 from "../../assets/cafe1.svg";
+import CategoryBtn from "../../components/categoryBtn";
 const Wrapper = styled.div`
   margin: 1rem;
 `;
@@ -38,6 +39,7 @@ function MyPlaceList() {
 
   return (
     <Wrapper>
+      <CategoryBtn />
       <InfoSmall places={places} />
     </Wrapper>
   );
