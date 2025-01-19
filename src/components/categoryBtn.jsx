@@ -7,8 +7,6 @@ const Wrapper = styled.div`
   flex-direction: row;
   margin: 1.19rem 0;
   gap: 0.25rem;
-  font-size: 0.75rem;
-  font-weight: 600;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
@@ -23,6 +21,9 @@ const Items = styled.button`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  font-family: Pretendard;
+  font-size: 0.75rem;
+  font-weight: 600;
   height: 2.13rem;
   padding: 0.625rem 1.25rem;
   border-radius: 6.25rem;
