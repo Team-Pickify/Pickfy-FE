@@ -39,7 +39,7 @@ const category = [
   { id: 5, name: "도서/문구" },
 ];
 function CategoryBtn() {
-  const [btnClick, setBtnClick] = useState();
+  const [btnClick, setBtnClick] = useState(1);
   const handleClick = (id) => {
     setBtnClick(id);
   };
