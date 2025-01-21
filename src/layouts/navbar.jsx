@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import logoImg from "../assets/logo.png";
 import HeaderBtn from "../components/header/headerBtn";
+import { useLocation } from "react-router-dom";
 
 const Header = styled.div`
   display: flex;
@@ -20,11 +21,13 @@ const Logo = styled.div`
 `;
 
 export default function Navbar() {
+  const location = useLocation().pathname.replace("/", "");
+
   return (
     <Header>
-      <HeaderBtn pageLoc="myplacelist" pos="left" />
+      <HeaderBtn pageLoc={location} pos="left" />
       <Logo logo={logoImg} />
-      <HeaderBtn pageLoc="myplacelist" pos="right" />
+      <HeaderBtn pageLoc={location} pos="right" />
     </Header>
   );
 }
