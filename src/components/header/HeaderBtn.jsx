@@ -14,7 +14,7 @@ const Btn = styled.div`
 
 const icons = {
   back: { ic: <GoArrowLeft size={28} color={theme.Sub1} />, addr: -1 },
-  share: { ic: <CiShare2 size={28} color={theme.Sub1} />, addr: "" },
+  share: { ic: <CiShare2 size={28} color={theme.Sub1} />, addr: "/" },
   setting: {
     ic: <LuUserRound size={28} color={theme.Sub1} />,
     addr: "/setting",
