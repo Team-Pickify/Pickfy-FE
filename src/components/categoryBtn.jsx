@@ -2,8 +2,24 @@ import { useState } from "react";
 import styled from "styled-components";
 import { theme } from "../styles/themes";
 
+
 const Wrapper = styled.div`
-  z-index:10;
+  display: flex;
+  flex-direction: row;
+  margin: 1.19rem 0;
+  gap: 0.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+
+const Wrapper2 = styled.div`
+  z-index:100;
   position:absolute;
   top:10%;
   display: flex;
@@ -34,6 +50,7 @@ const Items = styled.button`
   background-color: ${(props) => (props.isActive ? theme.Text : "#ffffff")};
   color: ${(props) => (props.isActive ? "#ffffff" : "#000000")};
 `;
+
 const category = [
   { id: 1, name: "전체" },
   { id: 2, name: "음식점" },
@@ -41,7 +58,31 @@ const category = [
   { id: 4, name: "바/펍" },
   { id: 5, name: "도서/문구" },
 ];
-function CategoryBtn({btnClick,setBtnClick,mapCurLocation_toMark,container}) {
+
+
+function CategoryBtn() {
+  const [btnClick, setBtnClick] = useState(1);
+  const handleClick = (id) => {
+    setBtnClick(id);
+  };
+  return (
+    <Wrapper>
+      {category.map((item) => (
+        <Items
+          key={item.id}
+          onClick={() => handleClick(item.id)}
+          isActive={btnClick === item.id}
+        >
+          {item.name}
+        </Items>
+      ))}
+    </Wrapper>
+  );
+}
+
+
+
+export const CategoryBtn_map =({btnClick,setBtnClick,mapCurLocation_toMark,container})=> {
 
   const handleClick = (id) => {
     const newarr = btnClick.map((v,i)=>{
@@ -58,7 +99,7 @@ function CategoryBtn({btnClick,setBtnClick,mapCurLocation_toMark,container}) {
 
   };
   return (
-    <Wrapper>
+    <Wrapper2>
       {category.map((item) => (
         <Items
           key={item.id}
@@ -68,7 +109,8 @@ function CategoryBtn({btnClick,setBtnClick,mapCurLocation_toMark,container}) {
           {item.name}
         </Items>
       ))}
-    </Wrapper>
+    </Wrapper2>
   );
 }
+
 export default CategoryBtn;
