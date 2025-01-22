@@ -3,6 +3,9 @@ import styled from "styled-components";
 import { theme } from "../styles/themes";
 
 const Wrapper = styled.div`
+  z-index:10;
+  position:absolute;
+  top:10%;
   display: flex;
   flex-direction: row;
   margin: 1.19rem 0;
@@ -38,10 +41,21 @@ const category = [
   { id: 4, name: "바/펍" },
   { id: 5, name: "도서/문구" },
 ];
-function CategoryBtn() {
-  const [btnClick, setBtnClick] = useState(1);
+function CategoryBtn({btnClick,setBtnClick,mapCurLocation_toMark,container}) {
+
   const handleClick = (id) => {
-    setBtnClick(id);
+    const newarr = btnClick.map((v,i)=>{
+      if(i == id){
+        return (v ? 0 : 1)
+      }
+      else{
+        return v
+      }
+     })
+     setBtnClick(newarr)
+    console.log(newarr)
+     mapCurLocation_toMark(newarr);
+
   };
   return (
     <Wrapper>
@@ -49,7 +63,7 @@ function CategoryBtn() {
         <Items
           key={item.id}
           onClick={() => handleClick(item.id)}
-          isActive={btnClick === item.id}
+          isActive={btnClick[item.id] === 1}
         >
           {item.name}
         </Items>
