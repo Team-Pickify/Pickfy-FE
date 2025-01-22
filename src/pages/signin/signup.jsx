@@ -18,7 +18,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column; 
   align-items: center; 
-  gap: 1rem; 
+  gap: 0.5rem; 
   margin: 0rem 0.95rem;
 `;
 
@@ -39,7 +39,8 @@ const DividerContainer = styled.div`
 `;
 
 const Line = styled.div` 
-  height: 0.03125rem; 
+  margin: 0.8rem;
+  height: 0.03rem; 
   width: 40%;
   background: #7E7E7E; 
 `;
@@ -54,10 +55,11 @@ const Text = styled.span`
 
 const StyledLink = styled(Link)`
   text-decoration: underline; 
-  color: #7E7E7E"; 
+  color: #7E7E7E; 
   font-size: 0.875rem;
   font-weight: 400;
   display: inline-block; 
+  margin-top: 0.8rem;
 
   &:visited {
     color: #7E7E7E; 

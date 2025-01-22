@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-// Styled Button
+
 const StyledButton = styled.button`
   display: flex;
   align-items: center;
