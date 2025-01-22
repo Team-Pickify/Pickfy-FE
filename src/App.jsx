@@ -3,7 +3,7 @@ import GlobalStyles from "./styles/GlobalStyles";
 import Navbar from "./layouts/navbar";
 import routes from "./navigator/routes";
 
-const NavPage = ["/main", "/myplacelist", "/setting"];
+const NavPage = ["/main", "/myplacelist", "/setting","/map"];
 
 function App() {
   return (

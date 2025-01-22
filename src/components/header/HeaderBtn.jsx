@@ -36,7 +36,9 @@ export default function HeaderBtn({ pageLoc, pos }) {
     icon = pos === "left" ? icons.back : icons.share;
   } else if (pageLoc === "setting") {
     icon = pos === "left" ? icons.back : "none";
-  }
+  } else if (pageLoc === "map") {
+    icon = pos === "right" ? icons.myplacelist : "none";
+  } 
 
   return <Btn onClick={() => handleNav(icon.addr)}>{icon.ic}</Btn>;
 }
