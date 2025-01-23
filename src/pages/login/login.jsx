@@ -8,6 +8,9 @@ import KakaoLogo from "../../assets/Kakao_Logo.svg";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column; 
+  justify-content: center; 
   background-color: #000;
   width: 100%;
   height: 100%;
