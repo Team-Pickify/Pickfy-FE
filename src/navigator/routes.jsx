@@ -1,7 +1,7 @@
 import Main from "../pages/main";
 import MyPlaceList from "../pages/placelist";
 import Setting from "../pages/setting";
-import Signup from "../pages/signin/signup";
+import Login from "../pages/login/login";
 import Mapview from "../pages/map/map";
 
 const routes = [
@@ -10,8 +10,8 @@ const routes = [
     element: <Main />,
   },
   {
-    path: "/signup",
-    element: <Signup />,
+    path: "/login",
+    element: <Login />,
   },
   {
     path: "/myplacelist",
@@ -23,8 +23,8 @@ const routes = [
   },
   {
     path: "/map",
-    element:<Mapview/>
-  }
+    element: <Mapview />,
+  },
 ];
 
 export default routes;
