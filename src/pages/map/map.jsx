@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { PiCompassRoseDuotone } from "react-icons/pi";
 import mapPermission from '../../hooks/mapPermission';
-import CategoryBtn from '../../components/categoryBtn'
+import {CategoryBtn_map} from '../../components/categoryBtn'
 import redMarker from "../../assets/redmarker.svg"
 import blackMarker from "../../assets/black_marker.svg"
 
@@ -229,7 +229,7 @@ const Marking = (latitude,longitude,newarr)=>{
   return (
     <>
      <Mapbox ref = {mapRef}>
-        <CategoryBtn btnClick={btnClick} setBtnClick= {setBtnClick} mapCurLocation_toMark = {mapCurLocation_toMark} container = {mapRef.current}></CategoryBtn>
+        <CategoryBtn_map btnClick={btnClick} setBtnClick= {setBtnClick} mapCurLocation_toMark = {mapCurLocation_toMark} container = {mapRef.current}></CategoryBtn_map>
       
       <Curdesbutton onClick={handlebutton}>
         <PiCompassRoseDuotone style={{width:"80%",height:"80%"}}/>
