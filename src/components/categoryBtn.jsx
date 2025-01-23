@@ -2,7 +2,26 @@ import { useState } from "react";
 import styled from "styled-components";
 import { theme } from "../styles/themes";
 
+
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 1.19rem 0;
+  gap: 0.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+
+const Wrapper2 = styled.div`
+  z-index:100;
+  position:absolute;
+  top:10%;
   display: flex;
   flex-direction: row;
   margin: 1.19rem 0;
@@ -31,6 +50,7 @@ const Items = styled.button`
   background-color: ${(props) => (props.isActive ? theme.Text : "#ffffff")};
   color: ${(props) => (props.isActive ? "#ffffff" : "#000000")};
 `;
+
 const category = [
   { id: 1, name: "전체" },
   { id: 2, name: "음식점" },
@@ -38,6 +58,8 @@ const category = [
   { id: 4, name: "바/펍" },
   { id: 5, name: "도서/문구" },
 ];
+
+
 function CategoryBtn() {
   const [btnClick, setBtnClick] = useState(1);
   const handleClick = (id) => {
@@ -57,4 +79,38 @@ function CategoryBtn() {
     </Wrapper>
   );
 }
+
+
+
+export const CategoryBtn_map =({btnClick,setBtnClick,mapCurLocation_toMark,container})=> {
+
+  const handleClick = (id) => {
+    const newarr = btnClick.map((v,i)=>{
+      if(i == id){
+        return (v ? 0 : 1)
+      }
+      else{
+        return v
+      }
+     })
+     setBtnClick(newarr)
+    console.log(newarr)
+     mapCurLocation_toMark(newarr);
+
+  };
+  return (
+    <Wrapper2>
+      {category.map((item) => (
+        <Items
+          key={item.id}
+          onClick={() => handleClick(item.id)}
+          isActive={btnClick[item.id] === 1}
+        >
+          {item.name}
+        </Items>
+      ))}
+    </Wrapper2>
+  );
+}
+
 export default CategoryBtn;

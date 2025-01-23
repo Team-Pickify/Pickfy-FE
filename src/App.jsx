@@ -5,9 +5,10 @@ import Navbar from "./layouts/navbar";
 import routes from "./navigator/routes";
 import SplashScreen from "./pages/splash/splashScreen";
 
+const NavPage = ["/main", "/myplacelist", "/setting","/map"];
+
 function App() {
   const [showSplash, setShowSplash] = useState(true);
-  const NavPage = ["/main", "/myplacelist", "/setting"];
   const navigate = useNavigate();
   const location = useLocation();
 

@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import LoginBtn from "../../components/LoginBtn";
 import InputBox from "../../components/InputBox";
 import WhiteLogo from "../../assets/Logo_White.svg";
-import KakaoLogo from "../../assets/Kakao_Logo.svg"
-import { IoMdEye, IoMdEyeOff  } from "react-icons/io";
-
+import KakaoLogo from "../../assets/Kakao_Logo.svg";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 const Wrapper = styled.div`
   display: flex;
@@ -19,15 +18,16 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column; 
-  align-items: center; 
-  gap: 0.5rem; 
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
   margin: 0rem 0.95rem;
 `;
 
 const Logo = styled.img`
-  width: 9.1875rem; 
-  height: 5rem; 
+  width: 9.1875rem;
+  height: 5rem;
+  margin-top: 10.63rem;
   margin-bottom: 1.19rem;
 `;
 
@@ -36,46 +36,46 @@ const DividerContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 90%; 
-  margin: 0.38rem; 
+  max-width: 90%;
+  margin: 0.38rem;
 `;
 
-const Line = styled.div` 
+const Line = styled.div`
   margin: 0.8rem;
-  height: 0.03rem; 
+  height: 0.03rem;
   width: 40%;
-  background: #7E7E7E; 
+  background: #7e7e7e;
 `;
 
 const Text = styled.span`
   width: 1.875rem;
   height: 0.8125rem;
-  color: #7E7E7E; 
-  font-size: 0.625rem; 
+  color: #7e7e7e;
+  font-size: 0.625rem;
   text-align: center;
 `;
 
 const StyledLink = styled(Link)`
-  text-decoration: underline; 
-  color: #7E7E7E; 
+  text-decoration: underline;
+  color: #7e7e7e;
   font-size: 0.875rem;
   font-weight: 400;
-  display: inline-block; 
+  display: inline-block;
   margin-top: 0.8rem;
 
   &:visited {
-    color: #7E7E7E; 
+    color: #7e7e7e;
   }
 
   &:active {
-    color: #E6E6E6; 
+    color: #e6e6e6;
   }
 `;
 
-function Signup() {
+function Login() {
   const [isActive, setIsActive] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
-  const [email, setEmail] = useState(""); 
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const isButtonEnabled = email.trim() !== "" && password.trim() !== "";
@@ -122,7 +122,7 @@ function Signup() {
           bgColor="#FEE500"
           textColor="#3A1D1D"
           borderColor="#FEE500"
-          imageSrc = {KakaoLogo}
+          imageSrc={KakaoLogo}
           onClick={() => {
             if (isButtonEnabled) {
               setIsActive(!isActive);
@@ -135,4 +135,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Login;

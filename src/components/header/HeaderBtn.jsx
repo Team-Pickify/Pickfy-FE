@@ -30,7 +30,7 @@ export default function HeaderBtn({ pageLoc, pos }) {
   const handleNav = (address) => navigate(address);
 
   let icon;
-  if (pageLoc === "main") {
+  if (pageLoc === "map") {
     icon = pos === "left" ? icons.setting : icons.myplacelist;
   } else if (pageLoc === "myplacelist") {
     icon = pos === "left" ? icons.back : icons.share;
