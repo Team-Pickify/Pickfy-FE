@@ -15,7 +15,7 @@ function App() {
   useEffect(() => {
     if (!showSplash) {
       if (location.pathname === "/") {
-        navigate("/signup"); 
+        navigate("/login"); 
       }
     }
   }, [showSplash, navigate, location]);

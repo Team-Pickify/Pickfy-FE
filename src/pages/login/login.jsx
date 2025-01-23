@@ -27,7 +27,6 @@ const Container = styled.div`
 const Logo = styled.img`
   width: 9.1875rem;
   height: 5rem;
-  margin-top: 10.63rem;
   margin-bottom: 1.19rem;
 `;
 
