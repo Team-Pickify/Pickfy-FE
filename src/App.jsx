@@ -1,20 +1,42 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import GlobalStyles from "./styles/GlobalStyles";
 import Navbar from "./layouts/navbar";
 import routes from "./navigator/routes";
-
-const NavPage = ["/main", "/myplacelist", "/setting"];
+import SplashScreen from "./pages/splash/splashScreen";
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+  const NavPage = ["/main", "/myplacelist", "/setting"];
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!showSplash) {
+      if (location.pathname === "/") {
+        navigate("/signup"); 
+      }
+    }
+  }, [showSplash, navigate, location]);
+
   return (
     <>
       <GlobalStyles />
-      {NavPage.includes(location.pathname) && <Navbar />}
-      <Routes>
-        {routes.map((route) => (
-          <Route key={route.path} path={route.path} element={route.element} />
-        ))}
-      </Routes>
+      {showSplash ? (
+        <SplashScreen
+          duration={1000}
+          onFinish={() => setShowSplash(false)} 
+        />
+      ) : (
+        <>
+          {NavPage.includes(location.pathname) && <Navbar />}
+          <Routes>
+            {routes.map((route) => (
+              <Route key={route.path} path={route.path} element={route.element} />
+            ))}
+          </Routes>
+        </>
+      )}
     </>
   );
 }

@@ -9,6 +9,9 @@ import { IoMdEye, IoMdEyeOff  } from "react-icons/io";
 
 
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column; 
+  justify-content: center; 
   background-color: #000;
   width: 100%;
   height: 100%;
@@ -25,7 +28,6 @@ const Container = styled.div`
 const Logo = styled.img`
   width: 9.1875rem; 
   height: 5rem; 
-  margin-top: 10.63rem; 
   margin-bottom: 1.19rem;
 `;
 
