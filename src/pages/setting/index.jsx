@@ -133,11 +133,13 @@ function Setting() {
 
     // 닉네임 유효성 검사
     if (name.length > 15 || name.length < 1) {
-      setMessage("이름은 최소 1자 이상, 최대 15자 이내로 입력해주세요.");
+      setMessage(
+        <div>이름은 최소 1자 이상, 최대 15자 이내로 입력해주세요.</div>
+      );
       setToastVisible(true); // 토스트 컴포넌트 호출
       return;
     } else if (!regex.test(name)) {
-      setMessage("이름은 한글, 영문, 숫자만 입력해주세요.");
+      setMessage(<div>이름은 한글, 영문, 숫자만 입력해주세요.</div>);
       setToastVisible(true); // 토스트 컴포넌트 호출
       return;
     }

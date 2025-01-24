@@ -49,8 +49,6 @@ const ToastContainer = styled.div`
 `;
 
 export default function Toast({ message, setToastVisible }) {
-  let text = <div>{message}</div>;
-
   useEffect(() => {
     setTimeout(() => {
       setToastVisible(false);
@@ -59,7 +57,7 @@ export default function Toast({ message, setToastVisible }) {
 
   return (
     <ToastWrapper>
-      <ToastContainer>{text}</ToastContainer>
+      <ToastContainer>{message}</ToastContainer>
     </ToastWrapper>
   );
 }
