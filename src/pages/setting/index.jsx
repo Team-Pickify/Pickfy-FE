@@ -2,11 +2,13 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Toast from "../../components/Toast";
 import { theme } from "../../styles/themes";
 import { HiMiniUser } from "react-icons/hi2";
 import { LuPencilLine } from "react-icons/lu";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa";
+import { useEffect } from "react";
 
 const Container = styled.div`
   display: flex;
@@ -67,9 +69,13 @@ const GreyBox = styled.div`
 `;
 
 const Username = styled.input`
+  width: 45vw;
+  @media screen and (min-width: 600px) {
+    width: 22rem;
+  }
+
   border: 0;
   background-color: transparent;
-  width: 12rem;
 
   font-size: 1.4rem;
   font-weight: bold;
@@ -95,9 +101,11 @@ const SettingText = styled.div`
 function Setting() {
   const navigate = useNavigate();
 
-  const [profileImg, setProfileImg] = useState("");
-  const [name, setName] = useState("username");
-  const [toggle, setToggle] = useState(false);
+  const [profileImg, setProfileImg] = useState(""); // 프로필 이미지 상태
+  const [name, setName] = useState("username"); // 이름 상태
+  const [toggle, setToggle] = useState(false); // 편집 버튼 상태
+  const [toastVisible, setToastVisible] = useState(false); // 토스트 상태
+  const [message, setMessage] = useState(""); // 토스트 메세지
 
   const handleImg = () => {
     const input = document.createElement("input");
@@ -121,6 +129,19 @@ function Setting() {
   };
 
   const hanldeToggle = () => {
+    const regex = /^[a-zA-Z0-9가-힣]*$/; // 한글, 영문, 숫자 정규식
+
+    // 닉네임 유효성 검사
+    if (name.length > 15 || name.length < 1) {
+      setMessage("이름은 최소 1자 이상, 최대 15자 이내로 입력해주세요.");
+      setToastVisible(true); // 토스트 컴포넌트 호출
+      return;
+    } else if (!regex.test(name)) {
+      setMessage("이름은 한글, 영문, 숫자만 입력해주세요.");
+      setToastVisible(true); // 토스트 컴포넌트 호출
+      return;
+    }
+
     setToggle(!toggle);
   };
 
@@ -131,6 +152,11 @@ function Setting() {
 
   return (
     <Container>
+      {/* 토스트 컴포넌트 */}
+      {toastVisible && (
+        <Toast message={message} setToastVisible={setToastVisible} />
+      )}
+
       {/* 프로필 */}
       <ProfileBox>
         <UserInfo>
@@ -151,6 +177,7 @@ function Setting() {
           </ImgBox>
           {/* 유저 이름 */}
           <Username
+            maxLength={15}
             value={name}
             disabled={!toggle}
             placeholder="한글/영문/숫자 최대 15자"
