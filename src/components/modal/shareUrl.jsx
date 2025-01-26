@@ -67,7 +67,7 @@ export default function ShareModal({ isOpen, onClose }) {
   if (!isOpen) return null;
   return (
     <Overlay onClick={onClose}>
-      <Container>
+      <Container onClick={(e) => e.stopPropagation()}>
         <UrlContainer>
           <ShowUrl>url-----</ShowUrl>
           <CopyBtn>복사</CopyBtn>
