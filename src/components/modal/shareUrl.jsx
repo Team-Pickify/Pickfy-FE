@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { theme } from "../../styles/themes";
+import kakaoLogo from "../../assets/Kakao_Logo.svg";
 
 const Overlay = styled.div`
   position: fixed;
@@ -33,8 +35,7 @@ const UrlContainer = styled.div`
   height: 2.5rem;
   padding: 0.37rem 0.44rem 0.37rem 0.625rem;
   border-radius: 6.25rem;
-  border: 1px solid #e6e6e6;
-  background: #fff;
+  border: 1px solid ${theme.Sub2};
 `;
 const ShowUrl = styled.div`
   display: flex;
@@ -49,8 +50,10 @@ const CopyBtn = styled.div`
   height: 1.75rem;
   gap: 0.625rem;
   border-radius: 6.25rem;
-  background: #000;
-  color: #fff;
+  background-color: ${theme.Text};
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
 `;
 const KakaoShareBtn = styled.div`
   display: flex;
@@ -60,7 +63,11 @@ const KakaoShareBtn = styled.div`
   gap: 0.625rem;
   align-self: stretch;
   border-radius: 4.75rem;
-  background: #fee500;
+  background: ${theme.KakaoYellow};
+  color: ${theme.KakaoBrown};
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 600;
 `;
 
 export default function ShareModal({ isOpen, onClose }) {
@@ -72,7 +79,10 @@ export default function ShareModal({ isOpen, onClose }) {
           <ShowUrl>url-----</ShowUrl>
           <CopyBtn>복사</CopyBtn>
         </UrlContainer>
-        <KakaoShareBtn>카카오톡으로 공유하기</KakaoShareBtn>
+        <KakaoShareBtn>
+          <img src={kakaoLogo} alt="카카오로고" />
+          카카오톡으로 공유하기
+        </KakaoShareBtn>
       </Container>
     </Overlay>
   );
