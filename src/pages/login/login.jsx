@@ -10,7 +10,7 @@ import LogoBox from "../../components/LogoBox";
 import {theme} from "../../styles/themes";
 
 const Wrapper = styled.div`
-  background-color: #000000;
+  background-color: ${theme.Text};
   width: 100%;
   height: 100%;
 `;
@@ -36,13 +36,13 @@ const Line = styled.div`
   margin: 0.8rem;
   height: 0.03rem;
   width: 100%;
-  background: ${({ theme }) => theme.Sub1};
+  background: ${theme.Sub1};
 `;
 
 const Text = styled.span`
   width: 1.875rem;
   height: 0.8125rem;
-  color: ${({ theme }) => theme.Sub1};
+  color: ${theme.Sub1};
   font-size: 0.625rem;
   text-align: center;
 `;
@@ -58,23 +58,23 @@ const LinkCon = styled.div`
 
 const StyledLink = styled(Link)`
   text-decoration: underline;
-  color: ${({ theme }) => theme.Sub1};
+  color: ${theme.Sub1};
   font-size: 0.875rem;
   font-weight: 400;
   display: inline-block;
 
   &:visited {
-    color: ${({ theme }) => theme.Sub1};
+    color: ${theme.Sub1};
   }
 
   &:active {
-    color: ${({ theme }) => theme.Sub2};
+    color: ${theme.Sub2};
   }
 `;
 
 const Divider = styled.span`
-  color: ${({ theme }) => theme.Sub1};
-  margin: 0 0.5rem; /* 좌우 간격 */
+  color: ${theme.Sub1};
+  margin: 0 0.5rem; 
   font-size: 0.875rem;
 `;
 
