@@ -3,6 +3,8 @@ import MyPlaceList from "../pages/placelist";
 import Setting from "../pages/setting";
 import Login from "../pages/login/login";
 import Mapview from "../pages/map/map";
+import AdminLogin from "../pages/login/admin-login";
+import SignUp from "../pages/login/signup"
 
 const routes = [
   {
@@ -24,6 +26,14 @@ const routes = [
   {
     path: "/map",
     element: <Mapview />,
+  },
+  {
+    path: "/adminlogin",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/signup",
+    element: <SignUp />,
   },
 ];
 
