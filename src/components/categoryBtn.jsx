@@ -17,23 +17,6 @@ const Wrapper = styled.div`
   }
 `;
 
-
-const Wrapper2 = styled.div`
-  z-index:100;
-  position:absolute;
-  top:10%;
-  display: flex;
-  flex-direction: row;
-  margin: 1.19rem 0;
-  gap: 0.25rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
 const Items = styled.button`
   display: flex;
   flex-shrink: 0;
@@ -80,37 +63,5 @@ function CategoryBtn() {
   );
 }
 
-
-
-export const CategoryBtn_map =({btnClick,setBtnClick,mapCurLocation_toMark,container})=> {
-
-  const handleClick = (id) => {
-    const newarr = btnClick.map((v,i)=>{
-      if(i == id){
-        return (v ? 0 : 1)
-      }
-      else{
-        return v
-      }
-     })
-     setBtnClick(newarr)
-    console.log(newarr)
-     mapCurLocation_toMark(newarr);
-
-  };
-  return (
-    <Wrapper2>
-      {category.map((item) => (
-        <Items
-          key={item.id}
-          onClick={() => handleClick(item.id)}
-          isActive={btnClick[item.id] === 1}
-        >
-          {item.name}
-        </Items>
-      ))}
-    </Wrapper2>
-  );
-}
 
 export default CategoryBtn;

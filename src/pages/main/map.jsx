@@ -3,19 +3,85 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { PiCompassRoseDuotone } from "react-icons/pi";
 import mapPermission from '../../hooks/mapPermission';
-import CategoryBtn from '../../components/categoryBtn'
 import redMarker from "../../assets/redmarker.svg"
 import blackMarker from "../../assets/black_marker.svg"
+import { theme } from "../../styles/themes";
+import axios from 'axios';
 
 
-const category = ["","전체","음식점","카페","베이커리","바","펍","도서","문구"
+const Wrapper = styled.div`
+  z-index:100;
+  position:absolute;
+  display: flex;
+  flex-direction: row;
+  top: 1.19rem;
+  gap: 0.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+const Wrapper2 = styled.div`
+  z-index:100;
+  position:absolute;
+  display: flex;
+  flex-direction: row;
+  top: 90%;
+  gap: 0.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+const Items = styled.button`
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-family: Pretendard;
+  font-size: 0.75rem;
+  font-weight: 600;
+  height: 2.13rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 6.25rem;
+  border: ${(props) => (props.isActive ? "none" : " 1px solid #e6e6e6")};
+  background-color: ${(props) => (props.isActive ? theme.Text : "#ffffff")};
+  color: ${(props) => (props.isActive ? "#ffffff" : "#000000")};
+`;
+
+const category = [
+  { id: 1, name: "전체" },
+  { id: 2, name: "음식점" },
+  { id: 3, name: "카페/베이커리" },
+  { id: 4, name: "바/펍" },
+  { id: 5, name: "도서/문구" },
 ];
+
+
+const magazine = [
+  { id: 1, name: "전체" },
+  { id: 2, name: "데이트립코리아" },
+  { id: 3, name: "뉴뉴" },
+  { id: 4, name: "책플" },
+  { id: 5, name: "빵모아" },
+];
+
 
 function Mapview() {
 
+  const [{curlatitude,curlongitude},setcurlocation] = useState({curlatitude:33.450701,curlongitude:126.570667})
+
   const [placearray,setplacearray] = useState([]);
 
-  const [btnClick, setBtnClick] = useState([0,0,0,0,0,0]);
+  const [categorybtn, setcategorybtn] = useState([0,1,0,0,0,0]);
+  const [magazinebtn, setmagazinebtn] = useState([0,1,0,0,0,0]);
 
   const [isloading ,setloading] = useState(false);
 
@@ -35,6 +101,56 @@ function Mapview() {
 
   const handleWheel2 = (e) => {
     scrollRef2.current.scrollLeft += (e.deltaY*0.3); // 수직 스크롤(deltaY)을 가로 스크롤로 변환
+  };
+
+  const getdata = async (keyword) =>{
+    const datas = await axios.get('/categories')
+    .then((res)=>{
+      console.log(res)
+    })
+    
+  }
+  
+  const btnClick = ()=>{
+    let newarr = []
+    for(let i=1;i<=5;i++){
+      if(category[i] === 1){
+        
+      }
+    }
+    for(let i=1;i<=5;i++){
+      
+    }
+  }
+
+  const handleClick = (id) => {
+    const newarr = categorybtn.map((v,i)=>{
+      if(i == id){
+        return (v ? 0 : 1)
+      }
+      else{
+        return v
+      }
+     })
+     setcategorybtn(newarr)
+     console.log(newarr)
+     console.log(magazinebtn)
+     btnClick();
+  };
+
+  const handleClick2= (id) => {
+    const newarr = magazinebtn.map((v,i)=>{
+      if(i == id){
+        return (v ? 0 : 1)
+      }
+      else{
+        return v
+      }
+     })
+     setmagazinebtn(newarr)
+     console.log(categorybtn)
+     console.log(newarr)
+     btnClick();
   };
 
 
@@ -97,7 +213,7 @@ const InitializeMap =(latitude,longitude , container)=>{
             title: "내 위치", // 마커 제목
             image: curmarkerimage
         });
-  setBtnClick([0,0,0,0,0,0])
+  setcurlocation({latitude,longitude})
 }
 
 
@@ -216,6 +332,7 @@ const Marking = (latitude,longitude,newarr)=>{
 
 
 
+
   const handleBottomSheet = () => {
     const sheet = bottomSheetRef.current
     if (sheet.classList.contains("visible")) {
@@ -229,12 +346,32 @@ const Marking = (latitude,longitude,newarr)=>{
   return (
     <>
      <Mapbox ref = {mapRef}>
-        <CategoryBtn btnClick={btnClick} setBtnClick= {setBtnClick} mapCurLocation_toMark = {mapCurLocation_toMark} container = {mapRef.current}></CategoryBtn>
+     <Wrapper>
+      {category.map((item) => (
+        <Items
+          key={item.id}
+          onClick={()=>{handleClick(item.id)}}
+          isActive={categorybtn[item.id] === 1}
+        >
+          {item.name}
+        </Items>
+      ))}
+    </Wrapper>
       
       <Curdesbutton onClick={handlebutton}>
         <PiCompassRoseDuotone style={{width:"80%",height:"80%"}}/>
       </Curdesbutton>
-      {/* <CCC onClick={()=>{handleBottomSheet()}}>눌러</CCC> */}
+      <Wrapper2>
+      {magazine.map((item) => (
+        <Items
+          key={item.id}
+          onClick={()=>{handleClick2(item.id)}}
+          isActive={magazinebtn[item.id] === 1}
+        >
+          {item.name}
+        </Items>
+      ))}
+    </Wrapper2>
        <BottomSheet ref={bottomSheetRef}>
         <div style={{width:"100%",height:"90%",backgroundColor:"white"}}>
 
