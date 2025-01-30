@@ -1,5 +1,4 @@
 import styled from "styled-components";
-// import { IoIosArrowRoundBack } from "react-icons/io";
 import { GoArrowLeft } from "react-icons/go";
 import { CiShare2 } from "react-icons/ci";
 import { LuUserRound } from "react-icons/lu";
@@ -10,6 +9,9 @@ import { useNavigate } from "react-router-dom";
 const Btn = styled.div`
   cursor: pointer;
   width: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const icons = {

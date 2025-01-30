@@ -12,15 +12,13 @@ import Linkbox from "../../components/Linkbox";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
 `;
 
 const ProfileBox = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 2.5rem;
-  margin-top: 2.5rem;
+  margin: 2rem 2.5rem;
 `;
 
 const UserInfo = styled.div`
