@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { useState } from "react";
-
 import Toast from "../../components/toast/Toast";
 import CheckMsg from "../../components/toast/CheckMsg";
 import { theme } from "../../styles/themes";
@@ -14,13 +13,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
-`;
-
-const Line = styled.div`
-  width: 100%;
-  height: 0.05vh;
-
-  background-color: ${theme.Sub3};
 `;
 
 const ProfileBox = styled.div`
@@ -89,15 +81,6 @@ const Username = styled.input`
   }
 `;
 
-const SettingText = styled.div`
-  cursor: pointer;
-  width: 10rem;
-  color: ${theme.Sub1};
-
-  padding: 0 2.5rem;
-  font-size: 1.2rem;
-  font-weight: 500;
-`;
 function Setting() {
   const [profileImg, setProfileImg] = useState(""); // 프로필 이미지 상태
   const [name, setName] = useState("username"); // 이름 상태
