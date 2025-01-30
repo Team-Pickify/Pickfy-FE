@@ -5,7 +5,7 @@ import Navbar from "./layouts/navbar";
 import routes from "./navigator/routes";
 import SplashScreen from "./pages/splash/splashScreen";
 
-const NavPage = ["/map", "/myplacelist", "/setting"];
+const NavPage = ["/", "/myplacelist", "/setting"];
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
