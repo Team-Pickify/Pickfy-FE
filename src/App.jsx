@@ -1,11 +1,13 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import GlobalStyles from "./styles/GlobalStyles";
 import Navbar from "./layouts/navbar";
 import routes from "./navigator/routes";
 
-const NavPage = ["/map", "/myplacelist", "/setting"];
+const NavPage = ["/", "/myplacelist", "/setting"];
 
 function App() {
+  const location = useLocation();
+
   return (
     <>
       <GlobalStyles />

@@ -1,13 +1,12 @@
-import Main from "../pages/main";
+import Mapview from "../pages/main/map";
+import Login from "../pages/login/login";
 import MyPlaceList from "../pages/placelist";
 import Setting from "../pages/setting";
-import Login from "../pages/login/login";
-import Mapview from "../pages/map/map";
 
 const routes = [
   {
     path: "/",
-    element: <Main />,
+    element: <Mapview />,
   },
   {
     path: "/login",
@@ -20,10 +19,6 @@ const routes = [
   {
     path: "/setting",
     element: <Setting />,
-  },
-  {
-    path: "/map",
-    element: <Mapview />,
   },
 ];
 
