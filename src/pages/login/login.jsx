@@ -5,7 +5,6 @@ import LoginBtn from "../../components/LoginBtn";
 import InputBox from "../../components/InputBox";
 import WhiteLogo from "../../assets/Logo_White.svg";
 import KakaoLogo from "../../assets/Kakao_Logo.svg";
-import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import LogoBox from "../../components/LogoBox";
 import {theme} from "../../styles/themes";
 
@@ -103,13 +102,8 @@ function Login() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          icon={
-            isPasswordVisible ? (
-              <IoMdEye style={{ fontSize: "1.06rem" }} />
-            ) : (
-              <IoMdEyeOff style={{ fontSize: "1.06rem" }} />
-            )
-          }
+          isIcon={true} 
+          iconType={isPasswordVisible ? "eye" : "eye-off"}
           onIconClick={() => setPasswordVisible(!isPasswordVisible)}
         />
         <LoginBtn
