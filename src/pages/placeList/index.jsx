@@ -11,6 +11,15 @@ const Wrapper = styled.div`
 const Container = styled.div`
   margin: 1rem;
 `;
+const CarouselWrapper = styled.div`
+  position: relative;
+`;
+const ButtonWrapper = styled.div`
+  position: absolute;
+  top: 1.19rem;
+  margin-left: 0.94rem;
+  z-index: 10;
+`;
 function MyPlaceList() {
   const places = [
     {
@@ -45,8 +54,12 @@ function MyPlaceList() {
 
   return (
     <Wrapper>
-      <Carousel />
-      <CategoryBtn />
+      <CarouselWrapper>
+        <Carousel />
+        <ButtonWrapper>
+          <CategoryBtn />
+        </ButtonWrapper>
+      </CarouselWrapper>
       <Container>
         <InfoSmall places={places} />
       </Container>
