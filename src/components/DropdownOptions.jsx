@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { theme } from "../styles/themes";
 
 const OptionBox = styled.div`
-  width: 15vh;
+  width: ${(props) => props.wd || "15vh"};
   padding: 1vh 0;
 
   background-color: white;
@@ -32,14 +32,14 @@ const Option = styled.div`
   }
 `;
 
-export default function DropboxOptions({ setVal, options }) {
+export default function DropdownOptions({ setVal, options, wd }) {
   const handleOpt = (opt) => {
     setVal(opt);
   };
 
   return (
     <div>
-      <OptionBox>
+      <OptionBox wd={wd}>
         {options.map((v, idx) => {
           return (
             <Option key={v + idx} onClick={() => handleOpt(v)}>

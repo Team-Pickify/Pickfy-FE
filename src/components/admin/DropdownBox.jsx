@@ -4,7 +4,7 @@ import { theme } from "../../styles/themes";
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import { useState } from "react";
-import DropboxOptions from "../DropboxOptions";
+import DropdownOptions from "../DropdownOptions";
 
 const Container = styled.div`
   display: flex;
@@ -69,7 +69,9 @@ export default function DropdownBox({ register, name, kind, options }) {
           ) : (
             <IoIosArrowDown color={theme.Sub1} size="1rem" />
           )}
-          {toggle && <DropboxOptions setVal={setVal} options={options} />}
+          {toggle && (
+            <DropdownOptions setVal={setVal} options={options} wd="15vh" />
+          )}
         </Dropdown>
       </Box>
     </Container>
