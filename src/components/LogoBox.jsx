@@ -6,7 +6,6 @@ import { GoArrowLeft } from "react-icons/go";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   background-color: #000;
   width: 100%;
   height: 100%;
@@ -17,8 +16,9 @@ const LogoCon = styled.div`
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  margin-top: 8.56rem;
-  margin-bottom: 3.31rem;
+  min-height: 8em;
+  margin-top: 3.56rem;
+  margin-bottom: 2.06rem;
 `;
 
 const Logo = styled.img`
@@ -33,8 +33,21 @@ const LogoText = styled.span`
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 600;
+  text-align: left;
+  margin-left: 1.5rem;
+  white-space: pre-line; 
+`;
+
+const MiniText = styled.span`
+  color: #7E7E7E;
+  font-family: Pretendard;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 600;
   text-align: center;
   margin-left: 1.5rem;
+  height: 1rem; /* 높이 고정 */
+  
 `;
 
 const IconWrapper = styled.div`
@@ -42,9 +55,12 @@ const IconWrapper = styled.div`
   margin-left: 1.25rem;
   margin-bottom: 1rem;
   cursor: pointer;
+
+  width: 1.5rem; 
+  height: 1.5rem;
 `;
 
-function LogoBox({ showIcon = true, logoSrc, logoText }) {
+function LogoBox({ showIcon = true, logoSrc, logoText, miniText }) {
   const navigate = useNavigate(); 
 
   const handleGoBack = () => {
@@ -53,14 +69,13 @@ function LogoBox({ showIcon = true, logoSrc, logoText }) {
 
   return (
     <Wrapper>
-      {showIcon && (
-        <IconWrapper onClick={handleGoBack}>
-          <GoArrowLeft size={28} color="#FFF" />
-        </IconWrapper>
-      )}
+      <IconWrapper onClick={handleGoBack}>
+        {showIcon && <GoArrowLeft size={28} color="#FFF" />}
+      </IconWrapper>
       <LogoCon>
         {logoSrc && <Logo src={logoSrc} alt="Logo" />}
         {logoText && <LogoText>{logoText}</LogoText>}
+        {miniText && <MiniText>{miniText}</MiniText>}
       </LogoCon>
     </Wrapper>
   );
