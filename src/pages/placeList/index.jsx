@@ -2,7 +2,7 @@ import styled from "styled-components";
 import InfoSmall from "../../components/InfoSmall";
 import cafe1 from "../../assets/cafe1.svg";
 import CategoryBtn from "../../components/categoryBtn";
-import Carousel from "./Carousel";
+import Carousel from "../../components/carousel/Carousel";
 
 const Wrapper = styled.div`
   height: auto;
