@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { IoIosArrowForward } from "react-icons/io";
 
 
 const StyledButton = styled.button`
@@ -26,24 +27,29 @@ const StyledButton = styled.button`
   }
 `;
 
+const TextContainer = styled.span`
+  text-align: center;
+  flex-grow: 1; /* 텍스트를 정확한 가운데 정렬 */
+  margin-left: 1.41rem;
+`;
 
-const Image = styled.img`
-  width: 1.0625rem;
-  height: 1.0625rem;  
-  margin-right: 0.5rem; 
-  color: #3A1D1D;
+const IconContainer = styled.div`
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 
 
-const LoginBtn = ({ 
+const SignupBtn = ({ 
   text = "Login",
   isActive = true,  
   onClick,
-  imageSrc,
   bgColor,
   textColor,
   borderColor,
+  showIcon = false
 }) => {
   return (
     <div style={{ width: "100%" }}> 
@@ -53,11 +59,15 @@ const LoginBtn = ({
         bgColor={bgColor}
         textColor={textColor}
         borderColor={borderColor}>
-        {imageSrc && <Image src={imageSrc} alt="icon" />}
-        {text}
+        <TextContainer>{text}</TextContainer>
+        {showIcon && (
+          <IconContainer>
+            <IoIosArrowForward size={18} color={textColor || "white"} />
+          </IconContainer>
+        )}
       </StyledButton>
     </div>
   );
 };
 
-export default LoginBtn;
+export default SignupBtn;

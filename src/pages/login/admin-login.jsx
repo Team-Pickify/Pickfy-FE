@@ -4,14 +4,11 @@ import styled from "styled-components";
 import LoginBtn from "../../components/LoginBtn";
 import InputBox from "../../components/InputBox";
 import WhiteLogo from "../../assets/Logo_White.svg";
-import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import LogoBox from "../../components/LogoBox";
+import {theme} from "../../styles/themes";
 
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column; 
-  justify-content: flex-start; 
-  background-color: #000;
+  background-color: ${theme.Text};
   width: 100%;
   height: 100%;
 `;
@@ -50,13 +47,8 @@ function Login() {
           placeholder="관리자 비밀번호"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          icon={
-            isPasswordVisible ? (
-              <IoMdEye style={{ fontSize: "1.06rem" }} />
-            ) : (
-              <IoMdEyeOff style={{ fontSize: "1.06rem" }} />
-            )
-          }
+          isIcon={true} 
+          iconType={isPasswordVisible ? "eye" : "eye-off"}
           onIconClick={() => setPasswordVisible(!isPasswordVisible)}
         />
         <LoginBtn
