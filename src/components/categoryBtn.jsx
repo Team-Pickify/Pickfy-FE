@@ -2,11 +2,9 @@ import { useState } from "react";
 import styled from "styled-components";
 import { theme } from "../styles/themes";
 
-
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
-  margin: 1.19rem 0;
   gap: 0.25rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -30,7 +28,8 @@ const Items = styled.button`
   padding: 0.625rem 1.25rem;
   border-radius: 6.25rem;
   border: ${(props) => (props.isActive ? "none" : " 1px solid #e6e6e6")};
-  background-color: ${(props) => (props.isActive ? theme.Text : "#ffffff")};
+  background-color: ${(props) =>
+    props.isActive ? theme.Text : "rgba(255, 255, 255, 0.7)"};
   color: ${(props) => (props.isActive ? "#ffffff" : "#000000")};
 `;
 
@@ -41,7 +40,6 @@ const category = [
   { id: 4, name: "바/펍" },
   { id: 5, name: "도서/문구" },
 ];
-
 
 function CategoryBtn() {
   const [btnClick, setBtnClick] = useState(1);
@@ -62,6 +60,5 @@ function CategoryBtn() {
     </Wrapper>
   );
 }
-
 
 export default CategoryBtn;

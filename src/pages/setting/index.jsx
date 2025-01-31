@@ -1,34 +1,24 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-import Toast from "../../components/Toast";
+import Toast from "../../components/toast/Toast";
+import CheckMsg from "../../components/toast/CheckMsg";
 import { theme } from "../../styles/themes";
 import { HiMiniUser } from "react-icons/hi2";
 import { LuPencilLine } from "react-icons/lu";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa";
-import { useEffect } from "react";
+import Linkbox from "../../components/Linkbox";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
-`;
-
-const Line = styled.div`
-  width: 100%;
-  height: 0.05vh;
-
-  background-color: ${theme.Sub3};
 `;
 
 const ProfileBox = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 2.5rem;
-  margin-top: 2.5rem;
+  margin: 2rem 2.5rem;
 `;
 
 const UserInfo = styled.div`
@@ -64,7 +54,7 @@ const GreyBox = styled.div`
   justify-content: center;
   align-items: center;
 
-  background-color: #00000069;
+  background-color: #37373769;
   position: absolute;
 `;
 
@@ -82,25 +72,14 @@ const Username = styled.input`
 
   &::placeholder {
     color: ${theme.Sub2};
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   &:focus {
     outline: none;
   }
 `;
 
-const SettingText = styled.div`
-  cursor: pointer;
-  width: 10rem;
-  color: ${theme.Sub1};
-
-  padding: 0 2.5rem;
-  font-size: 1.2rem;
-  font-weight: 500;
-`;
 function Setting() {
-  const navigate = useNavigate();
-
   const [profileImg, setProfileImg] = useState(""); // 프로필 이미지 상태
   const [name, setName] = useState("username"); // 이름 상태
   const [toggle, setToggle] = useState(false); // 편집 버튼 상태
@@ -145,11 +124,9 @@ function Setting() {
     }
 
     setToggle(!toggle);
-  };
-
-  const goLogin = () => {
-    navigate("/login");
-    window.location.reload();
+    toggle &&
+      (setMessage(<CheckMsg msg="변경이 완료되었습니다" />),
+      setToastVisible(true));
   };
 
   return (
@@ -204,15 +181,11 @@ function Setting() {
         )}
       </ProfileBox>
 
-      <Line />
-
       {/* 로그아웃 */}
-      <SettingText onClick={goLogin}>로그아웃</SettingText>
-
-      <Line />
+      <Linkbox name="로그아웃" addr="/login" />
 
       {/* 회원탈퇴 */}
-      <SettingText onClick={goLogin}>회원탈퇴</SettingText>
+      <Linkbox name="회원탈퇴" addr="/login" />
     </Container>
   );
 }

@@ -2,8 +2,23 @@ import styled from "styled-components";
 import InfoSmall from "../../components/InfoSmall";
 import cafe1 from "../../assets/cafe1.svg";
 import CategoryBtn from "../../components/categoryBtn";
+import Carousel from "../../components/carousel/Carousel";
+
 const Wrapper = styled.div`
+  height: auto;
+  background-color: #ffffff;
+`;
+const Container = styled.div`
   margin: 1rem;
+`;
+const CarouselWrapper = styled.div`
+  position: relative;
+`;
+const ButtonWrapper = styled.div`
+  position: absolute;
+  top: 1.19rem;
+  margin-left: 0.94rem;
+  z-index: 10;
 `;
 function MyPlaceList() {
   const places = [
@@ -39,8 +54,15 @@ function MyPlaceList() {
 
   return (
     <Wrapper>
-      <CategoryBtn />
-      <InfoSmall places={places} />
+      <CarouselWrapper>
+        <Carousel />
+        <ButtonWrapper>
+          <CategoryBtn />
+        </ButtonWrapper>
+      </CarouselWrapper>
+      <Container>
+        <InfoSmall places={places} />
+      </Container>
     </Wrapper>
   );
 }
