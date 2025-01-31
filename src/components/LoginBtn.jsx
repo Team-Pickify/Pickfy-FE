@@ -11,6 +11,7 @@ const StyledButton = styled.button`
   border: none;
   width: 100%; 
   max-width: 100%; 
+  height: 2.9375rem;
   border-radius: 4.75rem; 
   border: 1px solid ${({ borderColor }) => borderColor || "#FFF"}; 
   background-color: ${({ isActive, bgColor }) =>
