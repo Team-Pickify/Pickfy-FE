@@ -97,9 +97,18 @@ function Info({
     setMessage(<CheckMsg msg={msg} />);
     setToastVisible(true);
   };
-
+  const center = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  };
   return (
     <>
+      <div style={center}>
+        {toastVisible && (
+          <Toast message={message} setToastVisible={setToastVisible} />
+        )}
+      </div>
       <InfoWrapper>
         <InfoLine>
           <TextContainer>
@@ -163,9 +172,6 @@ function Info({
           onClose={ModalClose}
           onToast={handleToast}
         />
-      )}
-      {toastVisible && (
-        <Toast message={message} setToastVisible={setToastVisible} />
       )}
     </>
   );
