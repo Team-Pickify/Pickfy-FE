@@ -40,6 +40,7 @@ const UrlContainer = styled.div`
 const ShowUrl = styled.div`
   display: flex;
   align-items: center;
+  width: 11.87rem;
 `;
 const CopyBtn = styled.div`
   display: flex;
@@ -71,7 +72,7 @@ const KakaoShareBtn = styled.div`
 `;
 
 export default function ShareModal({ isOpen, onClose, onToast }) {
-  const url = "";
+  const url = window.location.href; //현재 url 가져오기
 
   if (!isOpen) return null;
   const copyToClipboard = () => {
