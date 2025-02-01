@@ -10,6 +10,8 @@ const Header = styled.div`
   height: 6.5rem;
   background-color: white;
   border-bottom: 1px solid #e6e6e6;
+
+  position: sticky;
 `;
 
 const Logo = styled.div`

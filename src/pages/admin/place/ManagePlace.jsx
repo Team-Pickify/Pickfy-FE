@@ -70,9 +70,9 @@ export default function ManagePlace() {
           })}
         </div>
       ) : page === "add" ? (
-        <AddPlace place={place} setPlace={setPlace} setPage={setPage}/>
+        <AddPlace place={place} setPlace={setPlace} setPage={setPage} />
       ) : (
-        <FixPlace />
+        <FixPlace place={place} setPlace={setPlace} setPage={setPage} />
       )}
     </div>
   );

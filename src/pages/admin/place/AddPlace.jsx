@@ -6,6 +6,7 @@ import { IoCheckmark } from "react-icons/io5";
 import { theme } from "../../../styles/themes";
 import DetailBox from "../../../components/admin/DetailBox";
 import DropdownBox from "../../../components/admin/DropdownBox";
+import PlaceImgBox from "../../../components/admin/PlaceImgBox";
 
 const Header = styled.div`
   display: flex;
@@ -15,6 +16,10 @@ const Header = styled.div`
   height: 6.5rem;
   background-color: white;
   border-bottom: 1px solid #e6e6e6;
+
+  position: sticky;
+  top: 0;
+  z-index: 9999;
 `;
 
 const Title = styled.div`
@@ -50,7 +55,7 @@ export default function AddPlace({ place, setPlace, setPage }) {
             <GoArrowLeft size={28} color={theme.Sub1} />
           </Btn>
           <Title>플레이스 관리</Title>
-          <Btn onClick={() => {}}>
+          <Btn onClick={() => setPage("main")}>
             <IoCheckmark size={28} color={theme.Sub1} />
           </Btn>
         </Header>
@@ -72,6 +77,7 @@ export default function AddPlace({ place, setPlace, setPage }) {
         <DetailBox register={register} name="위치" />
         <DetailBox register={register} name="인스타그램" />
         <DetailBox register={register} name="지도 링크" />
+        <PlaceImgBox register={register} name="이미지" />
       </form>
     </div>
   );
