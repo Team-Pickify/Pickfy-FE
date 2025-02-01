@@ -26,8 +26,8 @@ const Box = styled.div`
 const Dropdown = styled.div`
   position: relative;
   cursor: pointer;
-  width: 15vh;
-
+  //width: 15vh;
+  width: auto;
   padding: 1vh 1.5vh;
 
   display: flex;

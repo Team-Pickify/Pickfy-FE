@@ -4,6 +4,8 @@ import { IoShareSocialOutline } from "react-icons/io5";
 import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ShareModal from "./modal/shareUrl";
+import CheckMsg from "./toast/CheckMsg";
+import Toast from "./toast/Toast";
 
 const InfoWrapper = styled.div`
   display: flex;
@@ -89,8 +91,24 @@ function Info({
   const ModalClose = () => {
     setIsModalOpen(false);
   };
+  const [toastVisible, setToastVisible] = useState(false);
+  const [message, setMessage] = useState("");
+  const handleToast = (msg) => {
+    setMessage(<CheckMsg msg={msg} />);
+    setToastVisible(true);
+  };
+  const center = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  };
   return (
     <>
+      <div style={center}>
+        {toastVisible && (
+          <Toast message={message} setToastVisible={setToastVisible} />
+        )}
+      </div>
       <InfoWrapper>
         <InfoLine>
           <TextContainer>
@@ -148,7 +166,13 @@ function Info({
           </AdditionContainer>
         </InfoLine>
       </InfoWrapper>
-      {isModalOpen && <ShareModal isOpen={ModalOpen} onClose={ModalClose} />}
+      {isModalOpen && (
+        <ShareModal
+          isOpen={ModalOpen}
+          onClose={ModalClose}
+          onToast={handleToast}
+        />
+      )}
     </>
   );
 }

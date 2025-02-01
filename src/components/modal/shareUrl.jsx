@@ -40,6 +40,7 @@ const UrlContainer = styled.div`
 const ShowUrl = styled.div`
   display: flex;
   align-items: center;
+  width: 11.87rem;
 `;
 const CopyBtn = styled.div`
   display: flex;
@@ -70,14 +71,22 @@ const KakaoShareBtn = styled.div`
   font-weight: 600;
 `;
 
-export default function ShareModal({ isOpen, onClose }) {
+export default function ShareModal({ isOpen, onClose, onToast }) {
+  const url = window.location.href; //현재 url 가져오기
+
   if (!isOpen) return null;
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(url).then(() => {
+      onClose();
+      onToast("클립보드에 복사되었습니다");
+    });
+  };
   return (
     <Overlay onClick={onClose}>
       <Container onClick={(e) => e.stopPropagation()}>
         <UrlContainer>
-          <ShowUrl>url-----</ShowUrl>
-          <CopyBtn>복사</CopyBtn>
+          <ShowUrl>{url}</ShowUrl>
+          <CopyBtn onClick={copyToClipboard}>복사</CopyBtn>
         </UrlContainer>
         <KakaoShareBtn>
           <img src={kakaoLogo} alt="카카오로고" />
