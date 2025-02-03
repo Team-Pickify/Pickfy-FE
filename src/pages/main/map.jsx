@@ -80,6 +80,8 @@ function Mapview() {
 
   const [placearray,setplacearray] = useState([]);
 
+  const [magazinearray,setmagazinearray] = useState([])
+
   const [categorybtn, setcategorybtn] = useState([0,1,0,0,0,0]);
   const [magazinebtn, setmagazinebtn] = useState([0,1,0,0,0,0]);
 
@@ -103,24 +105,17 @@ function Mapview() {
     scrollRef2.current.scrollLeft += (e.deltaY*0.3); // 수직 스크롤(deltaY)을 가로 스크롤로 변환
   };
 
-  const getdata = async (keyword) =>{
-    const datas = await axios.get('/categories')
-    .then((res)=>{
-      console.log(res)
-    })
-    
-  }
   
-  const btnClick = ()=>{
-    let newarr = []
-    for(let i=1;i<=5;i++){
-      if(category[i] === 1){
-        
-      }
-    }
-    for(let i=1;i<=5;i++){
-      
-    }
+  
+  const getData = async()=>{
+    const datas = await axios.get('http://localhost:8000/')
+    .then((res)=>{
+      return res.data
+    })
+    .catch((error)=>{
+      console.error(error)
+    })
+    Marking(datas)
   }
 
   const handleClick = (id) => {
@@ -135,7 +130,7 @@ function Mapview() {
      setcategorybtn(newarr)
      console.log(newarr)
      console.log(magazinebtn)
-     btnClick();
+     getData();
   };
 
   const handleClick2= (id) => {
@@ -150,8 +145,28 @@ function Mapview() {
      setmagazinebtn(newarr)
      console.log(categorybtn)
      console.log(newarr)
-     btnClick();
+     getData();
   };
+
+  const getmaga = async()=>{
+
+    const tokenn = import.meta.env.VITE_TOKKEN
+    const magazinesurl = import.meta.env.VITE_MAGAZINES_URL
+
+    await axios.get(magazinesurl,
+  {
+    headers :{
+      'Authorization' : `Bearer ${tokenn}`,
+      'Accept': '*/*',
+      'Content-Type': 'application/json'
+    }
+  })
+  .then((res)=>{
+    console.log(res)
+  })
+  .catch((err)=>{console.error(err)})
+
+  }
 
 
 
@@ -160,12 +175,19 @@ function Mapview() {
       console.error("Kakao Maps API is not loaded!");
       return;
     }
+
+    getmaga();
+
+
+
     const container = mapRef.current;
     // Kakao Maps API 로드 후 실행
     window.kakao.maps.load(() => {
       mapPermission();
       mapCurLocation_toInit(container);
     });
+
+    
 
   }, []);
 
@@ -217,121 +239,30 @@ const InitializeMap =(latitude,longitude , container)=>{
 }
 
 
-
-const mapCurLocation_toMark = (newarr)=>{
-
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const { latitude, longitude } = position.coords; // 사용자의 현재 위치 좌표
-      console.log(latitude,longitude)
-
-      console.log("Accuracy:", position.coords.accuracy, "meters");
-      Marking(latitude, longitude,newarr);
-    },
-    (error) => {
-      console.error("Error getting user location:", error);
-      // 위치를 가져오지 못하면 기본 좌표(제주시)로 설정
-      Marking(33.450701, 126.570667,newarr);
-    },
-    {enableHighAccuracy: true}
-  );
-
-}
-
-
-const Marking = (latitude,longitude,newarr)=>{
+const Marking = (datas)=>{
 
     const places = new kakao.maps.services.Places();
-    console.log(newarr)
-    setBtnClick(newarr)
-    let arrdetail = [0,0,0,0,0,0,0,0,0]
-    for(var i = 1;i<=5;i++){
-      if(newarr[i] === 1){
-        if(i<=2){
-          arrdetail[i] = 1;
-        }
-        else if(i === 3){
-          arrdetail[3] = 1;
-          arrdetail[4] = 1;
-        }
-        else if(i === 4){
-          arrdetail[5] = 1;
-          arrdetail[6] = 1;
-        }
-        else{
-          arrdetail[7] = 1;
-          arrdetail[8] = 1;
-        }
-      }
-    }
 
-    let arr = [];
-    const curlocation = new kakao.maps.LatLng(latitude, longitude)
 
-    const promises = arrdetail.map((v, i) => {
-      if (v === 1) {
-        return new Promise((resolve, reject) => {
-          places.keywordSearch(`${category[i]}`, (result, status) => {
-            if (status === kakao.maps.services.Status.OK) {
-              resolve(result);
-            } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-              console.log("검색 결과가 없습니다.");
-              resolve([]);
-            } else {
-              console.log("검색 중 오류가 발생했습니다.");
-              reject(new Error("검색 오류 발생"));
-            }
-          },
-          {
-            location: curlocation, // 중심 좌표 설정
-            radius: 2000, // 검색 반경 (단위: 미터)
-          }
-        );
-        });
-      }
-      return Promise.resolve([]); // `v !== 1`일 경우 빈 배열 반환
-    });
-  
-    Promise.all(promises)
-      .then((results) => {
-        const options = {
-          center: new window.kakao.maps.LatLng(latitude, longitude),
-          level: 4,
-        };
-        const newmap = new window.kakao.maps.Map(mapRef.current, options);
-        const imageSize = new kakao.maps.Size(50, 55); 
+    const imageSize = new kakao.maps.Size(50, 55); 
         const imageSize2 = new kakao.maps.Size(40, 45); 
        const imageSrc = redMarker;
        const imageSrc2 = blackMarker;
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
         var markerImage2 = new kakao.maps.MarkerImage(imageSrc2, imageSize2); 
-        arr = results.flat(); // 결과 평탄화
-        console.log(arr);
-        for(var i = 0;i<arr.length;i++){
+
+        const markers = datas.map((v)=>{
           const marker = new kakao.maps.Marker({
-            map: newmap,
-            position: new kakao.maps.LatLng(arr[i].y, arr[i].x),
+            map: curmap,
+            position: new kakao.maps.LatLng(v.y,v.x),
             image: markerImage
         });
         kakao.maps.event.addListener(marker, "click", () => {
           handleBottomSheet();
         });
-        }
-        const curmarker = new kakao.maps.Marker({
-          map: newmap,
-          position: new kakao.maps.LatLng(latitude, longitude),
-          image: markerImage2
-      });
-        setplacearray(arr)
-      })
-      .catch((error) => {
-        console.error("에러 발생:", error);
-      });
+        })
 
   }
-
-
-
 
   const handleBottomSheet = () => {
     const sheet = bottomSheetRef.current
