@@ -13,6 +13,8 @@ const Header = styled.div`
   border-bottom: 1px solid #e6e6e6;
 
   position: sticky;
+  top: 0;
+  z-index: 9999;
 `;
 
 const Logo = styled.div`
