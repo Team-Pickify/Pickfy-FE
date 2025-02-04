@@ -6,16 +6,45 @@ import mapPermission from '../../hooks/mapPermission';
 import CategoryBtn from '../../components/categoryBtn'
 import redMarker from "../../assets/redmarker.svg"
 import blackMarker from "../../assets/black_marker.svg"
+<<<<<<< Updated upstream:src/pages/map/map.jsx
+=======
+import { theme } from "../../styles/themes";
+import axios from 'axios';
+import { TokenReq as getApi } from '../../apis/axiosInstance';
+import Info from '../../components/Info';
+import InfoSmall from '../../components/InfoSmall';
+>>>>>>> Stashed changes:src/pages/main/map.jsx
 
+const kk = [
+  {
+    id : 1,
+    name:"컴투레스트",
+    category:"카페/베이커리",
+    shortDescription:"에스프레소 어쩌고",
+    images:["w","w"]
+           
+  }
+]
 
 const category = ["","전체","음식점","카페","베이커리","바","펍","도서","문구"
 ];
 
+<<<<<<< Updated upstream:src/pages/map/map.jsx
+=======
+
+>>>>>>> Stashed changes:src/pages/main/map.jsx
 function Mapview() {
 
   const [placearray,setplacearray] = useState([]);
 
+<<<<<<< Updated upstream:src/pages/map/map.jsx
   const [btnClick, setBtnClick] = useState([0,0,0,0,0,0]);
+=======
+  const [magazinearray,setmagazinearray] = useState([])
+
+  const [categorybtn, setcategorybtn] = useState([1,0,0,0,0]);
+  const [magazinebtn, setmagazinebtn] = useState([]);
+>>>>>>> Stashed changes:src/pages/main/map.jsx
 
   const [isloading ,setloading] = useState(false);
 
@@ -27,6 +56,54 @@ function Mapview() {
 
   const bottomSheetRef = useRef(null);
 
+  /////////////////////////////////
+
+  const [startY, setStartY] = useState(0);
+  const [translateY, setTranslateY] = useState(100); // 기본적으로 숨김
+  const [bottomSheetState, setBottomSheetState] = useState("hidden"); // "hidden" | "half" | "full"
+  const [isDragging, setIsDragging] = useState(false);
+
+  // 📌 터치 & 마우스 이벤트 통합 함수
+  const getClientY = (e) => (e.touches ? e.touches[0].clientY : e.clientY);
+
+  // 📌 터치 & 마우스 드래그 시작
+  const handleStart = (e) => {
+    setStartY(getClientY(e));
+    setIsDragging(true);
+  };
+
+  // 📌 터치 & 마우스 드래그 종료 (위/아래 스와이프 감지)
+  const handleEnd = (e) => {
+    if (!isDragging) return;
+    setIsDragging(false);
+
+    const endY = getClientY(e);
+    const deltaY = endY - startY;
+
+    // 📌 **위로 스와이프하면 100%로 이동**
+    if (deltaY < -50) {
+      setTranslateY(0);
+      setBottomSheetState("full");
+    }
+    // 📌 **아래로 스와이프하면 50% 또는 숨김**
+    else if (deltaY > 50) {
+      if (bottomSheetState === "full") {
+        setTranslateY(50); // 100% → 50%로 내려감
+        setBottomSheetState("half");
+      } else {
+        setTranslateY(100); // 50% → 숨김
+        setBottomSheetState("hidden");
+      }
+    }
+  };
+
+  // 📌 버튼 클릭하면 바텀시트 50%까지 올림
+  const handleOpenBottomSheet = () => {
+    setTranslateY(50);
+    setBottomSheetState("half");
+  };
+  ////////////////////////////
+
 
   const handleWheel = (e) => {
     scrollRef.current.scrollLeft += (e.deltaY*0.3); // 수직 스크롤(deltaY)을 가로 스크롤로 변환
@@ -37,6 +114,59 @@ function Mapview() {
     scrollRef2.current.scrollLeft += (e.deltaY*0.3); // 수직 스크롤(deltaY)을 가로 스크롤로 변환
   };
 
+<<<<<<< Updated upstream:src/pages/map/map.jsx
+=======
+  
+
+  const handleClick = (id) => {
+    const newarr = categorybtn.map((v,i)=>{
+      if(i == id){
+        return (v ? 0 : 1)
+      }
+      else{
+        return v
+      }
+     })
+     setcategorybtn(newarr)
+     console.log(newarr)
+     console.log(magazinebtn)
+     getPlaceData(newarr,magazinebtn)
+  };
+
+  const handleClick2= (id) => {
+    const newarr = magazinebtn.map((v,i)=>{
+      if(i == id){
+        return (v ? 0 : 1)
+      }
+      else{
+        return v
+      }
+     })
+     setmagazinebtn(newarr)
+     console.log(categorybtn)
+     console.log(newarr)
+     getPlaceData(categorybtn,newarr)
+  };
+
+  const getmagazinelist = async()=>{
+    await getApi.get("/magazines")
+    .then((res)=>{
+      console.log(res.data.result)
+      const newarr = res.data.result.map(()=>{return 0})
+      console.log(newarr)
+      setmagazinebtn(newarr)
+      setmagazinearray(res.data.result)
+    })
+    .catch((error)=>{console.error(error)})
+    
+
+  }
+
+  const getPlaceData = async(cate,maga)=>{
+    
+  }
+
+>>>>>>> Stashed changes:src/pages/main/map.jsx
 
 
   useEffect(() => {
@@ -44,6 +174,14 @@ function Mapview() {
       console.error("Kakao Maps API is not loaded!");
       return;
     }
+<<<<<<< Updated upstream:src/pages/map/map.jsx
+=======
+
+    getmagazinelist();
+
+
+
+>>>>>>> Stashed changes:src/pages/main/map.jsx
     const container = mapRef.current;
     // Kakao Maps API 로드 후 실행
     window.kakao.maps.load(() => {
@@ -198,7 +336,7 @@ const Marking = (latitude,longitude,newarr)=>{
             image: markerImage
         });
         kakao.maps.event.addListener(marker, "click", () => {
-          handleBottomSheet();
+          handleOpenBottomSheet();
         });
         }
         const curmarker = new kakao.maps.Marker({
@@ -214,6 +352,7 @@ const Marking = (latitude,longitude,newarr)=>{
 
   }
 
+<<<<<<< Updated upstream:src/pages/map/map.jsx
 
 
   const handleBottomSheet = () => {
@@ -224,22 +363,78 @@ const Marking = (latitude,longitude,newarr)=>{
       sheet.classList.add("visible");
     }
   };
+=======
+  
+>>>>>>> Stashed changes:src/pages/main/map.jsx
 
 
   return (
     <>
      <Mapbox ref = {mapRef}>
+<<<<<<< Updated upstream:src/pages/map/map.jsx
         <CategoryBtn btnClick={btnClick} setBtnClick= {setBtnClick} mapCurLocation_toMark = {mapCurLocation_toMark} container = {mapRef.current}></CategoryBtn>
+=======
+     <Wrapper>
+      {category.map((item,i) => (
+        <Items
+          key={item.id}
+          onClick={()=>{handleClick(i)}}
+          isActive={categorybtn[i] === 1}
+        >
+          {item.name}
+        </Items>
+      ))}
+    </Wrapper>
+>>>>>>> Stashed changes:src/pages/main/map.jsx
       
       <Curdesbutton onClick={handlebutton}>
         <PiCompassRoseDuotone style={{width:"80%",height:"80%"}}/>
       </Curdesbutton>
+<<<<<<< Updated upstream:src/pages/map/map.jsx
       {/* <CCC onClick={()=>{handleBottomSheet()}}>눌러</CCC> */}
        <BottomSheet ref={bottomSheetRef}>
         <div style={{width:"100%",height:"90%",backgroundColor:"white"}}>
 
+=======
+      <Wrapper2>
+      {magazinearray.map((item,i) => (
+        <Items
+          key={item.id}
+          onClick={()=>{handleClick2(i)}}
+          isActive={magazinebtn[i] === 1}
+        >
+          {item.title}
+        </Items>
+      ))}
+    </Wrapper2>
+    <CCC onClick={handleOpenBottomSheet}></CCC>
+       <BottomSheet ref={bottomSheetRef}
+      
+       style={{ transform: `translateY(${translateY}%)` }}
+       onTouchStart={handleStart}
+        onTouchEnd={handleEnd}
+        onMouseDown={handleStart}
+        onMouseUp={handleEnd}
+       > 
+        <BottomSheettop>
+          <div style={{ width: "8%", height: "7%" ,backgroundColor:theme.Sub3,marginTop:"2%" , borderRadius:"5% 5% 5% 5%"}}></div>
+        </BottomSheettop>
+        {bottomSheetState === "full" ? (
+           <div style={{ width: "100%", height: "95%" ,backgroundColor:"black"}}>
+            
+         </div>
+        ) : <div style={{ width: "100%", height: "95%"}}>
+        <div style={{ width: "100%", height: "100%" , marginLeft:"5%"}}>
+         <InfoSmall places={kk}>
+         </InfoSmall>
+>>>>>>> Stashed changes:src/pages/main/map.jsx
         </div>
-       </BottomSheet>
+     </div>}
+       
+       
+        </BottomSheet>
+       
+       
     </Mapbox>
     
     </>
@@ -317,7 +512,7 @@ const CategorieBox = styled.button`
 `;
 
 const CCC = styled.button`
-  background-color: white;
+  background-color: red;
   border: none;
   border-radius: 100%;
   height: 6vh;
@@ -334,66 +529,28 @@ const CCC = styled.button`
 
 const BottomSheet = styled.div`
   position: absolute;
-  background-color: grey;
+  background-color: white;
   border-radius:7% 7% 0 0;
   display:flex;
-  align-items: flex-end;
-  height: 50%;
+  flex-direction:column;
+  height: 100%;
   width: 100%;
   z-index: 100;
   bottom: 0;
   transform: translateY(100%); /* 기본값: 숨김 */
   transition: transform 0.3s ease;
 
-  &.visible {
-    transform: translateY(0); /* 보이게 하기 */
-  }
+  
 `;
 
+const BottomSheettop = styled.div`
+width:100%;
+height:5%;
+display:flex;
+justify-content : center;
+`
 
+// &.visible {
+//   transform: translateY(0); /* 보이게 하기 */
+// }
 
-// const imageSize = new kakao.maps.Size(50, 55); 
-//           const imageSrc = redMarker;
-//           var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
-//           const newMarkers = result.map((v) => {
-//           var iwContent = `<div style="padding:5px;">${v.place_url}</div>`, // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-//           iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
-  
-//           // 인포윈도우를 생성합니다
-//           var infowindow = new kakao.maps.InfoWindow({
-//           content : iwContent,
-//           removable : iwRemoveable
-//             });
-//             const markerPosition = new kakao.maps.LatLng(v.y, v.x); // 마커 위치
-//             const marker = new kakao.maps.Marker({
-//               map: map, // 마커를 표시할 지도
-//               position: markerPosition, // 마커 위치
-//               title: v.place_name, // 마커 제목
-//               image: markerImage, // 마커 이미지
-//             });
-//             kakao.maps.event.addListener(marker, 'click',async function() {
-//               // 마커 위에 인포윈도우를 표시합니다
-              
-//               // infowindow.open(map, marker);  
-              
-//               if (sheet.classList.contains("visible")) {
-//                 sheet.classList.remove("visible");
-//               } 
-//               else {
-//                 sheet.classList.add("visible");
-//               }
-  
-              
-//             });
-    
-//             return marker; // 생성된 마커 반환
-//           });
-//           var curmarkerimage = new kakao.maps.MarkerImage(blackMarker, new kakao.maps.Size(30, 35)); 
-//           const curmarker = new window.kakao.maps.LatLng(latitude,longitude);
-//           const marking = new window.kakao.maps.Marker({
-//               map: map, // 마커를 표시할 지도
-//               position: curmarker, // 마커 위치
-//               title: "내 위치", // 마커 제목
-//               image: curmarkerimage
-//           });
-//           console.log(result);
