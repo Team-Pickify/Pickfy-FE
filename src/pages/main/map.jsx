@@ -7,7 +7,20 @@ import redMarker from "../../assets/redmarker.svg"
 import blackMarker from "../../assets/black_marker.svg"
 import { theme } from "../../styles/themes";
 import axios from 'axios';
+import { TokenReq as getApi } from '../../apis/axiosInstance';
+import Info from '../../components/Info';
+import InfoSmall from '../../components/InfoSmall';
 
+const kk = [
+  {
+    id : 1,
+    name:"컴투레스트",
+    category:"카페/베이커리",
+    shortDescription:"에스프레소 어쩌고",
+    images:["w","w"]
+           
+  }
+]
 
 const Wrapper = styled.div`
   z-index:100;
@@ -65,15 +78,6 @@ const category = [
 ];
 
 
-const magazine = [
-  { id: 1, name: "전체" },
-  { id: 2, name: "데이트립코리아" },
-  { id: 3, name: "뉴뉴" },
-  { id: 4, name: "책플" },
-  { id: 5, name: "빵모아" },
-];
-
-
 function Mapview() {
 
   const [{curlatitude,curlongitude},setcurlocation] = useState({curlatitude:33.450701,curlongitude:126.570667})
@@ -82,8 +86,8 @@ function Mapview() {
 
   const [magazinearray,setmagazinearray] = useState([])
 
-  const [categorybtn, setcategorybtn] = useState([0,1,0,0,0,0]);
-  const [magazinebtn, setmagazinebtn] = useState([0,1,0,0,0,0]);
+  const [categorybtn, setcategorybtn] = useState([1,0,0,0,0]);
+  const [magazinebtn, setmagazinebtn] = useState([]);
 
   const [isloading ,setloading] = useState(false);
 
@@ -94,6 +98,54 @@ function Mapview() {
   const scrollRef = useRef(null);
 
   const bottomSheetRef = useRef(null);
+
+  /////////////////////////////////
+
+  const [startY, setStartY] = useState(0);
+  const [translateY, setTranslateY] = useState(100); // 기본적으로 숨김
+  const [bottomSheetState, setBottomSheetState] = useState("hidden"); // "hidden" | "half" | "full"
+  const [isDragging, setIsDragging] = useState(false);
+
+  // 📌 터치 & 마우스 이벤트 통합 함수
+  const getClientY = (e) => (e.touches ? e.touches[0].clientY : e.clientY);
+
+  // 📌 터치 & 마우스 드래그 시작
+  const handleStart = (e) => {
+    setStartY(getClientY(e));
+    setIsDragging(true);
+  };
+
+  // 📌 터치 & 마우스 드래그 종료 (위/아래 스와이프 감지)
+  const handleEnd = (e) => {
+    if (!isDragging) return;
+    setIsDragging(false);
+
+    const endY = getClientY(e);
+    const deltaY = endY - startY;
+
+    // 📌 **위로 스와이프하면 100%로 이동**
+    if (deltaY < -50) {
+      setTranslateY(0);
+      setBottomSheetState("full");
+    }
+    // 📌 **아래로 스와이프하면 50% 또는 숨김**
+    else if (deltaY > 50) {
+      if (bottomSheetState === "full") {
+        setTranslateY(50); // 100% → 50%로 내려감
+        setBottomSheetState("half");
+      } else {
+        setTranslateY(100); // 50% → 숨김
+        setBottomSheetState("hidden");
+      }
+    }
+  };
+
+  // 📌 버튼 클릭하면 바텀시트 50%까지 올림
+  const handleOpenBottomSheet = () => {
+    setTranslateY(50);
+    setBottomSheetState("half");
+  };
+  ////////////////////////////
 
 
   const handleWheel = (e) => {
@@ -106,17 +158,6 @@ function Mapview() {
   };
 
   
-  
-  const getData = async()=>{
-    const datas = await axios.get('http://localhost:8000/')
-    .then((res)=>{
-      return res.data
-    })
-    .catch((error)=>{
-      console.error(error)
-    })
-    Marking(datas)
-  }
 
   const handleClick = (id) => {
     const newarr = categorybtn.map((v,i)=>{
@@ -130,7 +171,7 @@ function Mapview() {
      setcategorybtn(newarr)
      console.log(newarr)
      console.log(magazinebtn)
-     getData();
+     getPlaceData(newarr,magazinebtn)
   };
 
   const handleClick2= (id) => {
@@ -145,27 +186,25 @@ function Mapview() {
      setmagazinebtn(newarr)
      console.log(categorybtn)
      console.log(newarr)
-     getData();
+     getPlaceData(categorybtn,newarr)
   };
 
-  const getmaga = async()=>{
+  const getmagazinelist = async()=>{
+    await getApi.get("/magazines")
+    .then((res)=>{
+      console.log(res.data.result)
+      const newarr = res.data.result.map(()=>{return 0})
+      console.log(newarr)
+      setmagazinebtn(newarr)
+      setmagazinearray(res.data.result)
+    })
+    .catch((error)=>{console.error(error)})
+    
 
-    const tokenn = import.meta.env.VITE_TOKKEN
-    const magazinesurl = import.meta.env.VITE_MAGAZINES_URL
+  }
 
-    await axios.get(magazinesurl,
-  {
-    headers :{
-      'Authorization' : `Bearer ${tokenn}`,
-      'Accept': '*/*',
-      'Content-Type': 'application/json'
-    }
-  })
-  .then((res)=>{
-    console.log(res)
-  })
-  .catch((err)=>{console.error(err)})
-
+  const getPlaceData = async(cate,maga)=>{
+    
   }
 
 
@@ -176,7 +215,7 @@ function Mapview() {
       return;
     }
 
-    getmaga();
+    getmagazinelist();
 
 
 
@@ -258,31 +297,24 @@ const Marking = (datas)=>{
             image: markerImage
         });
         kakao.maps.event.addListener(marker, "click", () => {
-          handleBottomSheet();
+          handleOpenBottomSheet();
         });
         })
 
   }
 
-  const handleBottomSheet = () => {
-    const sheet = bottomSheetRef.current
-    if (sheet.classList.contains("visible")) {
-      sheet.classList.remove("visible");
-    } else {
-      sheet.classList.add("visible");
-    }
-  };
+  
 
 
   return (
     <>
      <Mapbox ref = {mapRef}>
      <Wrapper>
-      {category.map((item) => (
+      {category.map((item,i) => (
         <Items
           key={item.id}
-          onClick={()=>{handleClick(item.id)}}
-          isActive={categorybtn[item.id] === 1}
+          onClick={()=>{handleClick(i)}}
+          isActive={categorybtn[i] === 1}
         >
           {item.name}
         </Items>
@@ -293,21 +325,43 @@ const Marking = (datas)=>{
         <PiCompassRoseDuotone style={{width:"80%",height:"80%"}}/>
       </Curdesbutton>
       <Wrapper2>
-      {magazine.map((item) => (
+      {magazinearray.map((item,i) => (
         <Items
           key={item.id}
-          onClick={()=>{handleClick2(item.id)}}
-          isActive={magazinebtn[item.id] === 1}
+          onClick={()=>{handleClick2(i)}}
+          isActive={magazinebtn[i] === 1}
         >
-          {item.name}
+          {item.title}
         </Items>
       ))}
     </Wrapper2>
-       <BottomSheet ref={bottomSheetRef}>
-        <div style={{width:"100%",height:"90%",backgroundColor:"white"}}>
-
+    <CCC onClick={handleOpenBottomSheet}></CCC>
+       <BottomSheet ref={bottomSheetRef}
+      
+       style={{ transform: `translateY(${translateY}%)` }}
+       onTouchStart={handleStart}
+        onTouchEnd={handleEnd}
+        onMouseDown={handleStart}
+        onMouseUp={handleEnd}
+       > 
+        <BottomSheettop>
+          <div style={{ width: "8%", height: "7%" ,backgroundColor:theme.Sub3,marginTop:"2%" , borderRadius:"5% 5% 5% 5%"}}></div>
+        </BottomSheettop>
+        {bottomSheetState === "full" ? (
+           <div style={{ width: "100%", height: "95%" ,backgroundColor:"black"}}>
+            
+         </div>
+        ) : <div style={{ width: "100%", height: "95%"}}>
+        <div style={{ width: "100%", height: "100%" , marginLeft:"5%"}}>
+         <InfoSmall places={kk}>
+         </InfoSmall>
         </div>
-       </BottomSheet>
+     </div>}
+       
+       
+        </BottomSheet>
+       
+       
     </Mapbox>
     
     </>
@@ -385,7 +439,7 @@ const CategorieBox = styled.button`
 `;
 
 const CCC = styled.button`
-  background-color: white;
+  background-color: red;
   border: none;
   border-radius: 100%;
   height: 6vh;
@@ -402,66 +456,28 @@ const CCC = styled.button`
 
 const BottomSheet = styled.div`
   position: absolute;
-  background-color: grey;
+  background-color: white;
   border-radius:7% 7% 0 0;
   display:flex;
-  align-items: flex-end;
-  height: 50%;
+  flex-direction:column;
+  height: 100%;
   width: 100%;
   z-index: 100;
   bottom: 0;
   transform: translateY(100%); /* 기본값: 숨김 */
   transition: transform 0.3s ease;
 
-  &.visible {
-    transform: translateY(0); /* 보이게 하기 */
-  }
+  
 `;
 
+const BottomSheettop = styled.div`
+width:100%;
+height:5%;
+display:flex;
+justify-content : center;
+`
 
+// &.visible {
+//   transform: translateY(0); /* 보이게 하기 */
+// }
 
-// const imageSize = new kakao.maps.Size(50, 55); 
-//           const imageSrc = redMarker;
-//           var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
-//           const newMarkers = result.map((v) => {
-//           var iwContent = `<div style="padding:5px;">${v.place_url}</div>`, // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-//           iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
-  
-//           // 인포윈도우를 생성합니다
-//           var infowindow = new kakao.maps.InfoWindow({
-//           content : iwContent,
-//           removable : iwRemoveable
-//             });
-//             const markerPosition = new kakao.maps.LatLng(v.y, v.x); // 마커 위치
-//             const marker = new kakao.maps.Marker({
-//               map: map, // 마커를 표시할 지도
-//               position: markerPosition, // 마커 위치
-//               title: v.place_name, // 마커 제목
-//               image: markerImage, // 마커 이미지
-//             });
-//             kakao.maps.event.addListener(marker, 'click',async function() {
-//               // 마커 위에 인포윈도우를 표시합니다
-              
-//               // infowindow.open(map, marker);  
-              
-//               if (sheet.classList.contains("visible")) {
-//                 sheet.classList.remove("visible");
-//               } 
-//               else {
-//                 sheet.classList.add("visible");
-//               }
-  
-              
-//             });
-    
-//             return marker; // 생성된 마커 반환
-//           });
-//           var curmarkerimage = new kakao.maps.MarkerImage(blackMarker, new kakao.maps.Size(30, 35)); 
-//           const curmarker = new window.kakao.maps.LatLng(latitude,longitude);
-//           const marking = new window.kakao.maps.Marker({
-//               map: map, // 마커를 표시할 지도
-//               position: curmarker, // 마커 위치
-//               title: "내 위치", // 마커 제목
-//               image: curmarkerimage
-//           });
-//           console.log(result);
