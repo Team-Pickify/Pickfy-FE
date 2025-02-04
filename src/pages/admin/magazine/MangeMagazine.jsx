@@ -8,6 +8,8 @@ import Linkbox from "../../../components/Linkbox";
 import AddMagazine from "./AddMagazine";
 import FixMagazine from "./FixMagazine";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { TokenReq } from "../../../apis/axiosInstance";
 
 const Header = styled.div`
   display: flex;
@@ -33,10 +35,18 @@ const Btn = styled.div`
 `;
 
 export default function MangeMagazine() {
-  const [list, setList] = useState(["매거진A", "매거진B"]);
+  // const baseUrl = import.meta.env.VITE_BASE_URL;
+
+  const [list, setList] = useState([]);
   const [page, setPage] = useState("main");
   const [selectedBrand, setSelectedBrand] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    TokenReq.get("/magazines")
+      .then((res) => res.data.result)
+      .then((data) => console.log(data));
+  }, []);
 
   const HandleLeftBtn = () => {
     navigate(-1);
