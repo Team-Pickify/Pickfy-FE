@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import { theme } from "../../styles/themes";
 import { useState } from "react";
-import { useEffect } from "react";
-import { AddressSearch, TransCoords } from "../../hooks/useMapInfo";
+import { AddressSearch } from "../../hooks/useMapInfo";
 
 const Container = styled.div`
   display: flex;
@@ -45,16 +44,6 @@ export default function AddressBox({ name, regId, register }) {
       setAddress(selectedAddress);
     });
   };
-
-  // useEffect(() => {
-  //   const getCoords = async () => {
-  //     if (address) {
-  //       const res = await TransCoords(address);
-  //       console.log("result:", res);
-  //     }
-  //   };
-  //   getCoords();
-  // }, [address]);
 
   return (
     <Container>
