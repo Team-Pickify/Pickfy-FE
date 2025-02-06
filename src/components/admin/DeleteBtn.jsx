@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import { theme } from "../../styles/themes";
 import { FaXmark } from "react-icons/fa6";
+import { TokenReq } from "../../apis/axiosInstance";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  background-color: white;
 `;
 
 const Box = styled.div`
@@ -33,12 +35,25 @@ const Line = styled.div`
   background-color: ${theme.Sub3};
 `;
 
-export default function DeleteBtn() {
+export default function DeleteBtn({ id, setPage, kind }) {
+  const handleDel = async (id) => {
+    try {
+      const url =
+        kind === "magazine" ? `/admin/magazines/${id}` : `/places/admin/${id}`;
+      console.log(url);
+
+      await TokenReq.delete(url);
+      setPage("main");
+    } catch (error) {
+      console.log("매거진 삭제 오류:", error);
+    }
+  };
+
   return (
     <Container>
       <Line />
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Box>
+        <Box onClick={() => handleDel(id)}>
           <div>삭제하기</div>
           <FaXmark color={theme.Sub3} size={12} />
         </Box>
