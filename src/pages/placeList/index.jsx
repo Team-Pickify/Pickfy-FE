@@ -5,9 +5,10 @@ import CategoryBtn from "../../components/categoryBtn";
 import Carousel from "../../components/carousel/Carousel";
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { theme } from "../../styles/themes";
 import DropdownOptions from "../../components/DropdownOptions";
+import axios from "axios";
 
 const Wrapper = styled.div`
   height: auto;
@@ -52,36 +53,39 @@ const DropdownWrapper = styled.div`
 `;
 
 function MyPlaceList() {
-  const places = [
-    {
-      id: 1,
-      name: "플레이스명",
-      category: "카테고리명",
-      short_description: "한줄소개",
-      instagram_link: "https://www.instagram.com",
-      naverplace_link: "https://www.naver.com",
-      images: [
-        { id: 1, url: cafe1 },
-        { id: 2, url: cafe1 },
-        { id: 3, url: cafe1 },
-        { id: 4, url: cafe1 },
-      ],
-    },
-    {
-      id: 2,
-      name: "플레이스명",
-      category: "카테고리명",
-      short_description: "한줄소개",
-      instagram_link: "https://www.instagram.com",
-      naverplace_link: "https://www.naver.com",
-      images: [
-        { id: 1, url: cafe1 },
-        { id: 2, url: cafe1 },
-        { id: 3, url: cafe1 },
-        { id: 4, url: cafe1 },
-      ],
-    },
-  ];
+  // const places = [
+  //   {
+  //     id: 1,
+  //     name: "플레이스명",
+  //     category: "카테고리명",
+  //     short_description: "한줄소개",
+  //     instagram_link: "https://www.instagram.com",
+  //     naverplace_link: "https://www.naver.com",
+  //     images: [
+  //       { id: 1, url: cafe1 },
+  //       { id: 2, url: cafe1 },
+  //       { id: 3, url: cafe1 },
+  //       { id: 4, url: cafe1 },
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "플레이스명",
+  //     category: "카테고리명",
+  //     short_description: "한줄소개",
+  //     instagram_link: "https://www.instagram.com",
+  //     naverplace_link: "https://www.naver.com",
+  //     images: [
+  //       { id: 1, url: cafe1 },
+  //       { id: 2, url: cafe1 },
+  //       { id: 3, url: cafe1 },
+  //       { id: 4, url: cafe1 },
+  //     ],
+  //   },
+  // ];
+
+  const [places, setPlaces] = useState([]);
+
   const categoryoptions = ["전체", "매거진A", "매거진B", "매거진C", "매거진D"];
   const sortoptions = ["최신순", "좋아요순"];
 
@@ -90,6 +94,36 @@ function MyPlaceList() {
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
+  useEffect(() => {
+    const userId = 2;
+    const fetchPlaces = async () => {
+      try {
+        const response = await axios.get("/places/", {
+          params: { userId },
+        });
+        if (response.data.isSuccess) {
+          const places = response.data.result.map((place) => ({
+            id: place.placeId,
+            name: place.name,
+            category: place.categoryName,
+            short_description: place.shortDescripton,
+            nstagram_link: place.instagramLink,
+            naverplace_link: place.naverLink,
+            images: place.placeImageUrl.map((url, index) => ({
+              id: index,
+              url,
+            })),
+          }));
+          setPlaces(places);
+        } else {
+          console.log(response.data.message);
+        }
+      } catch (error) {
+        console.log("마이플레이스 리스트 api 연동 실패: ", error);
+      }
+    };
+    fetchPlaces();
+  }, []);
   return (
     <Wrapper>
       <CarouselWrapper>
