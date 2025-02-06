@@ -8,12 +8,8 @@ import Setting from "../pages/setting";
 import Admin from "../pages/admin/";
 
 import MangeMagazine from "../pages/admin/magazine/MangeMagazine";
-import AddMagazine from "../pages/admin/magazine/AddMagazine";
-import FixMagazine from "../pages/admin/magazine/FixMagazine";
 
 import ManagePlace from "../pages/admin/place/ManagePlace";
-import AddPlace from "../pages/admin/place/AddPlace";
-import FixPlace from "../pages/admin/place/FixPlace";
 
 const routes = [
   // 지도(메인)
@@ -56,30 +52,10 @@ const routes = [
     path: "/admin/magazine-management",
     element: <MangeMagazine />,
   },
-  // 관리자 - 매거진 추가
-  {
-    path: "/admin/magazine-management/add",
-    element: <AddMagazine />,
-  },
-  // 관리자 - 매거진 수정
-  {
-    path: "/admin/magazine-management/fix",
-    element: <FixMagazine />,
-  },
   // 관리자 - 플레이스 관리
   {
     path: "/admin/place-management",
     element: <ManagePlace />,
-  },
-  // 관리자 - 플레이스 추가
-  {
-    path: "/admin/magazine-management/add",
-    element: <AddPlace />,
-  },
-  // 관리자 - 플레이스 수정
-  {
-    path: "/admin/magazine-management/fix",
-    element: <FixPlace />,
   },
 ];
 

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { GoArrowLeft } from "react-icons/go";
 import { GoPlus } from "react-icons/go";
@@ -9,6 +9,7 @@ import { theme } from "../../../styles/themes";
 import AddPlace from "./AddPlace";
 import FixPlace from "./FixPlace";
 import PlaceBox from "../../../components/admin/PlaceBox";
+import { TokenReq } from "../../../apis/axiosInstance";
 
 const Header = styled.div`
   display: flex;
@@ -34,17 +35,22 @@ const Btn = styled.div`
 `;
 
 export default function ManagePlace() {
-  const [place, setPlace] = useState([
-    { name: "플레이스명A", addr: "서울특별시 00구 00로 00번길 00" },
-    { name: "플레이스명B", addr: "서울특별시 00구 00로 00번길 01" },
-  ]);
+  const [place, setPlace] = useState([]);
   const [page, setPage] = useState("main");
-  const [selectedPlace, setSelectedPlace] = useState({ name: "", addr: "" });
+  const [selectedPlace, setSelectedPlace] = useState();
   const navigate = useNavigate();
   const handleNav = (address) => navigate(address);
 
-  const HandlePlace = (idx) => {
-    setSelectedPlace(place[idx]);
+  useEffect(() => {
+    TokenReq.get("/places/admin/")
+      .then((res) => res.data.result)
+      .then((data) => {
+        setPlace(data);
+      });
+  }, [page, setPage]);
+
+  const HandlePlace = (placeId) => {
+    setSelectedPlace(placeId);
     setPage("fix");
   };
 
@@ -61,18 +67,21 @@ export default function ManagePlace() {
               <GoPlus size={28} color={theme.Sub1} />
             </Btn>
           </Header>
-          {place.map((v, idx) => {
+          {place.map((v) => {
             return (
-              <div key={idx} onClick={() => HandlePlace(idx)}>
-                <PlaceBox name={v.name} addr={v.addr} />
+              <div key={v.placeId} onClick={() => HandlePlace(v.placeId)}>
+                <PlaceBox name={v.name} addr={v.shortDescription} />
               </div>
             );
           })}
         </div>
       ) : page === "add" ? (
-        <AddPlace place={place} setPlace={setPlace} setPage={setPage} />
+        <AddPlace setPage={setPage} />
       ) : (
-        <FixPlace place={place} setPlace={setPlace} setPage={setPage} />
+        <FixPlace
+          selectedPlace={place.find((v) => v.placeId === selectedPlace)}
+          setPage={setPage}
+        />
       )}
     </div>
   );
