@@ -9,7 +9,7 @@ import DropdownBox from "../../../components/admin/DropdownBox";
 import PlaceImgBox from "../../../components/admin/PlaceImgBox";
 import { useState } from "react";
 import { TokenReq } from "../../../apis/axiosInstance";
-import AddressBox from "../../../components/admin/\bAddressBox";
+import AddressBox from "../../../components/admin/AddressBox";
 import { TransCoords } from "../../../hooks/useMapInfo";
 
 const Header = styled.div`

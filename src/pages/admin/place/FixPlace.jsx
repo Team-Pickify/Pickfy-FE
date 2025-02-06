@@ -6,7 +6,7 @@ import DetailBox from "../../../components/admin/DetailBox";
 import DropdownBox from "../../../components/admin/DropdownBox";
 import PlaceImgBox from "../../../components/admin/PlaceImgBox";
 import DeleteBtn from "../../../components/admin/DeleteBtn";
-import AddressBox from "../../../components/admin/\bAddressBox";
+import AddressBox from "../../../components/admin/AddressBox";
 
 import { theme } from "../../../styles/themes";
 import { GoArrowLeft } from "react-icons/go";
