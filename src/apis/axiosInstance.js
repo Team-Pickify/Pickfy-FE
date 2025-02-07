@@ -15,7 +15,7 @@ const TokenReq = axios.create({
 // 요청 인터셉터에서 쿠키에서 토큰을 가져와 Authorization 헤더에 추가
 TokenReq.interceptors.request.use(
   (config) => {
-    const refreshToken = cookies("refreshToken"); // 쿠키에서 리프레시 토큰 가져오기
+    const refreshToken = cookies.get("refreshToken"); // 쿠키에서 리프레시 토큰 가져오기
 
     if (refreshToken) {
       config.headers.Authorization = `Bearer ${refreshToken}`; // 리프레시 토큰을 Authorization 헤더에 추가
