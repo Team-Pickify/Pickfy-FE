@@ -34,7 +34,7 @@ function InfoSmall({ places }) {
             naverLink={place.naverplace_link}
           />
           <Imgcontainer>
-            {place.placeImageUrl.map((image) => (
+            {place.placeImageUrl?.map((image) => (
               <Img
                 key={image.id}
                 src={image.url}

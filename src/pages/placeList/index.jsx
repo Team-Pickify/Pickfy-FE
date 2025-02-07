@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { theme } from "../../styles/themes";
 import DropdownOptions from "../../components/DropdownOptions";
 import axios from "axios";
+import { TokenReq } from "../../apis/axiosInstance";
 
 const Wrapper = styled.div`
   height: auto;
@@ -96,12 +97,10 @@ function MyPlaceList() {
 
   const fetchPlaces = async () => {
     const userId = 2;
-    const token = import.meta.env.VITE_API_TOKEN;
     try {
-      const response = await axios.get("/places/", {
+      const response = await TokenReq.get("/places/", {
         params: { userId },
         headers: {
-          Authorization: `Bearer ${token}`,
           "Cache-Control": "no-cache",
           Pragma: "no-cache",
         },
