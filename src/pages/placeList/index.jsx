@@ -99,10 +99,10 @@ function MyPlaceList() {
     const token = import.meta.env.VITE_API_TOKEN;
     try {
       const response = await axios.get("/places/", {
-        params: { userId }, // userId가 필요하다면 넣어줘
+        params: { userId },
         headers: {
-          Authorization: `Bearer ${token}`, // token을 헤더에 포함
-          "Cache-Control": "no-cache", // 캐시 무효화
+          Authorization: `Bearer ${token}`,
+          "Cache-Control": "no-cache",
           Pragma: "no-cache",
         },
       });
@@ -118,10 +118,9 @@ function MyPlaceList() {
     }
   };
 
-  // 컴포넌트 마운트 후, API 요청을 보내기 위한 useEffect
   useEffect(() => {
     fetchPlaces();
-  }, []); // 컴포넌트가 처음 렌더링 될 때 한 번만 실행
+  }, []);
 
   return (
     <Wrapper>
