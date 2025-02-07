@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import LoginBtn from "../../components/LoginBtn";
 import InputBox from "../../components/InputBox";
 import WhiteLogo from "../../assets/Logo_White.svg";
 import KakaoLogo from "../../assets/Kakao_Logo.svg";
 import LogoBox from "../../components/LogoBox";
-import {theme} from "../../styles/themes";
+import { theme } from "../../styles/themes";
+import { TokenReq } from "../../apis/axiosInstance";
 
 const Wrapper = styled.div`
   background-color: ${theme.Text};
@@ -73,7 +74,7 @@ const StyledLink = styled(Link)`
 
 const Divider = styled.span`
   color: ${theme.Sub1};
-  margin: 0 0.5rem; 
+  margin: 0 0.5rem;
   font-size: 0.875rem;
 `;
 
@@ -85,13 +86,29 @@ function Login() {
 
   const isButtonEnabled = email.trim() !== "" && password.trim() !== "";
 
+  const navigate = useNavigate();
+  const handleLogin = async () => {
+    if (isButtonEnabled) {
+      try {
+        const response = await TokenReq.post("/auth/login", {
+          principal: email,
+          password,
+        });
+        navigate("/");
+        console.log("응답 헤더:", response.headers);
+      } catch (error) {
+        console.log("로그인 에러: ", error);
+      }
+    }
+  };
   return (
     <Wrapper>
       <Container>
-        <LogoBox 
-          showIcon={false} 
+        <LogoBox
+          showIcon={false}
           logoSrc={WhiteLogo}
-          logoText="내 주변 트렌디한 매거진 플레이스"/>
+          logoText="내 주변 트렌디한 매거진 플레이스"
+        />
         <InputBox
           placeholder="Email"
           value={email}
@@ -102,18 +119,14 @@ function Login() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          isIcon={true} 
+          isIcon={true}
           iconType={isPasswordVisible ? "eye" : "eye-off"}
           onIconClick={() => setPasswordVisible(!isPasswordVisible)}
         />
         <LoginBtn
           text="Login"
           isActive={isButtonEnabled}
-          onClick={() => {
-            if (isButtonEnabled) {
-              setIsActive(!isActive);
-            }
-          }}
+          onClick={handleLogin}
         />
         <DividerContainer>
           <Line />
@@ -133,10 +146,10 @@ function Login() {
           }}
         />
         <LinkCon>
-          <div> 
-           <StyledLink to="/signup">회원가입</StyledLink>
-           <Divider>/</Divider>
-           <StyledLink to="/setting">비밀번호 찾기</StyledLink>
+          <div>
+            <StyledLink to="/signup">회원가입</StyledLink>
+            <Divider>/</Divider>
+            <StyledLink to="/setting">비밀번호 찾기</StyledLink>
           </div>
           <StyledLink to="/adminlogin">관리자 로그인</StyledLink>
         </LinkCon>
@@ -146,4 +159,3 @@ function Login() {
 }
 
 export default Login;
-
