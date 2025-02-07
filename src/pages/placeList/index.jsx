@@ -94,36 +94,35 @@ function MyPlaceList() {
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
-  useEffect(() => {
+  const fetchPlaces = async () => {
     const userId = 2;
-    const fetchPlaces = async () => {
-      try {
-        const response = await axios.get("/places/", {
-          params: { userId },
-        });
-        if (response.data.isSuccess) {
-          const places = response.data.result.map((place) => ({
-            id: place.placeId,
-            name: place.name,
-            category: place.categoryName,
-            short_description: place.shortDescripton,
-            nstagram_link: place.instagramLink,
-            naverplace_link: place.naverLink,
-            images: place.placeImageUrl.map((url, index) => ({
-              id: index,
-              url,
-            })),
-          }));
-          setPlaces(places);
-        } else {
-          console.log(response.data.message);
-        }
-      } catch (error) {
-        console.log("마이플레이스 리스트 api 연동 실패: ", error);
+    const token = import.meta.env.VITE_API_TOKEN;
+    try {
+      const response = await axios.get("/places/", {
+        params: { userId }, // userId가 필요하다면 넣어줘
+        headers: {
+          Authorization: `Bearer ${token}`, // token을 헤더에 포함
+          "Cache-Control": "no-cache", // 캐시 무효화
+          Pragma: "no-cache",
+        },
+      });
+
+      // 데이터가 성공적으로 왔을 때, 상태에 저장
+      if (response && response.data) {
+        setPlaces(response.data.result); // 받은 데이터를 상태에 저장
+      } else {
+        console.log("응답 데이터가 없습니다.");
       }
-    };
+    } catch (error) {
+      console.error("API 요청 오류:", error);
+    }
+  };
+
+  // 컴포넌트 마운트 후, API 요청을 보내기 위한 useEffect
+  useEffect(() => {
     fetchPlaces();
-  }, []);
+  }, []); // 컴포넌트가 처음 렌더링 될 때 한 번만 실행
+
   return (
     <Wrapper>
       <CarouselWrapper>

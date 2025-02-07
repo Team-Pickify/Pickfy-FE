@@ -75,10 +75,10 @@ const ShareButton = styled.button`
 
 function Info({
   name,
-  category,
+  categoryName,
   shortDescription,
   instagramLink,
-  naverPlaceLink,
+  naverLink,
 }) {
   const [isClicked, setIsClicked] = useState(false);
   const handleClick = () => {
@@ -113,7 +113,7 @@ function Info({
         <InfoLine>
           <TextContainer>
             <TitleText>{name}</TitleText>
-            <CategoryText>{category}</CategoryText>
+            <CategoryText>{categoryName}</CategoryText>
           </TextContainer>
           <LineIntro>{shortDescription}</LineIntro>
           <AdditionContainer>
@@ -133,7 +133,7 @@ function Info({
                 </svg>
                 인스타그램
               </LinkConnect>
-              <LinkConnect href={naverPlaceLink}>
+              <LinkConnect href={naverLink}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="14"
