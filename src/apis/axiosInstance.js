@@ -5,7 +5,7 @@ const cookies = new Cookies();
 
 const TokenReq = axios.create({
   headers: {
-    Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
+    //Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
     accept: "application/json",
   },
   withCredentials: true,
