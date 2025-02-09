@@ -2,7 +2,7 @@ import Mapview from "../pages/main/map";
 import Login from "../pages/login/login";
 import AdminLogin from "../pages/login/admin-login";
 import SignUp from "../pages/login/signup";
-import MyPlaceList from "../pages/placelist";
+import MyPlaceList from "../pages/placeList/index";
 import Setting from "../pages/setting";
 
 import Admin from "../pages/admin/";
