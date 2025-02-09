@@ -67,10 +67,8 @@ function MyPlaceList() {
   const [sortOpen, setSortOpen] = useState(false);
 
   const fetchPlaces = async () => {
-    const userId = 2;
     try {
-      const response = await TokenReq.get("/places/", {
-        params: { userId },
+      const response = await TokenReq.get("/places", {
         headers: {
           "Cache-Control": "no-cache",
           Pragma: "no-cache",
