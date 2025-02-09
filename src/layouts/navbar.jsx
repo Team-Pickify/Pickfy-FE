@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import logoImg from "../assets/logo.png";
-import HeaderBtn from "../components/header/headerBtn";
+import HeaderBtn from "../components/header/HeaderBtn";
 import { useLocation } from "react-router-dom";
 
 const Header = styled.div`
