@@ -8,6 +8,7 @@ import KakaoLogo from "../../assets/Kakao_Logo.svg";
 import LogoBox from "../../components/LogoBox";
 import { theme } from "../../styles/themes";
 import { TokenReq } from "../../apis/axiosInstance";
+import { Cookies, useCookies } from "react-cookie";
 
 const Wrapper = styled.div`
   background-color: ${theme.Text};
@@ -87,6 +88,7 @@ function Login() {
   const isButtonEnabled = email.trim() !== "" && password.trim() !== "";
 
   const navigate = useNavigate();
+  const [cookies, setCookies] = useCookies();
   const handleLogin = async () => {
     if (isButtonEnabled) {
       try {
@@ -94,8 +96,20 @@ function Login() {
           principal: email,
           password,
         });
+        if (response.status === 200) {
+          //const accessToken = response.headers["authorization"];
+          const accessToken = response.headers.authorization?.split(" ")[1];
+          console.log("access token: ", accessToken);
+          console.log(response.headers.authorization);
+          setCookies("accessToken", accessToken, { path: "/" });
+          TokenReq.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${accessToken}`;
+          console.log("✅ Refresh Token:", cookies["refreshToken"]);
+        }
+
         navigate("/");
-        console.log("응답 헤더:", response.headers);
+        console.log("응답 헤더:", response);
       } catch (error) {
         console.log("로그인 에러: ", error);
       }
