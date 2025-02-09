@@ -70,6 +70,7 @@ const ShareButton = styled.button`
   background-color: transparent;
   border: none;
   font-size: 1.25rem;
+  width: 1.25rem;
   color: ${theme.Sub3};
 `;
 

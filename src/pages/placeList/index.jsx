@@ -52,39 +52,10 @@ const DropdownWrapper = styled.div`
   left: -2rem; /* 끝나는 지점을 SelectedItem과 맞춤 */
   z-index: 99;
 `;
-
+const ListContainer = styled.div`
+  padding: 0.5rem;
+`;
 function MyPlaceList() {
-  // const places = [
-  //   {
-  //     id: 1,
-  //     name: "플레이스명",
-  //     category: "카테고리명",
-  //     short_description: "한줄소개",
-  //     instagram_link: "https://www.instagram.com",
-  //     naverplace_link: "https://www.naver.com",
-  //     images: [
-  //       { id: 1, url: cafe1 },
-  //       { id: 2, url: cafe1 },
-  //       { id: 3, url: cafe1 },
-  //       { id: 4, url: cafe1 },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "플레이스명",
-  //     category: "카테고리명",
-  //     short_description: "한줄소개",
-  //     instagram_link: "https://www.instagram.com",
-  //     naverplace_link: "https://www.naver.com",
-  //     images: [
-  //       { id: 1, url: cafe1 },
-  //       { id: 2, url: cafe1 },
-  //       { id: 3, url: cafe1 },
-  //       { id: 4, url: cafe1 },
-  //     ],
-  //   },
-  // ];
-
   const [places, setPlaces] = useState([]);
 
   const categoryoptions = ["전체", "매거진A", "매거진B", "매거진C", "매거진D"];
@@ -173,7 +144,9 @@ function MyPlaceList() {
             )}
           </SelectedItem>
         </DrowdownContainer>
-        <InfoSmall places={places} />
+        <ListContainer>
+          <InfoSmall places={places} />
+        </ListContainer>
       </Container>
     </Wrapper>
   );

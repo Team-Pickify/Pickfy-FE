@@ -34,12 +34,8 @@ function InfoSmall({ places }) {
             naverLink={place.naverLink}
           />
           <Imgcontainer>
-            {place.placeImageUrl?.map((image) => (
-              <Img
-                key={image.placeId}
-                src={image.placeImageUrl}
-                alt={`${place.name} 이미지`}
-              />
+            {place.placeImageUrl?.map((image, index) => (
+              <Img key={index} src={image} alt={`${place.name} 이미지`} />
             ))}
           </Imgcontainer>
         </div>
