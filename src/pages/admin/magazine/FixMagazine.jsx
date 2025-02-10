@@ -47,11 +47,7 @@ export default function FixMagazine({ mag, setPage }) {
       formData.append("title", data.title);
       if (data.iconUrl.length === 1) {
         formData.append("iconFile", data.iconUrl[0]);
-      } else {
-        formData.append("iconFile", mag.iconUrl);
       }
-      console.log("title:", formData.getAll("title"));
-      console.log("iconFile:", formData.getAll("iconFile"));
 
       await TokenReq.put(`/admin/magazines/${mag.id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
