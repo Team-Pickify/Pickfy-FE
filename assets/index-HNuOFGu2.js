@@ -1024,7 +1024,7 @@ height:40%;
   display: flex;
   justify-content: center;
   align-items: center;
-`;function FS({mag:n,setPage:i}){const{register:o,handleSubmit:l}=Pl({defaultValues:{title:n.title,iconUrl:n.iconUrl}}),a=()=>i("main"),c=async f=>{try{const p=new FormData;p.append("title",f.title),f.iconUrl.length===1?p.append("iconFile",f.iconUrl[0]):p.append("iconFile",n.iconUrl),console.log("title:",p.getAll("title")),console.log("iconFile:",p.getAll("iconFile")),await gt.put(`/admin/magazines/${n.id}`,p,{headers:{"Content-Type":"multipart/form-data"}}),i("main")}catch(p){console.log("매거진 추가 중 오류 발생: ",p)}};return m.jsxs("div",{children:[m.jsxs("form",{onSubmit:l(c),children:[m.jsxs(zS,{children:[m.jsx(bh,{onClick:a,children:m.jsx(lr,{size:28,color:ne.Sub1})}),m.jsx(DS,{children:"매거진 관리"}),m.jsx(bh,{type:"submit",children:m.jsx(xo,{size:28,color:ne.Sub1})})]}),m.jsx(wn,{name:"브랜드명",regId:"title",register:o}),m.jsx(y0,{name:"대표 이미지",regId:"iconUrl",register:o,img:n.iconUrl})]}),m.jsx(v0,{id:n.id,setPage:i,kind:"magazine"})]})}const $S=I.div`
+`;function FS({mag:n,setPage:i}){const{register:o,handleSubmit:l}=Pl({defaultValues:{title:n.title,iconUrl:n.iconUrl}}),a=()=>i("main"),c=async f=>{try{const p=new FormData;p.append("title",f.title),f.iconUrl.length===1&&p.append("iconFile",f.iconUrl[0]),await gt.put(`/admin/magazines/${n.id}`,p,{headers:{"Content-Type":"multipart/form-data"}}),i("main")}catch(p){console.log("매거진 추가 중 오류 발생: ",p)}};return m.jsxs("div",{children:[m.jsxs("form",{onSubmit:l(c),children:[m.jsxs(zS,{children:[m.jsx(bh,{onClick:a,children:m.jsx(lr,{size:28,color:ne.Sub1})}),m.jsx(DS,{children:"매거진 관리"}),m.jsx(bh,{type:"submit",children:m.jsx(xo,{size:28,color:ne.Sub1})})]}),m.jsx(wn,{name:"브랜드명",regId:"title",register:o}),m.jsx(y0,{name:"대표 이미지",regId:"iconUrl",register:o,img:n.iconUrl})]}),m.jsx(v0,{id:n.id,setPage:i,kind:"magazine"})]})}const $S=I.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1049,7 +1049,7 @@ height:40%;
 `,HS=I.div`
   display: flex;
   align-items: center;
-  margin: 1.5rem 2rem;
+  margin: 1.5rem;
   margin-right: 0;
   gap: 2rem;
 `,WS=I.div`
@@ -1064,7 +1064,7 @@ height:40%;
   gap: 0.3rem;
 
   color: ${ne.Sub1};
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 
   border: 1px solid ${ne.Sub3};
   border-radius: 10vh;
@@ -1085,25 +1085,27 @@ height:40%;
 
   padding: 3vh;
 `,GS=I.div`
-  display: flex;
+  /* display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
+  flex-wrap: wrap; */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
 
-  padding: 0 4rem;
+  padding: 0 3rem;
 `,JS=I.div`
   font-weight: 500;
 `,zh=I.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
 `,ZS=I.div`
   width: 100%;
   height: 0.05vh;
 
   background-color: ${ne.Sub3};
 `,XS=I.div`
-  width: 18vh;
-  height: 18vh;
+  width: 8rem;
+  height: 8rem;
 
   display: flex;
   justify-content: center;
@@ -1112,8 +1114,8 @@ height:40%;
   border-radius: 1vh;
   background-color: ${ne.Sub3};
 `,e5=I.img`
-  width: 18vh;
-  height: 18vh;
+  width: 8rem;
+  height: 8rem;
 
   border-radius: 1vh;
 `;function w0({images:n,setImages:i}){const[o,l]=T.useState(!0);T.useEffect(()=>{l(n.length<5)},[n]);const a=f=>{const p=f.target.files[0];p&&(i(g=>[...g,p]),f.target.value="")},c=()=>{i([]),l(!0)};return m.jsxs(QS,{children:[m.jsx(ZS,{}),m.jsxs(YS,{children:[m.jsx(JS,{children:"이미지"}),m.jsx(qS,{color:ne.Sub3,size:"1.5rem",onClick:c})]}),m.jsxs(GS,{children:[n.map((f,p)=>m.jsx(zh,{children:m.jsx(e5,{src:typeof f=="string"?f:URL.createObjectURL(f),alt:`preview ${p+1}`})},p)),o&&m.jsxs(zh,{children:[m.jsx("input",{type:"file",id:"brandImage",accept:"image/*",style:{display:"none"},onChange:a}),m.jsx("label",{htmlFor:"brandImage",children:m.jsx(XS,{children:m.jsx(Oc,{color:"white",size:"1.5rem"})})})]})]})]})}function t5(n){new window.daum.Postcode({oncomplete:function(i){let o=i.address,l="";i.addressType==="R"&&(i.bname!==""&&(l+=i.bname),i.buildingName!==""&&(l+=l!==""?`, ${i.buildingName}`:i.buildingName),o+=l!==""?` (${l})`:""),n(o)}}).open()}function x0(n){return new Promise((i,o)=>{if(!window.kakao.maps){console.error("Kakao Maps API가 로드되지 않았습니다."),o(new Error("Kakao Maps API가 로드되지 않았습니다."));return}const l=new window.kakao.maps.services.Geocoder;console.log("Trans-addr:",n),l.addressSearch(n,(a,c)=>{if(c===window.kakao.maps.services.Status.OK){const f=a[0].y,p=a[0].x;console.log("Trans-coords",{latitude:f,longitude:p}),i({latitude:f,longitude:p})}else console.error("주소 변환 실패:",c),o(new Error("주소 변환 실패"))})})}function n5(n,i){return new Promise((o,l)=>{if(!window.kakao||!window.kakao.maps){console.error("Kakao Maps API가 로드되지 않았습니다."),l(new Error("Kakao Maps API가 로드되지 않았습니다."));return}const a=new window.kakao.maps.services.Geocoder,c=new window.kakao.maps.LatLng(n,i);a.coord2Address(c.getLng(),c.getLat(),(f,p)=>{if(p===window.kakao.maps.services.Status.OK){const g=f[0].road_address?f[0].road_address.address_name:f[0].address.address_name;console.log("변환된 주소:",g),o(g)}else console.error("좌표 변환 실패:",p),l(new Error("좌표 변환 실패"))})})}const r5=I.div`
@@ -1184,7 +1186,7 @@ height:40%;
   display: flex;
   justify-content: center;
   align-items: center;
-`;function p5({selectedPlace:n,setPage:i}){const[o,l]=T.useState(null),[a,c]=T.useState(null),[f,p]=T.useState([...n.placeImageUrl]),{register:g,handleSubmit:y,reset:v}=Pl({defaultValues:{name:n.name,shortDescription:n.shortDescription,address:"",instagramLink:n.instagramLink,naverPlaceLink:n.naverLink,latitude:n.latitude,longitude:n.longitude}});T.useEffect(()=>{(async()=>{const E=await n5(n.latitude,n.longitude);v(S=>({...S,address:E}))})()},[n.latitude,n.longitude,v]),T.useEffect(()=>{(async()=>{var E,S;try{const[C,P]=await Promise.all([gt.get("/magazines"),gt.get("/categories")]),z=C.data.result.map($=>({id:$.id,title:$.title})),O=P.data.result.map($=>({id:$.id,title:$.name}));l((E=z.find($=>$.title===n.magazineTitle))==null?void 0:E.id),c((S=O.find($=>$.title===n.categoryName))==null?void 0:S.id)}catch(C){console.error("데이터 로딩 중 에러:",C)}})()},[n]);const w=async k=>{try{k={...k,category:a,magazine:o,image:f};const E=await x0(k.address);k.latitude=E.latitude,k.longitude=E.longitude;const S=new FormData,C=JSON.stringify({name:k.name,shortDescription:k.shortDescription,address:k.address,instagramLink:k.instagramLink,naverPlaceLink:k.naverPlaceLink,latitude:k.latitude,longitude:k.longitude,categoryId:k.category,magazineId:k.magazine});S.append("request",new Blob([C],{type:"application/json"})),k.image.forEach(P=>{S.append("image",P)});for(let[P,z]of S.entries())console.log(`${P}:`,z);await gt.patch(`/places/admin/${n.placeId}`,S,{headers:{"Content-Type":"multipart/form-data"}}),i("main")}catch(E){console.log("플레이스 추가 에러:",E)}};return m.jsx("div",{children:m.jsxs("form",{onSubmit:y(w),children:[m.jsxs(d5,{children:[m.jsx(Fh,{onClick:()=>i("main"),children:m.jsx(lr,{size:28,color:ne.Sub1})}),m.jsx(f5,{children:"플레이스 관리"}),m.jsx(Fh,{type:"submit",children:m.jsx(xo,{size:28,color:ne.Sub1})})]}),a!==null&&m.jsx(fl,{name:"카테고리",val:a,setVal:c}),o!==null&&m.jsx(fl,{name:"매거진",val:o,setVal:l}),m.jsx(wn,{register:g,name:"플레이스명",regId:"name"}),m.jsx(wn,{register:g,name:"한줄소개",regId:"shortDescription"}),m.jsx(S0,{register:g,name:"위치",regId:"address"}),m.jsx(wn,{register:g,name:"인스타그램",regId:"instagramLink"}),m.jsx(wn,{register:g,name:"지도 링크",regId:"naverPlaceLink"}),m.jsx(w0,{images:f,setImages:p}),m.jsx(v0,{id:n.placeId,setPage:i,kind:"place"})]})})}const h5=I.div`
+`;function p5({selectedPlace:n,setPage:i}){const[o,l]=T.useState(null),[a,c]=T.useState(null),[f,p]=T.useState([...n.placeImageUrl]),{register:g,handleSubmit:y,reset:v}=Pl({defaultValues:{name:n.name,shortDescription:n.shortDescription,address:"",instagramLink:n.instagramLink,naverPlaceLink:n.naverLink,latitude:n.latitude,longitude:n.longitude}});T.useEffect(()=>{(async()=>{const E=await n5(n.latitude,n.longitude);v(S=>({...S,address:E}))})()},[n.latitude,n.longitude,v]),T.useEffect(()=>{(async()=>{var E,S;try{const[C,P]=await Promise.all([gt.get("/magazines"),gt.get("/categories")]),z=C.data.result.map($=>({id:$.id,title:$.title})),O=P.data.result.map($=>({id:$.id,title:$.name}));l((E=z.find($=>$.title===n.magazineTitle))==null?void 0:E.id),c((S=O.find($=>$.title===n.categoryName))==null?void 0:S.id)}catch(C){console.error("데이터 로딩 중 에러:",C)}})()},[n]);const w=async k=>{try{k={...k,category:a,magazine:o,image:f};const E=await x0(k.address);k.latitude=E.latitude,k.longitude=E.longitude;const S=new FormData,C=JSON.stringify({name:k.name,shortDescription:k.shortDescription,address:k.address,instagramLink:k.instagramLink,naverPlaceLink:k.naverPlaceLink,latitude:k.latitude,longitude:k.longitude,categoryId:k.category,magazineId:k.magazine});S.append("request",new Blob([C],{type:"application/json"})),k.image.forEach(P=>{S.append("image",P)});for(let[P,z]of S.entries())console.log(`${P}:`,z);await gt.patch(`/admin/places/${n.placeId}`,S,{headers:{"Content-Type":"multipart/form-data"}}),i("main")}catch(E){console.log("플레이스 추가 에러:",E)}};return m.jsx("div",{children:m.jsxs("form",{onSubmit:y(w),children:[m.jsxs(d5,{children:[m.jsx(Fh,{onClick:()=>i("main"),children:m.jsx(lr,{size:28,color:ne.Sub1})}),m.jsx(f5,{children:"플레이스 관리"}),m.jsx(Fh,{type:"submit",children:m.jsx(xo,{size:28,color:ne.Sub1})})]}),a!==null&&m.jsx(fl,{name:"카테고리",val:a,setVal:c}),o!==null&&m.jsx(fl,{name:"매거진",val:o,setVal:l}),m.jsx(wn,{register:g,name:"플레이스명",regId:"name"}),m.jsx(wn,{register:g,name:"한줄소개",regId:"shortDescription"}),m.jsx(S0,{register:g,name:"위치",regId:"address"}),m.jsx(wn,{register:g,name:"인스타그램",regId:"instagramLink"}),m.jsx(wn,{register:g,name:"지도 링크",regId:"naverPlaceLink"}),m.jsx(w0,{images:f,setImages:p}),m.jsx(v0,{id:n.placeId,setPage:i,kind:"place"})]})})}const h5=I.div`
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -1223,7 +1225,7 @@ height:40%;
   display: flex;
   justify-content: center;
   align-items: center;
-`;function k5(){const[n,i]=T.useState([]),[o,l]=T.useState("main"),[a,c]=T.useState(),f=Dn(),p=y=>f(y);T.useEffect(()=>{gt.get("/places/admin/").then(y=>y.data.result).then(y=>{i(y)})},[o,l]);const g=y=>{c(y),l("fix")};return m.jsx("div",{children:o==="main"?m.jsxs("div",{children:[m.jsxs(x5,{children:[m.jsx($h,{onClick:()=>p(-1),children:m.jsx(lr,{size:28,color:ne.Sub1})}),m.jsx(S5,{children:"플레이스 관리"}),m.jsx($h,{onClick:()=>l("add"),children:m.jsx(Om,{size:28,color:ne.Sub1})})]}),n.map(y=>m.jsx("div",{onClick:()=>g(y.placeId),children:m.jsx(w5,{name:y.name,addr:y.shortDescription})},y.placeId))]}):o==="add"?m.jsx(c5,{setPage:l}):m.jsx(p5,{selectedPlace:n.find(y=>y.placeId===a),setPage:l})})}const C5=[{path:"/",element:m.jsx(Px,{})},{path:"/login",element:m.jsx(u3,{})},{path:"/adminlogin",element:m.jsx(f3,{})},{path:"/signup",element:m.jsx(v3,{})},{path:"/myplacelist",element:m.jsx(D3,{})},{path:"/setting",element:m.jsx(Q3,{})},{path:"/admin",element:m.jsx(J3,{})},{path:"/admin/magazine-management",element:m.jsx(BS,{})},{path:"/admin/place-management",element:m.jsx(k5,{})}],E5="/assets/whiteLogo-VWWdmbxU.png",j5=I.div`
+`;function k5(){const[n,i]=T.useState([]),[o,l]=T.useState("main"),[a,c]=T.useState(),f=Dn(),p=y=>f(y);T.useEffect(()=>{gt.get("/admin/places").then(y=>y.data.result).then(y=>{i(y)})},[o,l]);const g=y=>{c(y),l("fix")};return m.jsx("div",{children:o==="main"?m.jsxs("div",{children:[m.jsxs(x5,{children:[m.jsx($h,{onClick:()=>p(-1),children:m.jsx(lr,{size:28,color:ne.Sub1})}),m.jsx(S5,{children:"플레이스 관리"}),m.jsx($h,{onClick:()=>l("add"),children:m.jsx(Om,{size:28,color:ne.Sub1})})]}),n.map(y=>m.jsx("div",{onClick:()=>g(y.placeId),children:m.jsx(w5,{name:y.name,addr:y.shortDescription})},y.placeId))]}):o==="add"?m.jsx(c5,{setPage:l}):m.jsx(p5,{selectedPlace:n.find(y=>y.placeId===a),setPage:l})})}const C5=[{path:"/",element:m.jsx(Px,{})},{path:"/login",element:m.jsx(u3,{})},{path:"/adminlogin",element:m.jsx(f3,{})},{path:"/signup",element:m.jsx(v3,{})},{path:"/myplacelist",element:m.jsx(D3,{})},{path:"/setting",element:m.jsx(Q3,{})},{path:"/admin",element:m.jsx(J3,{})},{path:"/admin/magazine-management",element:m.jsx(BS,{})},{path:"/admin/place-management",element:m.jsx(k5,{})}],E5="/assets/whiteLogo-VWWdmbxU.png",j5=I.div`
   display: flex;
   align-items: center;
   justify-content: center;
