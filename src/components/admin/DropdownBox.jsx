@@ -19,7 +19,7 @@ const Name = styled.div`
 const Box = styled.div`
   display: flex;
   align-items: center;
-  margin: 1.5rem 2rem;
+  margin: 1.5rem;
   margin-right: 0;
   gap: 2rem;
 `;
@@ -36,7 +36,7 @@ const Dropdown = styled.div`
   gap: 0.3rem;
 
   color: ${theme.Sub1};
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 
   border: 1px solid ${theme.Sub3};
   border-radius: 10vh;

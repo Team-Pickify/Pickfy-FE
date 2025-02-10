@@ -42,7 +42,7 @@ export default function ManagePlace() {
   const handleNav = (address) => navigate(address);
 
   useEffect(() => {
-    TokenReq.get("/places/admin/")
+    TokenReq.get("/admin/places")
       .then((res) => res.data.result)
       .then((data) => {
         setPlace(data);

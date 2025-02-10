@@ -20,12 +20,14 @@ const HeaderBox = styled.div`
 `;
 
 const Wrapper = styled.div`
-  display: flex;
+  /* display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
+  flex-wrap: wrap; */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
 
-  padding: 0 4rem;
+  padding: 0 3rem;
 `;
 
 const Name = styled.div`
@@ -34,7 +36,7 @@ const Name = styled.div`
 
 const Box = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
 `;
 
 const Line = styled.div`
@@ -45,8 +47,8 @@ const Line = styled.div`
 `;
 
 const Greybox = styled.div`
-  width: 18vh;
-  height: 18vh;
+  width: 8rem;
+  height: 8rem;
 
   display: flex;
   justify-content: center;
@@ -57,8 +59,8 @@ const Greybox = styled.div`
 `;
 
 const ImagePreview = styled.img`
-  width: 18vh;
-  height: 18vh;
+  width: 8rem;
+  height: 8rem;
 
   border-radius: 1vh;
 `;
