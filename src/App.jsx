@@ -12,13 +12,9 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    if (!showSplash) {
-      if (location.pathname === "/") {
-        navigate("/login");
-      }
-    }
-  }, [showSplash, navigate, location]);
+  // useEffect(() => {
+  //   navigate("/login");
+  // }, [navigate]);
 
   return (
     <>
