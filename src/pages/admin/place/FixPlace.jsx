@@ -144,7 +144,7 @@ export default function FixPlace({ selectedPlace, setPage }) {
         console.log(`${key}:`, value);
       }
 
-      await TokenReq.patch(`/places/admin/${selectedPlace.placeId}`, formData, {
+      await TokenReq.patch(`/admin/places/${selectedPlace.placeId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
