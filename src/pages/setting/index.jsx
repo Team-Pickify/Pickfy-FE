@@ -9,6 +9,7 @@ import { IoCheckmarkOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa";
 import Linkbox from "../../components/Linkbox";
 import { TokenReq } from "../../apis/axiosInstance";
+import { useCookies } from "react-cookie";
 
 const Container = styled.div`
   display: flex;
@@ -87,6 +88,10 @@ function Setting() {
   const [toggle, setToggle] = useState(false); // 편집 버튼 상태
   const [toastVisible, setToastVisible] = useState(false); // 토스트 상태
   const [message, setMessage] = useState(""); // 토스트 메세지
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "accessToken",
+    "refreshToken",
+  ]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -151,12 +156,34 @@ function Setting() {
     console.log(img, name);
 
     const formData = new FormData();
-    formData.append("profileImage", img);
+    if (img.length === undefined) {
+      formData.append("profileImage", img);
+    }
     formData.append("nickname", name);
 
     await TokenReq.patch("/users/update", formData, {
-      headers: { "Content-Type": "multipary/form-data" },
+      headers: { "Content-Type": "multipart/form-data" },
     });
+  };
+
+  const logout = async () => {
+    try {
+      await TokenReq.post("/auth/logout");
+      removeCookie("accessToken", { path: "/" });
+      console.log("로그아웃 성공");
+    } catch (error) {
+      console.log("로그아웃 실패: ", error);
+    }
+  };
+
+  const signout = async () => {
+    try {
+      removeCookie("accessToken", { path: "/" });
+      await TokenReq.delete("/users/signOut");
+      console.log("회원탈퇴 성공");
+    } catch (error) {
+      console.log("회원탈퇴 실패: ", error);
+    }
   };
 
   return (
@@ -212,10 +239,10 @@ function Setting() {
       </ProfileBox>
 
       {/* 로그아웃 */}
-      <Linkbox name="로그아웃" addr="/login" />
+      <Linkbox name="로그아웃" addr="/login" handler={logout} />
 
       {/* 회원탈퇴 */}
-      <Linkbox name="회원탈퇴" addr="/login" />
+      <Linkbox name="회원탈퇴" addr="/login" handler={signout} />
     </Container>
   );
 }
