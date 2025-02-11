@@ -1,5 +1,5 @@
 
-import blackMarker from "../assets/black_marker.svg"
+import blackMarker from "../../assets/black_marker.svg"
 const createMap = (latitude,longitude,container,setcurmap) =>{
     const options = {
         center: new window.kakao.maps.LatLng(latitude, longitude),

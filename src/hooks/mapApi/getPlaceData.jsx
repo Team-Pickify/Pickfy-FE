@@ -1,4 +1,4 @@
-import { TokenReq as getApi } from '../apis/axiosInstance';
+import { TokenReq as getApi } from '../../apis/axiosInstance';
 
 const getPlaceData = async (cate, maga, setplacearray, categoryarray, magazinearray, curlatitude, curlongitude) => {
   try {
