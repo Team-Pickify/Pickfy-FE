@@ -1,4 +1,4 @@
-import redMarker from "../assets/redmarker.svg"
+import redMarker from "../../assets/redmarker.svg"
 
 const Marking = (datas,setinfoData,curmap,handleOpenBottomSheet,setimagearray)=>{
 

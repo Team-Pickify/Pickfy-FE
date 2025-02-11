@@ -1,4 +1,4 @@
-import { TokenReq as getApi } from '../apis/axiosInstance';
+import { TokenReq as getApi } from '../../apis/axiosInstance';
 
 const getMagazinelist = async(setmagazinebtn,setmagazinearray)=>{
     await getApi.get("/magazines")
