@@ -1,4 +1,4 @@
-import { TokenReq as getApi } from '../apis/axiosInstance';
+import { TokenReq as getApi } from '../../apis/axiosInstance';
 
 const getCategorylist = async(setcategorybtn,setcategoryarray)=>{
     await getApi.get("/categories")
