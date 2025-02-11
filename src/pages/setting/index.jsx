@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Toast from "../../components/toast/Toast";
 import CheckMsg from "../../components/toast/CheckMsg";
 import { theme } from "../../styles/themes";
@@ -8,6 +8,7 @@ import { LuPencilLine } from "react-icons/lu";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa";
 import Linkbox from "../../components/Linkbox";
+import { TokenReq } from "../../apis/axiosInstance";
 
 const Container = styled.div`
   display: flex;
@@ -81,10 +82,24 @@ const Username = styled.input`
 
 function Setting() {
   const [profileImg, setProfileImg] = useState(""); // 프로필 이미지 상태
+  const [subImg, setSubImg] = useState(""); // 서버 요청용
   const [name, setName] = useState("username"); // 이름 상태
   const [toggle, setToggle] = useState(false); // 편집 버튼 상태
   const [toastVisible, setToastVisible] = useState(false); // 토스트 상태
   const [message, setMessage] = useState(""); // 토스트 메세지
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await TokenReq("/users/getInfo")
+        .then((res) => res.data.result)
+        .then((userData) => {
+          setProfileImg(userData.profileImage);
+          setSubImg(userData.profileImage);
+          setName(userData.nickname);
+        });
+    };
+    fetchData();
+  }, []);
 
   const handleImg = () => {
     const input = document.createElement("input");
@@ -92,6 +107,8 @@ function Setting() {
     input.accept = "image/*";
     input.onchange = (e) => {
       const file = e.target.files[0];
+      setSubImg(file);
+
       if (file) {
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -125,8 +142,21 @@ function Setting() {
 
     setToggle(!toggle);
     toggle &&
-      (setMessage(<CheckMsg msg="변경이 완료되었습니다" />),
+      (postData(subImg, name),
+      setMessage(<CheckMsg msg="변경이 완료되었습니다" />),
       setToastVisible(true));
+  };
+
+  const postData = async (img, name) => {
+    console.log(img, name);
+
+    const formData = new FormData();
+    formData.append("profileImage", img);
+    formData.append("nickname", name);
+
+    await TokenReq.patch("/users/update", formData, {
+      headers: { "Content-Type": "multipary/form-data" },
+    });
   };
 
   return (
