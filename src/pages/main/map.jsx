@@ -2,20 +2,16 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { PiCompassRoseDuotone } from "react-icons/pi";
-import mapPermission from '../../hooks/mapPermission';
-import redMarker from "../../assets/redmarker.svg"
-import blackMarker from "../../assets/black_marker.svg"
+import mapPermission from '../../hooks/mapApi/mapPermission';
 import { theme } from "../../styles/themes";
 import axios from 'axios';
-import { TokenReq as getApi } from '../../apis/axiosInstance';
 import Info from '../../components/Info';
-import InfoSmall from '../../components/InfoSmall.jsx'
-import createMap from '../../hooks/createMap';
-import findLocation from '../../hooks/findLocation';
-import getMagazinelist from '../../hooks/getMagazinelist';
-import getCategorylist from '../../hooks/getCategorylist';
-import getPlaceData from '../../hooks/getPlaceData';
-import Marking from '../../hooks/Marking';
+import createMap from '../../hooks/mapApi/createMap';
+import findLocation from '../../hooks/mapApi/findLocation';
+import getMagazinelist from '../../hooks/mapApi/getMagazinelist';
+import getCategorylist from '../../hooks/mapApi/getCategorylist';
+import getPlaceData from '../../hooks/mapApi/getPlaceData';
+import Marking from '../../hooks/mapApi/Marking';
 
 function Mapview() {
 
