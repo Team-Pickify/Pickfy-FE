@@ -22,11 +22,13 @@ const Line = styled.div`
 
 const blackTextList = ["magazine-management", "place-management"];
 
-export default function Linkbox({ name, addr }) {
+export default function Linkbox({ name, addr, handler = () => {} }) {
   const navigate = useNavigate();
   const bk = blackTextList.includes(location.pathname.split("/")[2]);
 
   const handleLink = () => {
+    handler();
+
     navigate(addr);
   };
 
