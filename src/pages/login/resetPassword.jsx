@@ -7,6 +7,7 @@ import InputBox from "../../components/InputBox";
 import SignupBtn from "../../components/SignupBtn";
 import LoginBtn from "../../components/LoginBtn";
 import { TokenReq } from "../../apis/axiosInstance"; 
+import Toast from "../../components/toast/WhiteToast";
 
 const Wrapper = styled.div`
   display: flex;
@@ -25,13 +26,12 @@ const Container = styled.div`
   margin: 0rem 0.95rem;
 `;
 
-function SignUp() {
+function ResetPassword() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     passwordCheck: "",
-    nickname: "",
     verificationCode: "",
     emailToken: "",
     emailBtnText: "인증코드 전송",
@@ -48,6 +48,14 @@ function SignUp() {
     step: 1,
   });
 
+  const [toastMessage, setToastMessage] = useState("");
+  const [isToastVisible, setToastVisible] = useState(false);
+
+  const showToast = (message) => {
+    setToastMessage(message);
+    setToastVisible(true);
+  };
+
   const nextStep = () => {
     setFormData((prev) => ({
       ...prev,
@@ -61,32 +69,51 @@ function SignUp() {
 
   const onEBtnClick = async () => {
     if (!formData.email) {
-      alert("이메일을 입력해주세요.");
+      showToast("이메일과 인증코드를 입력해주세요.");
       return;
     }
   
     try {
-      const response = await TokenReq.post("/email-auth/send-code", {
-        email: formData.email, 
+      // 1️⃣ 먼저 이메일이 존재하는지 확인 (users/verify-by-email)
+      const verifyResponse = await TokenReq.post("/users/verify-by-email", {
+        email: formData.email,
       });
   
-      console.log("인증코드 전송 응답:", response.data);
-      alert("인증코드가 전송되었습니다.");
+      console.log("📢 이메일 확인 응답:", verifyResponse.data);
   
-      setFormData((prev) => ({
-        ...prev,
-        isEmailClicked: true,
-        emailBtnText: "인증코드 재전송",
-      }));
+      if (verifyResponse.data.result === "존재하는 유저 정보입니다.") { // ✅ 이메일이 존재하는 경우만 진행
+        // 2️⃣ 인증코드 전송 (email-auth/send-auth-code)
+        const sendCodeResponse = await TokenReq.post("/email-auth/send-code", {
+          email: formData.email,
+        });
+  
+        console.log("📢 인증코드 전송 응답:", sendCodeResponse.data);
+        showToast("인증코드가 전송되었습니다.");
+  
+        setFormData((prev) => ({
+          ...prev,
+          isEmailClicked: true,
+          emailBtnText: "인증코드 재전송",
+        }));
+      } else {
+        showToast("존재하지 않는 이메일입니다. 회원가입을 진행하세요.");
+      }
     } catch (error) {
-      console.error("인증코드 전송 오류:", error);
-      alert("인증코드 전송 중 오류가 발생했습니다.");
+      console.error("❌ API 요청 오류:", error);
+  
+      if (error.response) {
+        console.error("❌ 서버 응답 데이터:", error.response.data);
+        alert(error.response.data.message || "오류가 발생했습니다.");
+      } else {
+        showToast("네트워크 오류가 발생했습니다.");
+      }
     }
   };
+  
 
   const onVBtnClick = async () => {
     if (!formData.email || !formData.verificationCode) {
-      alert("이메일과 인증코드를 입력해주세요.");
+      showToast("이메일과 인증코드를 입력해주세요.");
       return;
     }
   
@@ -97,7 +124,7 @@ function SignUp() {
       });
   
       console.log("인증코드 확인 응답:", response.data);
-      alert("인증코드가 확인되었습니다.");
+      showToast("인증코드가 확인되었습니다.");
   
       setFormData((prev) => ({
         ...prev,
@@ -108,53 +135,53 @@ function SignUp() {
       }));
     } catch (error) {
       console.error("인증코드 확인 오류:", error);
-      alert("인증코드 확인 중 오류가 발생했습니다.");
+      showToast("인증코드 확인 중 오류가 발생했습니다.");
     }
   };
 
-  const handleSignUp = async () => {
+  const handleResetPassword = async () => {
   
-    const signupData = {
-      nickname: formData.nickname,
-      password: formData.password,
+    const passwordData = {
       email: formData.email,
+      newPassword: formData.password,
       emailToken: formData.emailToken
     };
 
-    console.log("회원가입 요청 데이터:", signupData);
+    console.log("비밀번호 요청 데이터:", passwordData);
   
     try {
-      const response = await TokenReq.post("/users/signup", signupData);
+      const response = await TokenReq.patch("/users/reset-password", passwordData);
 
-      console.log("회원가입 응답 데이터:", response.data);
+      console.log("비밀번호 응답 데이터:", response.data);
       
       if (response.data.success) {
-        alert("회원가입이 완료되었습니다!");
-        navigate("/login"); 
+        showToast("비밀번호 변경이 완료되었습니다.");
+        nextStep();
       } else {
-        alert(response.data.message || "회원가입 실패");
-      }
+        alert(response.data.message || "비밀번호 변경 실패");
+        return; 
+      }      
     } catch (error) {
-      console.error("회원가입 API 요청 오류:", error);
-      alert("회원가입 중 오류가 발생했습니다.");
+      console.error("비밀번호 API 요청 오류:", error);
+      alert("비밀번호 변경 중 오류가 발생했습니다.");
     }
   };
 
   const isButtonEnabled = formData.veriBtnText === "확인되었습니다";
   const isPasswordMatch = formData.password === formData.passwordCheck;
   const isPasswordValid = isPasswordMatch && formData.password.trim() !== "" && formData.passwordCheck.trim() !== "";
-  const isNicknameValid = formData.nickname.trim() !== "";
   const isAgreeAllChecked = formData.agreeBtnText1Clicked && formData.agreeBtnText2Clicked;
 
   return (
     <Wrapper>
       <Container>
+        {isToastVisible && <Toast message={toastMessage} setToastVisible={setToastVisible} />}
         {formData.step === 1 && (
           <>
             <LogoBox 
               showIcon={true} 
               logoSrc={WhiteLogo}
-              logoText="사용할 이메일을 등록해주세요"
+              logoText="이메일을 등록해주세요"
               miniText=" "
             />
             <InputBox
@@ -192,7 +219,7 @@ function SignUp() {
             <LogoBox 
               showIcon={true} 
               logoSrc={WhiteLogo}
-              logoText="사용할 비밀번호를 등록해주세요"
+              logoText="새로운 비밀번호를 등록해주세요"
               miniText="영문,숫자 포함 8-15자"
             />
             <InputBox
@@ -221,44 +248,20 @@ function SignUp() {
               <p style={{ color: "red", fontSize: "0.875rem" }}>비밀번호가 일치하지 않습니다.</p>
             )}
             <SignupBtn
-              text="닉네임 등록"
+              text="비밀번호 등록"
               isActive={isPasswordValid}
-              onClick={() => {
-                if (isPasswordValid) {
-                  nextStep();
+              onClick={() =>{
+                if (!isPasswordMatch) {
+                  showToast("비밀번호가 일치하지 않습니다."); // 🚀 alert 대신 toast 사용!
+                  return;
                 }
+                nextStep();
               }}
               showIcon={true}
             />
           </>
         )}
         {formData.step === 3 && (
-          <>
-            <LogoBox 
-              showIcon={true} 
-              logoSrc={WhiteLogo}
-              logoText="사용할 닉네임을 등록해주세요"
-              miniText="한글,영문,숫자 최대 15자"
-            />
-            <InputBox
-              type={"text"}
-              placeholder="낙네임 입력"
-              value={formData.nickname}
-              onChange={(e) => setFormData((prev) => ({ ...prev, nickname: e.target.value }))}
-            />
-            <SignupBtn
-              text="이용약관 및 개인정보처리방침 확인"
-              isActive={isNicknameValid}
-              onClick={() => {
-                if (isNicknameValid) {
-                  nextStep();
-                }
-              }}
-              showIcon={true}
-            />
-          </>
-        )}
-        {formData.step === 4 && (
           <>
             <LogoBox 
               showIcon={true} 
@@ -282,28 +285,27 @@ function SignUp() {
               onBtnClick={() => setFormData((prev) => ({ ...prev, agreeBtnText2Clicked: true }))}
             />
             <SignupBtn
-              text="회원가입 완료"
+              text="비밀번호 변경 완료"
               isActive={isAgreeAllChecked}
               onClick={() => {
                 if (isAgreeAllChecked) {
-                  handleSignUp();
-                  nextStep();
+                  handleResetPassword();
                 }
               }}
               showIcon={true}
             />
           </>
         )}
-        {formData.step === 5 && (
+        {formData.step === 4 && (
           <>
             <LogoBox 
               showIcon={true} 
               logoSrc={WhiteLogo}
-              logoText="회원가입이 완료되었습니다"
+              logoText="비밀번호 변경이 완료되었습니다"
               miniText=" "
             />
             <LoginBtn
-              text="로그인으로 이동"
+              text="홈화면으로 이동"
               onClick={() => navigate("/login")} 
               isActive={false}
             />
@@ -314,4 +316,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default ResetPassword;

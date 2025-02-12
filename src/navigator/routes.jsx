@@ -4,12 +4,15 @@ import AdminLogin from "../pages/login/admin-login";
 import SignUp from "../pages/login/signup";
 import MyPlaceList from "../pages/placeList/index";
 import Setting from "../pages/setting";
+import ResetPassword from "../pages/login/resetPassword";
 
 import Admin from "../pages/admin/";
 
 import MangeMagazine from "../pages/admin/magazine/MangeMagazine";
 
 import ManagePlace from "../pages/admin/place/ManagePlace";
+
+import OAuth from "../pages/login/OAuth";
 
 const routes = [
   // 지도(메인)
@@ -31,6 +34,11 @@ const routes = [
   {
     path: "/signup",
     element: <SignUp />,
+  },
+  // 비밀번호 재설정
+  {
+    path: "/repassword",
+    element: <ResetPassword />,
   },
   // 마이 플레이스
   {
@@ -57,6 +65,10 @@ const routes = [
     path: "/admin/place-management",
     element: <ManagePlace />,
   },
+  {
+    path: "OAuth",
+    element: <OAuth />
+  }
 ];
 
 export default routes;
