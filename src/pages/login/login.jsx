@@ -80,7 +80,6 @@ const Divider = styled.span`
   font-size: 0.875rem;
 `;
 
-
 function Login() {
   const [isActive, setIsActive] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
@@ -109,8 +108,12 @@ function Login() {
           ] = `Bearer ${accessToken}`;
           console.log("✅ Refresh Token:", cookies["refreshToken"]);
         }
+        if (response.data.role === "ADMIN") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
 
-        navigate("/");
         console.log("응답 헤더:", response);
       } catch (error) {
         console.log("로그인 에러: ", error);
@@ -118,12 +121,11 @@ function Login() {
     }
   };
 
-
   const KakaoBtnClick = () => {
     const baseURL = import.meta.env.VITE_BASE_URL;
     window.location.href = `${baseURL}auth/oauth2/kakao`;
   };
-  
+
   return (
     <Wrapper>
       <Container>
