@@ -81,6 +81,17 @@ export default function ShareModal({ isOpen, onClose, onToast }) {
       onToast("클립보드에 복사되었습니다");
     });
   };
+
+  const share = () => {
+    if (!navigator.canShare) {
+      alert("지원되지 않는 브라우저입니다");
+      return;
+    }
+    navigator.share({
+      title: document.title,
+      url: document.location.href,
+    });
+  };
   return (
     <Overlay onClick={onClose}>
       <Container onClick={(e) => e.stopPropagation()}>
@@ -88,7 +99,7 @@ export default function ShareModal({ isOpen, onClose, onToast }) {
           <ShowUrl>{url}</ShowUrl>
           <CopyBtn onClick={copyToClipboard}>복사</CopyBtn>
         </UrlContainer>
-        <KakaoShareBtn>
+        <KakaoShareBtn onClick={share}>
           <img src={kakaoLogo} alt="카카오로고" />
           카카오톡으로 공유하기
         </KakaoShareBtn>
