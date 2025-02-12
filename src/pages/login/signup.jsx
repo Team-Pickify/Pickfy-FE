@@ -7,6 +7,7 @@ import InputBox from "../../components/InputBox";
 import SignupBtn from "../../components/SignupBtn";
 import LoginBtn from "../../components/LoginBtn";
 import { TokenReq } from "../../apis/axiosInstance"; 
+import Toast from "../../components/toast/WhiteToast";
 
 const Wrapper = styled.div`
   display: flex;
@@ -48,6 +49,14 @@ function SignUp() {
     step: 1,
   });
 
+  const [toastMessage, setToastMessage] = useState("");
+  const [isToastVisible, setToastVisible] = useState(false);
+
+  const showToast = (message) => {
+    setToastMessage(message);
+    setToastVisible(true);
+  };
+
   const nextStep = () => {
     setFormData((prev) => ({
       ...prev,
@@ -61,7 +70,7 @@ function SignUp() {
 
   const onEBtnClick = async () => {
     if (!formData.email) {
-      alert("이메일을 입력해주세요.");
+      showToast("이메일을 입력해주세요.");
       return;
     }
   
@@ -71,7 +80,7 @@ function SignUp() {
       });
   
       console.log("인증코드 전송 응답:", response.data);
-      alert("인증코드가 전송되었습니다.");
+      showToast("인증코드가 전송되었습니다.");
   
       setFormData((prev) => ({
         ...prev,
@@ -80,13 +89,13 @@ function SignUp() {
       }));
     } catch (error) {
       console.error("인증코드 전송 오류:", error);
-      alert("인증코드 전송 중 오류가 발생했습니다.");
+      showToast("인증코드 전송 중 오류가 발생했습니다.");
     }
   };
 
   const onVBtnClick = async () => {
     if (!formData.email || !formData.verificationCode) {
-      alert("이메일과 인증코드를 입력해주세요.");
+      showToast("이메일과 인증코드를 입력해주세요.");
       return;
     }
   
@@ -97,7 +106,7 @@ function SignUp() {
       });
   
       console.log("인증코드 확인 응답:", response.data);
-      alert("인증코드가 확인되었습니다.");
+      showToast("인증코드가 확인되었습니다.");
   
       setFormData((prev) => ({
         ...prev,
@@ -108,7 +117,7 @@ function SignUp() {
       }));
     } catch (error) {
       console.error("인증코드 확인 오류:", error);
-      alert("인증코드 확인 중 오류가 발생했습니다.");
+      showToast("인증코드 확인 중 오류가 발생했습니다.");
     }
   };
 
@@ -129,14 +138,14 @@ function SignUp() {
       console.log("회원가입 응답 데이터:", response.data);
       
       if (response.data.success) {
-        alert("회원가입이 완료되었습니다!");
+        showToast("회원가입이 완료되었습니다!");
         navigate("/login"); 
       } else {
         alert(response.data.message || "회원가입 실패");
       }
     } catch (error) {
       console.error("회원가입 API 요청 오류:", error);
-      alert("회원가입 중 오류가 발생했습니다.");
+      showToast("회원가입 중 오류가 발생했습니다.");
     }
   };
 
@@ -149,6 +158,7 @@ function SignUp() {
   return (
     <Wrapper>
       <Container>
+        {isToastVisible && <Toast message={toastMessage} setToastVisible={setToastVisible} />}
         {formData.step === 1 && (
           <>
             <LogoBox 
