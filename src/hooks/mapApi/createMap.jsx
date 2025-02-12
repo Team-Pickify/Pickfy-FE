@@ -4,8 +4,8 @@ const createMap = (latitude,longitude,container,setcurmap) =>{
     const options = {
         center: new window.kakao.maps.LatLng(latitude, longitude),
         level: 4,
-      };
-      const newmap = new window.kakao.maps.Map(container, options); // 지도 생성
+    };
+    const newmap = new window.kakao.maps.Map(container, options); // 지도 생성
     setcurmap(newmap)
     const imageSize = new kakao.maps.Size(40, 45); 
     var curmarkerimage = new kakao.maps.MarkerImage(blackMarker, imageSize); 
@@ -16,6 +16,10 @@ const createMap = (latitude,longitude,container,setcurmap) =>{
                 title: "내 위치", // 마커 제목
                 image: curmarkerimage
     });
+    kakao.maps.event.addListener(newmap, 'zoom_changed', function() { 
+      const level = newmap.getLevel();
+      console.log("변경된 지도 레벨: ", level);
+  });
     return newmap
 
 }

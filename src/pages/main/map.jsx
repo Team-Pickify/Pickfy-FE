@@ -12,11 +12,13 @@ import getMagazinelist from '../../hooks/mapApi/getMagazinelist';
 import getCategorylist from '../../hooks/mapApi/getCategorylist';
 import getPlaceData from '../../hooks/mapApi/getPlaceData';
 import Marking from '../../hooks/mapApi/Marking';
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { MdMyLocation } from "react-icons/md";
 
 function Mapview() {
 
-  const num1 = 37.54240802
-  const num2 = 127.07130716
+
+  const[isClicked,setIsClicked] = useState(0)
 
   const [curlatitude,setcurlatitude] = useState(33.450701)
   const [curlongitude,setcurlongitude] = useState(126.570667)
@@ -134,7 +136,7 @@ function Mapview() {
      console.log(magazinebtn)
      const datas = await getPlaceData(newarr,(!id && !categorybtn[0] ?newarr2:magazinebtn),setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
      console.log(datas)
-     const mapp = await createMap(num1 /*latitude */,num2 /*longitude */,container,setcurmap);
+     const mapp = await createMap(curlatitude,curlongitude,container,setcurmap);
      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
   };
 
@@ -148,13 +150,18 @@ function Mapview() {
         return v
       }
      })
+     const newarr2 = categorybtn.map((v,i)=>{
+      if(i === 0)return 0
+      return v
+     })
      const container = mapRef.current;
+     setcategorybtn(newarr2)
      setmagazinebtn(newarr)
-     console.log(categorybtn)
+     console.log(newarr2)
      console.log(newarr)
-     const datas = await getPlaceData(categorybtn,newarr,setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
+     const datas = await getPlaceData(newarr2,newarr,setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
      console.log(datas)
-     const mapp = await createMap(num1 /*latitude */,num2 /*longitude */,container,setcurmap);
+     const mapp = await createMap(curlatitude ,curlongitude ,container,setcurmap);
      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
   };
 
@@ -171,10 +178,10 @@ function Mapview() {
       await getMagazinelist(setmagazinebtn,setmagazinearray);
       await getCategorylist(setcategorybtn,setcategoryarray);
       const {latitude,longitude} = await findLocation();
-      setcurlatitude(num1 /*latitude */)
-      setcurlongitude(num2/*longitude */)
-      const mapp = await createMap(num1 /*latitude */,num2 /*longitude */,container,setcurmap);
-      const datas = await getPlaceData([1],magazinebtn,setplacearray,[{id:52}],magazinearray,num1 /*latitude */,num2 /*longitude */)
+      setcurlatitude(latitude )
+      setcurlongitude(longitude)
+      const mapp = await createMap(latitude,longitude,container,setcurmap);
+      const datas = await getPlaceData([1],magazinebtn,setplacearray,[{id:52}],magazinearray,latitude,longitude)
       console.log(datas)
       Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
     });
@@ -185,10 +192,14 @@ function Mapview() {
     curmap.setCenter(new kakao.maps.LatLng(curlatitude, curlongitude));
   }
 
+  const getMyplace = ()=>{
+    setIsClicked(isClicked ? 0:1 )
+  }
+
 
   return (
     <>
-     <Mapbox ref = {mapRef}>
+     <Mapbox ref = {mapRef} >
      <Wrapper>
       {categoryarray.map((item,i) => (
         <Items
@@ -203,10 +214,16 @@ function Mapview() {
         </Items>
       ))}
     </Wrapper>
-      <Likebutton></Likebutton>
+      <Likebutton onClick={getMyplace}>
+        {isClicked ? (
+            <FaHeart onClick={getMyplace} color="FF4B4B" size={25}/>
+            ) : (
+            <FaRegHeart onClick={getMyplace} size={25} color={theme.Sub1}/>
+                )}
+      </Likebutton>
       
       <Curdesbutton onClick={switchTocur}>
-        <PiCompassRoseDuotone style={{width:"80%",height:"80%"}}/>
+        <MdMyLocation size={25} color="black" />
       </Curdesbutton>
       <Wrapper2>
       {magazinearray.map((item,i) => (
@@ -276,17 +293,6 @@ function Mapview() {
   );
 }
 export default Mapview;
-
-const kk = [
-  {
-    id : 1,
-    name:"컴투레스트",
-    category:"카페/베이커리",
-    short_description:"에스프레소 어쩌고",
-    images:["w","w"]
-           
-  }
-]
 
 const Wrapper = styled.div`
   z-index:100;
@@ -364,8 +370,8 @@ const Curdesbutton = styled.button`
   left: 80%;
   z-index: 10;
   &:hover {
-    background-color: grey;
-    transition: 0.7s;
+    background-color: ${theme.Sub2};
+    transition: 0s;
   }
 `;
 
@@ -380,8 +386,8 @@ const Likebutton = styled.button`
   left: 80%;
   z-index: 10;
   &:hover {
-    background-color: grey;
-    transition: 0.7s;
+    background-color: ${theme.Sub2};
+    transition: 0s;
   }
 `;
 
