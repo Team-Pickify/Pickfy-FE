@@ -2,22 +2,21 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { PiCompassRoseDuotone } from "react-icons/pi";
-import mapPermission from '../../hooks/mapPermission';
-import redMarker from "../../assets/redmarker.svg"
-import blackMarker from "../../assets/black_marker.svg"
+import mapPermission from '../../hooks/mapApi/mapPermission';
 import { theme } from "../../styles/themes";
 import axios from 'axios';
-import { TokenReq as getApi } from '../../apis/axiosInstance';
 import Info from '../../components/Info';
-import InfoSmall from '../../components/InfoSmall.jsx'
-import createMap from '../../hooks/createMap';
-import findLocation from '../../hooks/findLocation';
-import getMagazinelist from '../../hooks/getMagazinelist';
-import getCategorylist from '../../hooks/getCategorylist';
-import getPlaceData from '../../hooks/getPlaceData';
-import Marking from '../../hooks/Marking';
+import createMap from '../../hooks/mapApi/createMap';
+import findLocation from '../../hooks/mapApi/findLocation';
+import getMagazinelist from '../../hooks/mapApi/getMagazinelist';
+import getCategorylist from '../../hooks/mapApi/getCategorylist';
+import getPlaceData from '../../hooks/mapApi/getPlaceData';
+import Marking from '../../hooks/mapApi/Marking';
 
 function Mapview() {
+
+  const num1 = 37.54240802
+  const num2 = 127.07130716
 
   const [curlatitude,setcurlatitude] = useState(33.450701)
   const [curlongitude,setcurlongitude] = useState(126.570667)
@@ -41,7 +40,7 @@ function Mapview() {
   const [infoData,setinfoData] = useState(
     {
       name:"",
-      category:"",
+      categoryName:"",
       shortDescription : "",
       instagramLink:"",
       naverPlaceLink:""
@@ -100,21 +99,42 @@ function Mapview() {
   
 
   const handleClick = async(id) => {
-    const newarr = categorybtn.map((v,i)=>{
-      if(i == id){
-        return (v ? 0 : 1)
+    let newarr = []
+    let newarr2 = []
+    if(id === 0){
+      if(categorybtn[0] === 1){
+        newarr = categorybtn
       }
       else{
-        return v
+        newarr = [1]
+        for(let i=1;i<categorybtn.length;i++){
+          newarr = [...newarr,0]
+        }
+        newarr2 = magazinebtn.map((v)=>{return 0})
+        console.log(newarr2)
+        setmagazinebtn(newarr2)
       }
-     })
+    }
+    else{
+      newarr = categorybtn.map((v,i)=>{
+        if(i == id){
+          return (v ? 0 : 1)
+        }
+        else{
+          return v
+        }
+       })
+       if(newarr[0] === 1){
+        newarr[0] = 0;
+       }
+    }
      const container = mapRef.current;
      setcategorybtn(newarr)
      console.log(newarr)
      console.log(magazinebtn)
-     const datas = await getPlaceData(newarr,magazinebtn,setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
+     const datas = await getPlaceData(newarr,(!id && !categorybtn[0] ?newarr2:magazinebtn),setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
      console.log(datas)
-     const mapp = await createMap(33.45101 /*latitude */,126.5705 /*longitude */,container,setcurmap);
+     const mapp = await createMap(num1 /*latitude */,num2 /*longitude */,container,setcurmap);
      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
   };
 
@@ -134,7 +154,7 @@ function Mapview() {
      console.log(newarr)
      const datas = await getPlaceData(categorybtn,newarr,setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
      console.log(datas)
-     const mapp = await createMap(33.45101 /*latitude */,126.5705 /*longitude */,container,setcurmap);
+     const mapp = await createMap(num1 /*latitude */,num2 /*longitude */,container,setcurmap);
      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
   };
 
@@ -151,10 +171,10 @@ function Mapview() {
       await getMagazinelist(setmagazinebtn,setmagazinearray);
       await getCategorylist(setcategorybtn,setcategoryarray);
       const {latitude,longitude} = await findLocation();
-      setcurlatitude(33.45101 /*latitude */)
-      setcurlongitude(126.5705/*longitude */)
-      const mapp = await createMap(33.45101 /*latitude */,126.5705 /*longitude */,container,setcurmap);
-      const datas = await getPlaceData(categorybtn,magazinebtn,setplacearray,categoryarray,magazinearray,33.45101 /*latitude */,126.5705 /*longitude */)
+      setcurlatitude(num1 /*latitude */)
+      setcurlongitude(num2/*longitude */)
+      const mapp = await createMap(num1 /*latitude */,num2 /*longitude */,container,setcurmap);
+      const datas = await getPlaceData([1],magazinebtn,setplacearray,[{id:52}],magazinearray,num1 /*latitude */,num2 /*longitude */)
       console.log(datas)
       Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
     });
@@ -199,7 +219,6 @@ function Mapview() {
         </Items>
       ))}
     </Wrapper2>
-    <CCC onClick={handleOpenBottomSheet}></CCC>
        <BottomSheet ref={bottomSheetRef}
       
        style={{ transform: `translateY(${translateY}%)` }}
@@ -213,13 +232,31 @@ function Mapview() {
         </BottomSheettop>
         {bottomSheetState === "full" ? (
            <Listcontainer>
-            <InfoSmall places={placearray} ></InfoSmall>
+            <div style={{width:"90%",marginLeft:"5%"}}>
+              {placearray?.map((place) => (
+                <div key={place.placeId}>
+                  <Info
+                    name={place.name}
+                    categoryName={place.categoryName}
+                    shortDescription={place.shortDescription}
+                    instagramLink={place.instagramLink}
+                    naverLink={place.naverLink}
+                  />
+              <Imgcontainer2>
+              {place.placeImageUrl?.map((image, index) => (
+                <Img key={index} src={image} alt={`${place.name} 이미지`} />
+              ))}
+            </Imgcontainer2>
+          </div>
+        ))}
+            </div>
+            
            </Listcontainer>
         ) : <div style={{ width: "100%", height: "95%"}}>
         
          <div style={{ width: "90%", height: "15%",marginLeft:"5%"}} >
          <Info 
-          name={infoData.name} category={infoData.category} shortDescription={infoData.shortDescription} instagramLink={infoData.instagramLink} naverPlaceLink={infoData.naverPlaceLink}
+          name={infoData.name} categoryName={infoData.categoryName} shortDescription={infoData.shortDescription} instagramLink={infoData.instagramLink} naverLink={infoData.naverLink}
          >
          </Info>
          </div>
@@ -432,8 +469,29 @@ justify-content : center;
 
 const Listcontainer = styled.div`
 width:100%;
-height:40%;
+height:100%;
+overflow:auto;
 `
+
+const Imgcontainer2 = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.1875rem;
+  margin: 0 0 1.5rem 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+const Img = styled.img`
+  width: 6.75rem;
+  height: 6.75rem;
+  border-radius: 0.25rem;
+`;
 
 // &.visible {
 //   transform: translateY(0); /* 보이게 하기 */

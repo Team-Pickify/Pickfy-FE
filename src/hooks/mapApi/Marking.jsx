@@ -1,4 +1,4 @@
-import redMarker from "../assets/redmarker.svg"
+import redMarker from "../../assets/redmarker.svg"
 
 const Marking = (datas,setinfoData,curmap,handleOpenBottomSheet,setimagearray)=>{
 
@@ -19,10 +19,10 @@ const Marking = (datas,setinfoData,curmap,handleOpenBottomSheet,setimagearray)=>
         setimagearray(v.imageUrls)
         setinfoData({
           name:v.name,
-          category:v.categories[0],
+          categoryName:v.categories[0],
           shortDescription : v.shortDescription,
-          instagramLink:"11",
-          naverPlaceLink:"11"
+          instagramLink:v.instagramLink,
+          naverLink:v.naverLink
         })
         handleOpenBottomSheet();
       });
