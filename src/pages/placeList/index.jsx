@@ -5,9 +5,11 @@ import CategoryBtn from "../../components/categoryBtn";
 import Carousel from "../../components/carousel/Carousel";
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { theme } from "../../styles/themes";
 import DropdownOptions from "../../components/DropdownOptions";
+import axios from "axios";
+import { TokenReq } from "../../apis/axiosInstance";
 
 const Wrapper = styled.div`
   height: auto;
@@ -50,38 +52,12 @@ const DropdownWrapper = styled.div`
   left: -2rem; /* 끝나는 지점을 SelectedItem과 맞춤 */
   z-index: 99;
 `;
-
+const ListContainer = styled.div`
+  padding: 0.5rem;
+`;
 function MyPlaceList() {
-  const places = [
-    {
-      id: 1,
-      name: "플레이스명",
-      category: "카테고리명",
-      short_description: "한줄소개",
-      instagram_link: "https://www.instagram.com",
-      naverplace_link: "https://www.naver.com",
-      images: [
-        { id: 1, url: cafe1 },
-        { id: 2, url: cafe1 },
-        { id: 3, url: cafe1 },
-        { id: 4, url: cafe1 },
-      ],
-    },
-    {
-      id: 2,
-      name: "플레이스명",
-      category: "카테고리명",
-      short_description: "한줄소개",
-      instagram_link: "https://www.instagram.com",
-      naverplace_link: "https://www.naver.com",
-      images: [
-        { id: 1, url: cafe1 },
-        { id: 2, url: cafe1 },
-        { id: 3, url: cafe1 },
-        { id: 4, url: cafe1 },
-      ],
-    },
-  ];
+  const [places, setPlaces] = useState([]);
+
   const categoryoptions = ["전체", "매거진A", "매거진B", "매거진C", "매거진D"];
   const sortoptions = ["최신순", "좋아요순"];
 
@@ -89,6 +65,30 @@ function MyPlaceList() {
   const [selectedSort, setSelectedSort] = useState("최신순");
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
+
+  const fetchPlaces = async () => {
+    try {
+      const response = await TokenReq.get("/places", {
+        headers: {
+          "Cache-Control": "no-cache",
+          Pragma: "no-cache",
+        },
+      });
+
+      // 데이터가 성공적으로 왔을 때, 상태에 저장
+      if (response && response.data) {
+        setPlaces(response.data.result); // 받은 데이터를 상태에 저장
+      } else {
+        console.log("응답 데이터가 없습니다.");
+      }
+    } catch (error) {
+      console.error("API 요청 오류:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlaces();
+  }, []);
 
   return (
     <Wrapper>
@@ -142,7 +142,9 @@ function MyPlaceList() {
             )}
           </SelectedItem>
         </DrowdownContainer>
-        <InfoSmall places={places} />
+        <ListContainer>
+          <InfoSmall places={places} />
+        </ListContainer>
       </Container>
     </Wrapper>
   );

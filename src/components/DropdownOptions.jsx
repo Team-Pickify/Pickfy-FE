@@ -40,10 +40,10 @@ export default function DropdownOptions({ setVal, options, wd }) {
   return (
     <div>
       <OptionBox wd={wd}>
-        {options.map((v, idx) => {
+        {options.map((v) => {
           return (
-            <Option key={v + idx} onClick={() => handleOpt(v)}>
-              {v}
+            <Option key={v.id} onClick={() => handleOpt(v.id)}>
+              {v.title}
             </Option>
           );
         })}

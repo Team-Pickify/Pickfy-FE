@@ -35,8 +35,6 @@ const Btn = styled.div`
 `;
 
 export default function MangeMagazine() {
-  // const baseUrl = import.meta.env.VITE_BASE_URL;
-
   const [list, setList] = useState([]);
   const [page, setPage] = useState("main");
   const [selectedBrand, setSelectedBrand] = useState("");
@@ -45,8 +43,17 @@ export default function MangeMagazine() {
   useEffect(() => {
     TokenReq.get("/magazines")
       .then((res) => res.data.result)
-      .then((data) => console.log(data));
-  }, []);
+      .then((data) => {
+        const getData = data.map((v) => {
+          return {
+            id: v.id,
+            title: v.title,
+            iconUrl: v.iconUrl,
+          };
+        });
+        setList(getData);
+      });
+  }, [page, setPage]);
 
   const HandleLeftBtn = () => {
     navigate(-1);
@@ -72,20 +79,18 @@ export default function MangeMagazine() {
               <GoPlus size={28} color={theme.Sub1} />
             </Btn>
           </Header>
-          {list.map((v, idx) => (
-            <div key={idx} onClick={() => HandleBrandName(idx)}>
-              <Linkbox name={v} addr="#" />
+          {list.map((v) => (
+            <div key={v.id} onClick={() => HandleBrandName(v.id)}>
+              <Linkbox name={v.title} addr="#" />
             </div>
           ))}
         </div>
       ) : page === "add" ? (
-        <AddMagazine list={list} setList={setList} setPage={setPage} />
+        <AddMagazine setPage={setPage} />
       ) : (
         <FixMagazine
-          list={list}
-          setList={setList}
+          mag={list.filter((v) => v.id === selectedBrand)[0]}
           setPage={setPage}
-          brandIdx={selectedBrand}
         />
       )}
     </div>

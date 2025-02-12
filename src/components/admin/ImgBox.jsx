@@ -26,15 +26,6 @@ const Line = styled.div`
   background-color: ${theme.Sub3};
 `;
 
-const FileInput = styled.input`
-  cursor: pointer;
-  width: 15rem;
-  padding: 1rem;
-
-  border: 2px solid ${theme.Sub3};
-  border-radius: 5px;
-`;
-
 const Greybox = styled.div`
   width: 20vh;
   height: 20vh;
@@ -54,8 +45,8 @@ const ImagePreview = styled.img`
   border-radius: 1vh;
 `;
 
-export default function ImgBox({ register, name }) {
-  const [image, setImage] = useState(null);
+export default function ImgBox({ name, regId, register, img }) {
+  const [image, setImage] = useState(img);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -74,8 +65,7 @@ export default function ImgBox({ register, name }) {
           id="brandImage"
           accept="image/*"
           style={{ display: "none" }}
-          {...register(name, {
-            required: "이미지는 필수입니다.",
+          {...register(regId, {
             onChange: (e) => handleFileChange(e),
           })}
         />

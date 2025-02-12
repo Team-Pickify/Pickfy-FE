@@ -3,8 +3,9 @@ import { theme } from "../../styles/themes";
 
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DropdownOptions from "../DropdownOptions";
+import { TokenReq } from "../../apis/axiosInstance";
 
 const Container = styled.div`
   display: flex;
@@ -18,7 +19,7 @@ const Name = styled.div`
 const Box = styled.div`
   display: flex;
   align-items: center;
-  margin: 1.5rem 2rem;
+  margin: 1.5rem;
   margin-right: 0;
   gap: 2rem;
 `;
@@ -26,8 +27,7 @@ const Box = styled.div`
 const Dropdown = styled.div`
   position: relative;
   cursor: pointer;
-  //width: 15vh;
-  width: auto;
+  width: 8rem;
   padding: 1vh 1.5vh;
 
   display: flex;
@@ -36,7 +36,7 @@ const Dropdown = styled.div`
   gap: 0.3rem;
 
   color: ${theme.Sub1};
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 
   border: 1px solid ${theme.Sub3};
   border-radius: 10vh;
@@ -49,9 +49,30 @@ const Line = styled.div`
   background-color: ${theme.Sub3};
 `;
 
-export default function DropdownBox({ register, name, kind, options }) {
+export default function DropdownBox({ name, val, setVal }) {
   const [toggle, setToggle] = useState(false);
-  const [val, setVal] = useState(kind);
+  const [options, setOptions] = useState([]);
+
+  const getOptions = async () => {
+    const opts = [];
+    const opt = name === "매거진";
+    const url = opt ? "/magazines" : "/categories";
+    await TokenReq.get(url)
+      .then((res) => res.data.result)
+      .then((data) => {
+        data.map((v) => {
+          opts.push({ id: v.id, title: opt ? v.title : v.name });
+        });
+      });
+    setOptions(opts);
+  };
+
+  useEffect(() => {
+    const fetchData = () => {
+      getOptions();
+    };
+    fetchData();
+  }, [name]);
 
   const handleDropbox = () => {
     setToggle(!toggle);
@@ -63,7 +84,11 @@ export default function DropdownBox({ register, name, kind, options }) {
       <Box>
         <Name>{name}</Name>
         <Dropdown onClick={handleDropbox}>
-          <div>{val}</div>
+          {val ? (
+            options.find((v) => v.id === val)?.title
+          ) : (
+            <div>{name} 선택</div>
+          )}
           {toggle ? (
             <IoIosArrowUp color={theme.Sub1} size="1rem" />
           ) : (

@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { theme } from "../../styles/themes";
-import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { RiDeleteBin2Line } from "react-icons/ri";
+import { useEffect, useState } from "react";
 
 const Container = styled.div`
   display: flex;
@@ -20,10 +20,14 @@ const HeaderBox = styled.div`
 `;
 
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1rem;
+  /* display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+
+  padding: 0 3rem;
 `;
 
 const Name = styled.div`
@@ -32,6 +36,7 @@ const Name = styled.div`
 
 const Box = styled.div`
   display: flex;
+  justify-content: center;
 `;
 
 const Line = styled.div`
@@ -42,8 +47,8 @@ const Line = styled.div`
 `;
 
 const Greybox = styled.div`
-  width: 18vh;
-  height: 18vh;
+  width: 8rem;
+  height: 8rem;
 
   display: flex;
   justify-content: center;
@@ -54,56 +59,72 @@ const Greybox = styled.div`
 `;
 
 const ImagePreview = styled.img`
-  width: 18vh;
-  height: 18vh;
+  width: 8rem;
+  height: 8rem;
 
   border-radius: 1vh;
 `;
 
-export default function PlaceImgBox({ register, name }) {
-  const [images, setImages] = useState(Array(6).fill(null));
+export default function PlaceImgBox({ images, setImages }) {
+  const [addState, setAddState] = useState(true);
 
-  const handleFileChange = (index) => (e) => {
+  useEffect(() => {
+    setAddState(images.length < 5);
+  }, [images]);
+
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
+
     if (file) {
-      const newImages = [...images];
-      newImages[index] = URL.createObjectURL(file);
-      setImages(newImages);
+      setImages((prevImages) => [...prevImages, file]);
+      e.target.value = "";
     }
+  };
+
+  const handleDelImg = () => {
+    setImages([]);
+    setAddState(true);
   };
 
   return (
     <Container>
       <Line />
       <HeaderBox>
-        <Name>{name}</Name>
-        <RiDeleteBin2Line color={theme.Sub3} size="1.5rem" />
+        <Name>이미지</Name>
+        <RiDeleteBin2Line
+          color={theme.Sub3}
+          size="1.5rem"
+          onClick={handleDelImg}
+        />
       </HeaderBox>
       <Wrapper>
         {images.map((image, index) => (
-          <Box key={image + index}>
-            <input
-              type="file"
-              id={`brandImage${index}`}
-              accept="image/*"
-              style={{ display: "none" }}
-              {...register(`${name}[${index}]`, {
-                required: "이미지는 필수입니다.",
-                onChange: handleFileChange(index),
-              })}
+          <Box key={index}>
+            <ImagePreview
+              src={
+                typeof image === "string" ? image : URL.createObjectURL(image)
+              }
+              alt={`preview ${index + 1}`}
             />
-
-            <label htmlFor={`brandImage${index}`}>
-              {image ? (
-                <ImagePreview src={image} alt={`preview ${index + 1}`} />
-              ) : (
-                <Greybox>
-                  <FaPlus color="white" size="1.5rem" />
-                </Greybox>
-              )}
-            </label>
           </Box>
         ))}
+        {addState && (
+          <Box>
+            <input
+              type="file"
+              id={`brandImage`}
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
+
+            <label htmlFor={`brandImage`}>
+              <Greybox>
+                <FaPlus color="white" size="1.5rem" />
+              </Greybox>
+            </label>
+          </Box>
+        )}
       </Wrapper>
     </Container>
   );

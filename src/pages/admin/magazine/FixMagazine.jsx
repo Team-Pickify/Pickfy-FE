@@ -6,6 +6,8 @@ import { IoCheckmark } from "react-icons/io5";
 import { theme } from "../../../styles/themes";
 import DetailBox from "../../../components/admin/DetailBox";
 import ImgBox from "../../../components/admin/ImgBox";
+import DeleteBtn from "../../../components/admin/DeleteBtn";
+import { TokenReq } from "../../../apis/axiosInstance";
 
 const Header = styled.div`
   display: flex;
@@ -31,20 +33,30 @@ const Btn = styled.button`
   align-items: center;
 `;
 
-export default function FixMagazine({ list, setList, setPage, brandIdx }) {
+export default function FixMagazine({ mag, setPage }) {
   const { register, handleSubmit } = useForm({
-    defaultValues: { 브랜드명: list[brandIdx], "대표 이미지": "" },
+    defaultValues: { title: mag.title, iconUrl: mag.iconUrl },
   });
 
   const HandleLeftBtn = () => setPage("main");
-  const submit = (data) => {
-    console.log("remove: ", data);
 
-    const newList = list.map((v, idx) => {
-      return brandIdx === idx ? data["브랜드명"] : v;
-    });
-    setList(newList);
-    setPage("main");
+  const submit = async (data) => {
+    try {
+      const formData = new FormData();
+
+      formData.append("title", data.title);
+      if (data.iconUrl.length === 1) {
+        formData.append("iconFile", data.iconUrl[0]);
+      }
+
+      await TokenReq.put(`/admin/magazines/${mag.id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      setPage("main");
+    } catch (error) {
+      console.log("매거진 추가 중 오류 발생: ", error);
+    }
   };
 
   return (
@@ -59,9 +71,15 @@ export default function FixMagazine({ list, setList, setPage, brandIdx }) {
             <IoCheckmark size={28} color={theme.Sub1} />
           </Btn>
         </Header>
-        <DetailBox name="브랜드명" register={register} />
-        <ImgBox name="대표 이미지" register={register} />
+        <DetailBox name="브랜드명" regId="title" register={register} />
+        <ImgBox
+          name="대표 이미지"
+          regId="iconUrl"
+          register={register}
+          img={mag.iconUrl}
+        />
       </form>
+      <DeleteBtn id={mag.id} setPage={setPage} kind="magazine" />
     </div>
   );
 }

@@ -24,22 +24,18 @@ function InfoSmall({ places }) {
   console.log(places);
   return (
     <>
-      {places.map((place) => (
-        <div key={place.id}>
+      {places?.map((place) => (
+        <div key={place.placeId}>
           <Info
             name={place.name}
-            category={place.category}
-            shortDescription={place.short_description}
-            instagramLink={place.instagram_link}
-            naverPlaceLink={place.naverplace_link}
+            categoryName={place.categoryName}
+            shortDescription={place.shortDescription}
+            instagramLink={place.instagramLink}
+            naverLink={place.naverLink}
           />
           <Imgcontainer>
-            {place.images.map((image) => (
-              <Img
-                key={image.id}
-                src={image.url}
-                alt={`${place.name} 이미지`}
-              />
+            {place.placeImageUrl?.map((image, index) => (
+              <Img key={index} src={image} alt={`${place.name} 이미지`} />
             ))}
           </Imgcontainer>
         </div>

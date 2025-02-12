@@ -17,7 +17,7 @@ const StyledButton = styled.button`
   background-color: ${({ isActive, bgColor }) =>
     isActive ? bgColor || "#FF4B4B" : "black"}; 
   color: ${({ textColor }) => textColor || "white"}; 
-  cursor: ${({ isActive }) => (isActive ? "pointer" : "not-allowed")}; 
+  cursor: ${({ isActive, text }) => (text === "로그인으로 이동" ? "pointer" : isActive ? "pointer" : "not-allowed")};
   transition: background-color 0.3s ease;
 
   &:disabled {

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 
@@ -7,6 +6,7 @@ import ImgBox from "../../../components/admin/ImgBox";
 import { theme } from "../../../styles/themes";
 import { GoArrowLeft } from "react-icons/go";
 import { IoCheckmark } from "react-icons/io5";
+import { TokenReq } from "../../../apis/axiosInstance";
 
 const Header = styled.div`
   display: flex;
@@ -32,13 +32,24 @@ const Btn = styled.button`
   align-items: center;
 `;
 
-export default function AddMagazine({ list, setList, setPage }) {
+export default function AddMagazine({ setPage }) {
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    setList([...list, data["브랜드명"]]);
-    setPage("main");
+  const onSubmit = async (data) => {
+    try {
+      const formData = new FormData();
+
+      formData.append("title", data.title);
+      formData.append("iconFile", data.iconUrl[0]);
+
+      await TokenReq.post("/admin/magazines", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      setPage("main");
+    } catch (error) {
+      console.log("매거진 추가 중 오류 발생: ", error);
+    }
   };
 
   return (
@@ -57,8 +68,8 @@ export default function AddMagazine({ list, setList, setPage }) {
             <IoCheckmark size={28} color={theme.Sub1} />
           </Btn>
         </Header>
-        <DetailBox name="브랜드명" register={register} />
-        <ImgBox name="대표 이미지" register={register} />
+        <DetailBox name="브랜드명" regId="title" register={register} />
+        <ImgBox name="대표 이미지" regId="iconUrl" register={register} img="" />
       </form>
     </div>
   );
