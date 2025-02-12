@@ -61,7 +61,7 @@ const Button = styled.button`
   background-color: ${({ isClicked }) =>
     isClicked ?  "#7E7E7E" : "black"}; 
   color: white; 
-  cursor: ${({ isClicked }) => (isClicked ? "pointer" : "not-allowed")}; 
+  cursor: pointer;
   transition: background-color 0.2s ease;
 
   &:disabled {

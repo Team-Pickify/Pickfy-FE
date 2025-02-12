@@ -6,6 +6,7 @@ import LogoBox from "../../components/LogoBox";
 import InputBox from "../../components/InputBox";
 import SignupBtn from "../../components/SignupBtn";
 import LoginBtn from "../../components/LoginBtn";
+import { TokenReq } from "../../apis/axiosInstance"; 
 
 const Wrapper = styled.div`
   display: flex;
@@ -32,6 +33,7 @@ function SignUp() {
     passwordCheck: "",
     nickname: "",
     verificationCode: "",
+    emailToken: "",
     emailBtnText: "인증코드 전송",
     veriBtnText: "인증코드 확인",
     agreeBtnText1: "동의합니다",
@@ -57,20 +59,85 @@ function SignUp() {
     setFormData((prev) => ({ ...prev, step: prev.step - 1 }));
   };
 
-  const onEBtnClick = () => {
-    setFormData((prev) => ({
-      ...prev,
-      isEmailClicked: true,
-      emailBtnText: "인증코드 재전송",
-    }));
+  const onEBtnClick = async () => {
+    if (!formData.email) {
+      alert("이메일을 입력해주세요.");
+      return;
+    }
+  
+    try {
+      const response = await TokenReq.post("/email-auth/send-code", {
+        email: formData.email, 
+      });
+  
+      console.log("인증코드 전송 응답:", response.data);
+      alert("인증코드가 전송되었습니다.");
+  
+      setFormData((prev) => ({
+        ...prev,
+        isEmailClicked: true,
+        emailBtnText: "인증코드 재전송",
+      }));
+    } catch (error) {
+      console.error("인증코드 전송 오류:", error);
+      alert("인증코드 전송 중 오류가 발생했습니다.");
+    }
   };
 
-  const onVBtnClick = () => {
-    setFormData((prev) => ({
-      ...prev,
-      isVeriClicked: true,
-      veriBtnText: "확인되었습니다",
-    }));
+  const onVBtnClick = async () => {
+    if (!formData.email || !formData.verificationCode) {
+      alert("이메일과 인증코드를 입력해주세요.");
+      return;
+    }
+  
+    try {
+      const response = await TokenReq.post("/email-auth/verify-code", {
+        email: formData.email, 
+        code: formData.verificationCode, 
+      });
+  
+      console.log("인증코드 확인 응답:", response.data);
+      alert("인증코드가 확인되었습니다.");
+  
+      setFormData((prev) => ({
+        ...prev,
+        isVeriClicked: true,
+        veriBtnText: "확인되었습니다",
+        emailToken: response.data.result.emailToken,
+        email: response.data.result.email,
+      }));
+    } catch (error) {
+      console.error("인증코드 확인 오류:", error);
+      alert("인증코드 확인 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleSignUp = async () => {
+  
+    const signupData = {
+      nickname: formData.nickname,
+      password: formData.password,
+      email: formData.email,
+      emailToken: formData.emailToken
+    };
+
+    console.log("회원가입 요청 데이터:", signupData);
+  
+    try {
+      const response = await TokenReq.post("/users/signup", signupData);
+
+      console.log("회원가입 응답 데이터:", response.data);
+      
+      if (response.data.success) {
+        alert("회원가입이 완료되었습니다!");
+        navigate("/login"); 
+      } else {
+        alert(response.data.message || "회원가입 실패");
+      }
+    } catch (error) {
+      console.error("회원가입 API 요청 오류:", error);
+      alert("회원가입 중 오류가 발생했습니다.");
+    }
   };
 
   const isButtonEnabled = formData.veriBtnText === "확인되었습니다";
@@ -219,6 +286,7 @@ function SignUp() {
               isActive={isAgreeAllChecked}
               onClick={() => {
                 if (isAgreeAllChecked) {
+                  handleSignUp();
                   nextStep();
                 }
               }}

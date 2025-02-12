@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import LoginBtn from "../../components/LoginBtn";
@@ -9,6 +9,7 @@ import LogoBox from "../../components/LogoBox";
 import { theme } from "../../styles/themes";
 import { TokenReq } from "../../apis/axiosInstance";
 import { Cookies, useCookies } from "react-cookie";
+import OAuth from "../login/OAuth";
 
 const Wrapper = styled.div`
   background-color: ${theme.Text};
@@ -79,6 +80,7 @@ const Divider = styled.span`
   font-size: 0.875rem;
 `;
 
+
 function Login() {
   const [isActive, setIsActive] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
@@ -115,6 +117,13 @@ function Login() {
       }
     }
   };
+
+
+  const KakaoBtnClick = () => {
+    const baseURL = import.meta.env.VITE_BASE_URL;
+    window.location.href = `${baseURL}auth/oauth2/kakao`;
+  };
+  
   return (
     <Wrapper>
       <Container>
@@ -153,17 +162,14 @@ function Login() {
           textColor={theme.KakaoBrown}
           borderColor={theme.KakaoYellow}
           imageSrc={KakaoLogo}
-          onClick={() => {
-            if (isButtonEnabled) {
-              setIsActive(!isActive);
-            }
-          }}
+          onClick={KakaoBtnClick}
         />
+        <OAuth />
         <LinkCon>
           <div>
             <StyledLink to="/signup">회원가입</StyledLink>
             <Divider>/</Divider>
-            <StyledLink to="/setting">비밀번호 찾기</StyledLink>
+            <StyledLink to="/repassword">비밀번호 찾기</StyledLink>
           </div>
           <StyledLink to="/adminlogin">관리자 로그인</StyledLink>
         </LinkCon>
