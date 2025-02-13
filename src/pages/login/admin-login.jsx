@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
 import LoginBtn from "../../components/LoginBtn";
 import InputBox from "../../components/InputBox";
 import WhiteLogo from "../../assets/Logo_White.svg";
 import LogoBox from "../../components/LogoBox";
 import {theme} from "../../styles/themes";
+import { TokenReq } from "../../apis/axiosInstance";
+import { Cookies, useCookies } from "react-cookie";
 
 const Wrapper = styled.div`
   background-color: ${theme.Text};
@@ -23,12 +25,42 @@ const Container = styled.div`
 
 
 function Login() {
-  const [isActive, setIsActive] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const isButtonEnabled = email.trim() !== "" && password.trim() !== "";
+
+  const navigate = useNavigate();
+  const [cookies, setCookies] = useCookies();
+  const handleLogin = async () => {
+    if (isButtonEnabled) {
+      try {
+        const response = await TokenReq.post("/auth/login", {
+          principal: email,
+          password,
+        });
+        console.log("🔍 전체 응답 객체:", response);
+
+        if (response.status === 200 && response.data.role === "ADMIN") {
+          //const accessToken = response.headers["authorization"];
+          const accessToken = response.headers.authorization?.split(" ")[1];
+          console.log("access token: ", accessToken);
+          console.log(response.headers.authorization);
+          setCookies("accessToken", accessToken, { path: "/" });
+          TokenReq.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${accessToken}`;
+          console.log("✅ Refresh Token:", cookies["refreshToken"]);
+        }
+
+        navigate("/");
+        console.log("응답 헤더:", response);
+      } catch (error) {
+        console.log("로그인 에러: ", error);
+      }
+    }
+  };
 
   return (
     <Wrapper>
@@ -54,11 +86,7 @@ function Login() {
         <LoginBtn
           text="Login"
           isActive={isButtonEnabled}
-          onClick={() => {
-            if (isButtonEnabled) {
-              setIsActive(!isActive);
-            }
-          }}
+          onClick={handleLogin}
         />
       </Container>
     </Wrapper>
