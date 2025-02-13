@@ -14,6 +14,8 @@ import getPlaceData from '../../hooks/mapApi/getPlaceData';
 import Marking from '../../hooks/mapApi/Marking';
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { MdMyLocation } from "react-icons/md";
+import getMyplaceData from '../../hooks/mapApi/getMyPlcaeData';
+import selectarray from '../../hooks/mapApi/selectarray';
 
 function Mapview() {
 
@@ -24,6 +26,7 @@ function Mapview() {
   const [curlongitude,setcurlongitude] = useState(126.570667)
 
   const [placearray,setplacearray] = useState([]);
+  const [myPlacearray,setmyPlacearray] = useState([])
 
   const [magazinearray,setmagazinearray] = useState([])
   const [magazinebtn, setmagazinebtn] = useState([]);
@@ -134,10 +137,16 @@ function Mapview() {
      setcategorybtn(newarr)
      console.log(newarr)
      console.log(magazinebtn)
-     const datas = await getPlaceData(newarr,(!id && !categorybtn[0] ?newarr2:magazinebtn),setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
-     console.log(datas)
      const mapp = await createMap(curlatitude,curlongitude,container,setcurmap);
-     Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+     if(isClicked){
+        const newdata = selectarray(myPlacearray,categoryarray,magazinearray,newarr,(!id && newarr[0] ?newarr2:magazinebtn))
+        Marking(newdata,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+     }
+     else{
+      const datas = await getPlaceData(newarr,(!id && newarr[0] ?newarr2:magazinebtn),setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
+      console.log(datas)
+      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+     }
   };
 
 
@@ -159,10 +168,17 @@ function Mapview() {
      setmagazinebtn(newarr)
      console.log(newarr2)
      console.log(newarr)
-     const datas = await getPlaceData(newarr2,newarr,setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
-     console.log(datas)
      const mapp = await createMap(curlatitude ,curlongitude ,container,setcurmap);
-     Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+     if(isClicked){
+      const newdata = selectarray(myPlacearray,categoryarray,magazinearray,newarr2,newarr)
+      Marking(newdata,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+     }
+     else{
+      const datas = await getPlaceData(newarr2,newarr,setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
+      console.log(datas)
+      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+     }
+     
   };
 
   useEffect(() => {
@@ -192,8 +208,30 @@ function Mapview() {
     curmap.setCenter(new kakao.maps.LatLng(curlatitude, curlongitude));
   }
 
-  const getMyplace = ()=>{
+  const getMyplace = async ()=>{
+    const mapp = await createMap(curlatitude,curlongitude,mapRef.current,setcurmap);
+    if(!isClicked){
+      const datas = await getMyplaceData();
+      console.log(datas)
+      const newarr = datas.map((v)=>{
+        const x = [v.categoryName]
+        return {...v,imageUrls:v.placeImageUrl,categories:x}
+      })
+      console.log(newarr)
+      setmyPlacearray(newarr)
+      const newdata = selectarray(newarr,categoryarray,magazinearray,categorybtn,magazinebtn);
+      console.log(newdata)
+      Marking(newdata , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
+    }
+    else{
+      const datas  = await getPlaceData(categorybtn,magazinebtn,setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
+      console.log(datas)
+      Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
+    }
+
+
     setIsClicked(isClicked ? 0:1 )
+    
   }
 
 
@@ -216,9 +254,9 @@ function Mapview() {
     </Wrapper>
       <Likebutton onClick={getMyplace}>
         {isClicked ? (
-            <FaHeart onClick={getMyplace} color="FF4B4B" size={25}/>
+            <FaHeart color="FF4B4B" size={25}/>
             ) : (
-            <FaRegHeart onClick={getMyplace} size={25} color={theme.Sub1}/>
+            <FaRegHeart size={25} color={theme.Sub1}/>
                 )}
       </Likebutton>
       
