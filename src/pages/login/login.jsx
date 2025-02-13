@@ -97,7 +97,9 @@ function Login() {
           principal: email,
           password,
         });
-        if (response.status === 200) {
+        console.log("🔍 전체 응답 객체:", response);
+
+        if (response.status === 200 && response.data.role === "USER") {
           //const accessToken = response.headers["authorization"];
           const accessToken = response.headers.authorization?.split(" ")[1];
           console.log("access token: ", accessToken);

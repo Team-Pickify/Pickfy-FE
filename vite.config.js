@@ -40,7 +40,7 @@ export default defineConfig({
     https: {
       key: fs.readFileSync(path.resolve(__dirname, "localhost-key.pem")),
       cert: fs.readFileSync(path.resolve(__dirname, "localhost.pem")),
-    },
+  },
   },
   resolve: {
     alias: {
@@ -49,11 +49,5 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ["react-cookie"],
-  },
-  server: {
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, "localhost-key.pem")),
-      cert: fs.readFileSync(path.resolve(__dirname, "localhost.pem")),
-    },
   },
 });
