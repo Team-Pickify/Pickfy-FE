@@ -55,7 +55,7 @@ function Login() {
           console.log("✅ Refresh Token:", cookies["refreshToken"]);
         }
 
-        navigate("/");
+        navigate("/admin");
         console.log("응답 헤더:", response);
       } catch (error) {
         console.log("로그인 에러: ", error);
