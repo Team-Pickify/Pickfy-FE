@@ -36,12 +36,12 @@ export default defineConfig({
       },
     }),
   ],
-  server: {
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, "localhost-key.pem")),
-      cert: fs.readFileSync(path.resolve(__dirname, "localhost.pem")),
-    },
-  },
+  // server: {
+  //   https: {
+  //     key: fs.readFileSync(path.resolve(__dirname, "localhost-key.pem")),
+  //     cert: fs.readFileSync(path.resolve(__dirname, "localhost.pem")),
+  //   },
+  // },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"), // ⬅ 절대경로 설정
@@ -49,11 +49,5 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ["react-cookie"],
-  },
-  server: {
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, "localhost-key.pem")),
-      cert: fs.readFileSync(path.resolve(__dirname, "localhost.pem")),
-    },
   },
 });

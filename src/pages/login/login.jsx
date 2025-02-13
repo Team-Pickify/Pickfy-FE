@@ -80,7 +80,6 @@ const Divider = styled.span`
   font-size: 0.875rem;
 `;
 
-
 function Login() {
   const [isActive, setIsActive] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
@@ -118,12 +117,12 @@ function Login() {
     }
   };
 
-
-  const KakaoBtnClick = () => {
+  const KakaoBtnClick = async () => {
     const baseURL = import.meta.env.VITE_BASE_URL;
     window.location.href = `${baseURL}auth/oauth2/kakao`;
+    // await TokenReq.get("/auth/oauth2/kakao");
   };
-  
+
   return (
     <Wrapper>
       <Container>

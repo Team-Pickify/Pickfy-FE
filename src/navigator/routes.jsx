@@ -12,8 +12,6 @@ import MangeMagazine from "../pages/admin/magazine/MangeMagazine";
 
 import ManagePlace from "../pages/admin/place/ManagePlace";
 
-import OAuth from "../pages/login/OAuth";
-
 const routes = [
   // 지도(메인)
   {
@@ -65,10 +63,6 @@ const routes = [
     path: "/admin/place-management",
     element: <ManagePlace />,
   },
-  {
-    path: "OAuth",
-    element: <OAuth />
-  }
 ];
 
 export default routes;
