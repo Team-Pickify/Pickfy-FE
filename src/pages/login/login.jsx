@@ -97,7 +97,9 @@ function Login() {
           principal: email,
           password,
         });
-        if (response.status === 200) {
+        console.log("🔍 전체 응답 객체:", response);
+
+        if (response.status === 200 && response.data.role === "USER") {
           //const accessToken = response.headers["authorization"];
           const accessToken = response.headers.authorization?.split(" ")[1];
           console.log("access token: ", accessToken);
@@ -108,8 +110,12 @@ function Login() {
           ] = `Bearer ${accessToken}`;
           console.log("✅ Refresh Token:", cookies["refreshToken"]);
         }
+        if (response.data.role === "ADMIN") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
 
-        navigate("/");
         console.log("응답 헤더:", response);
       } catch (error) {
         console.log("로그인 에러: ", error);
@@ -117,7 +123,7 @@ function Login() {
     }
   };
 
-  const KakaoBtnClick = async () => {
+  const KakaoBtnClick = () => {
     const baseURL = import.meta.env.VITE_BASE_URL;
     window.location.href = `${baseURL}auth/oauth2/kakao`;
     // await TokenReq.get("/auth/oauth2/kakao");
