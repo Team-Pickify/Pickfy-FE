@@ -1,25 +1,15 @@
-import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { useState } from "react";
 import GlobalStyles from "./styles/GlobalStyles";
 import Navbar from "./layouts/navbar";
 import routes from "./navigator/routes";
 import SplashScreen from "./pages/splash/splashScreen";
-import { useCookies } from "react-cookie";
 
 const NavPage = ["/", "/myplacelist", "/setting"];
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
-  const navigate = useNavigate();
   const location = useLocation();
-  const [cookies] = useCookies(["accessToken"]);
-  useEffect(() => {
-    if (!showSplash) {
-      if (location.pathname === "/" && !cookies.accessToken) {
-        navigate("/login");
-      }
-    }
-  }, [showSplash, navigate, location, cookies.accessToken]);
 
   return (
     <>

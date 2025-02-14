@@ -1,13 +1,13 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LoginBtn from "../../components/LoginBtn";
 import InputBox from "../../components/InputBox";
 import WhiteLogo from "../../assets/Logo_White.svg";
 import LogoBox from "../../components/LogoBox";
-import {theme} from "../../styles/themes";
+import { theme } from "../../styles/themes";
 import { TokenReq } from "../../apis/axiosInstance";
-import { Cookies, useCookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 
 const Wrapper = styled.div`
   background-color: ${theme.Text};
@@ -22,7 +22,6 @@ const Container = styled.div`
   gap: 0.5rem;
   margin: 0rem 0.95rem;
 `;
-
 
 function Login() {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
@@ -43,20 +42,11 @@ function Login() {
         console.log("🔍 전체 응답 객체:", response);
 
         if (response.status === 200 && response.data.role === "ADMIN") {
-          //const accessToken = response.headers["authorization"];
-          const accessToken = response.headers.authorization?.split(" ")[1];
-          console.log("access token: ", accessToken);
-          console.log(response.headers.authorization);
-          setCookies("accessToken", accessToken, { path: "/" });
+          // 관리자 표시
           setCookies("userRole", response.data.role, { path: "/" });
-          TokenReq.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${accessToken}`;
-          console.log("✅ Refresh Token:", cookies["refreshToken"]);
-        }
 
-        navigate("/");
-        console.log("응답 헤더:", response);
+          navigate("/");
+        }
       } catch (error) {
         console.log("로그인 에러: ", error);
       }
@@ -66,10 +56,7 @@ function Login() {
   return (
     <Wrapper>
       <Container>
-       <LogoBox 
-        showIcon={true} 
-        logoSrc={WhiteLogo}
-        logoText="관리자 로그인"/>
+        <LogoBox showIcon={true} logoSrc={WhiteLogo} logoText="관리자 로그인" />
         <InputBox
           placeholder="사용자명"
           value={email}
@@ -80,7 +67,7 @@ function Login() {
           placeholder="관리자 비밀번호"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          isIcon={true} 
+          isIcon={true}
           iconType={isPasswordVisible ? "eye" : "eye-off"}
           onIconClick={() => setPasswordVisible(!isPasswordVisible)}
         />
@@ -95,4 +82,3 @@ function Login() {
 }
 
 export default Login;
-

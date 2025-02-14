@@ -89,11 +89,7 @@ function Setting() {
   const [toastVisible, setToastVisible] = useState(false); // 토스트 상태
   const [message, setMessage] = useState(""); // 토스트 메세지
   const [isAdmin, setIsAdmin] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "accessToken",
-    "refreshToken",
-    "userRole",
-  ]);
+  const [cookies, setCookie, removeCookie] = useCookies(["userRole"]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -174,9 +170,8 @@ function Setting() {
 
   const logout = async () => {
     try {
-      await TokenReq.post("/auth/logout");
-      removeCookie("accessToken", { path: "/" });
       removeCookie("userRole", { path: "/" });
+      await TokenReq.post("/auth/logout");
       console.log("로그아웃 성공");
     } catch (error) {
       console.log("로그아웃 실패: ", error);
@@ -185,7 +180,7 @@ function Setting() {
 
   const signout = async () => {
     try {
-      removeCookie("accessToken", { path: "/" });
+      removeCookie("userRole", { path: "/" });
       await TokenReq.delete("/users/signOut");
       console.log("회원탈퇴 성공");
     } catch (error) {
