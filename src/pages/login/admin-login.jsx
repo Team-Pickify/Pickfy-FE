@@ -45,8 +45,6 @@ function Login() {
             .then((data) => {
               // 관리자 표시
               setCookies("userRole", data.role, { path: "/" });
-            })
-            .then((data) => {
               console.log("체크:", data);
               if (data.result) navigate("/");
               else console.log("로그인 실패");
