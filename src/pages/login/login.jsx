@@ -122,6 +122,7 @@ function Login() {
   const KakaoBtnClick = () => {
     const baseURL = import.meta.env.VITE_BASE_URL;
     window.location.href = `${baseURL}auth/oauth2/kakao`;
+    // await TokenReq.get("/auth/oauth2/kakao");
   };
 
   return (
