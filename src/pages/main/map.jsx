@@ -15,8 +15,27 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { MdMyLocation } from "react-icons/md";
 import getMyplaceData from "../../hooks/mapApi/getMyPlcaeData";
 import selectarray from "../../hooks/mapApi/selectarray";
+import { useNavigate } from "react-router-dom";
+import { TokenReq } from "../../apis/axiosInstance";
 
 function Mapview() {
+  // 로그인 상태 체크
+  const navigate = useNavigate();
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const response = await TokenReq.post("/auth/me");
+        if (!response.data.result) {
+          navigate("/login");
+        }
+      } catch (err) {
+        navigate("/login");
+      }
+    };
+
+    checkLoginStatus();
+  }, [navigate]);
+
   const [isClicked, setIsClicked] = useState(0);
 
   const [curlatitude, setcurlatitude] = useState(33.450701);

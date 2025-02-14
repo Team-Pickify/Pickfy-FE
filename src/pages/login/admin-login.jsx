@@ -35,18 +35,23 @@ function Login() {
   const handleLogin = async () => {
     if (isButtonEnabled) {
       try {
-        const response = await TokenReq.post("/auth/login", {
+        await TokenReq.post("/auth/login", {
           principal: email,
           password,
+        }).then(() => {
+          console.log("로그인 성공");
+          TokenReq.post("/auth/me")
+            .then((res) => res.data)
+            .then((data) => {
+              // 관리자 표시
+              setCookies("userRole", data.role, { path: "/" });
+            })
+            .then((data) => {
+              console.log("체크:", data);
+              if (data.result) navigate("/");
+              else console.log("로그인 실패");
+            });
         });
-        console.log("🔍 전체 응답 객체:", response);
-
-        if (response.status === 200 && response.data.role === "ADMIN") {
-          // 관리자 표시
-          setCookies("userRole", response.data.role, { path: "/" });
-
-          navigate("/");
-        }
       } catch (error) {
         console.log("로그인 에러: ", error);
       }
