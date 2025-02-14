@@ -96,11 +96,12 @@ function Login() {
           console.log("로그인 성공");
           TokenReq.post("/auth/me")
             .then((res) => res.data)
-            .then((data) => console.log("체크:", data));
-
-          navigate("/");
+            .then((data) => {
+              console.log("체크:", data);
+              if (data.result) navigate("/");
+              else console.log("로그인 실패");
+            });
         });
-
       } catch (error) {
         console.log("로그인 에러: ", error);
       }
