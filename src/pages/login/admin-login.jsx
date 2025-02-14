@@ -38,13 +38,14 @@ function Login() {
         await TokenReq.post("/auth/login", {
           principal: email,
           password,
-        }).then(() => {
+        }).then((res) => {
+          // 관리자 표시
+          setCookies("userRole", res.data.role, { path: "/" });
           console.log("로그인 성공");
+
           TokenReq.post("/auth/me")
             .then((res) => res.data)
             .then((data) => {
-              // 관리자 표시
-              setCookies("userRole", data.role, { path: "/" });
               console.log("체크:", data);
               if (data.result) navigate("/");
               else console.log("로그인 실패");
