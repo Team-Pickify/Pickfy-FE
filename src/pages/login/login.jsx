@@ -92,20 +92,15 @@ function Login() {
         await TokenReq.post("/auth/login", {
           principal: email,
           password,
-        })
-          .then((res) => {
-            console.log("🔍 전체 응답 객체:", res);
-          })
-          .then(() => {
-            console.log("로그인 성공");
-            TokenReq.post("/auth/me")
-              .then((res) => res.data)
-              .then((data) => console.log("체크:", data));
+        }).then(() => {
+          console.log("로그인 성공");
+          TokenReq.post("/auth/me")
+            .then((res) => res.data)
+            .then((data) => console.log("체크:", data));
 
-            navigate("/");
-          });
+          navigate("/");
+        });
 
-        // if (response.status === 200) {}
       } catch (error) {
         console.log("로그인 에러: ", error);
       }
