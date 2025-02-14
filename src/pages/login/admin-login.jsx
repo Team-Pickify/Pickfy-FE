@@ -48,13 +48,14 @@ function Login() {
           console.log("access token: ", accessToken);
           console.log(response.headers.authorization);
           setCookies("accessToken", accessToken, { path: "/" });
+          setCookies("userRole", response.data.role, { path: "/" });
           TokenReq.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${accessToken}`;
           console.log("✅ Refresh Token:", cookies["refreshToken"]);
         }
 
-        navigate("/");
+        navigate("/admin");
         console.log("응답 헤더:", response);
       } catch (error) {
         console.log("로그인 에러: ", error);
