@@ -4,6 +4,7 @@ import AdminLogin from "../pages/login/admin-login";
 import SignUp from "../pages/login/signup";
 import MyPlaceList from "../pages/placeList/index";
 import Setting from "../pages/setting";
+import ResetPassword from "../pages/login/resetPassword";
 
 import Admin from "../pages/admin/";
 
@@ -31,6 +32,11 @@ const routes = [
   {
     path: "/signup",
     element: <SignUp />,
+  },
+  // 비밀번호 재설정
+  {
+    path: "/repassword",
+    element: <ResetPassword />,
   },
   // 마이 플레이스
   {

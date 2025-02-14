@@ -88,10 +88,8 @@ function Setting() {
   const [toggle, setToggle] = useState(false); // 편집 버튼 상태
   const [toastVisible, setToastVisible] = useState(false); // 토스트 상태
   const [message, setMessage] = useState(""); // 토스트 메세지
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "accessToken",
-    "refreshToken",
-  ]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(["userRole"]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,6 +103,10 @@ function Setting() {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    cookies.userRole === "ADMIN" && setIsAdmin(true);
+  }, [cookies.userRole]);
 
   const handleImg = () => {
     const input = document.createElement("input");
@@ -168,8 +170,8 @@ function Setting() {
 
   const logout = async () => {
     try {
+      removeCookie("userRole", { path: "/" });
       await TokenReq.post("/auth/logout");
-      removeCookie("accessToken", { path: "/" });
       console.log("로그아웃 성공");
     } catch (error) {
       console.log("로그아웃 실패: ", error);
@@ -178,7 +180,7 @@ function Setting() {
 
   const signout = async () => {
     try {
-      removeCookie("accessToken", { path: "/" });
+      removeCookie("userRole", { path: "/" });
       await TokenReq.delete("/users/signOut");
       console.log("회원탈퇴 성공");
     } catch (error) {
@@ -194,55 +196,62 @@ function Setting() {
       )}
 
       {/* 프로필 */}
-      <ProfileBox>
-        <UserInfo>
-          <ImgBox>
-            {/* 프로필 이미지 편집 요소 */}
-            {toggle && (
-              <GreyBox onClick={handleImg}>
-                <FaPlus size="1.2rem" color="white" />
-              </GreyBox>
-            )}
+      {!isAdmin && (
+        <ProfileBox>
+          <UserInfo>
+            <ImgBox>
+              {/* 프로필 이미지 편집 요소 */}
+              {toggle && (
+                <GreyBox onClick={handleImg}>
+                  <FaPlus size="1.2rem" color="white" />
+                </GreyBox>
+              )}
 
-            {/* 실제 프로필 이미지 요소 */}
-            {profileImg ? (
-              <ExistImgBox src={profileImg} alt="profileImg" />
-            ) : (
-              <HiMiniUser color="white" size="4.8rem" />
-            )}
-          </ImgBox>
-          {/* 유저 이름 */}
-          <Username
-            maxLength={15}
-            value={name}
-            disabled={!toggle}
-            placeholder="한글/영문/숫자 최대 15자"
-            onChange={handleName}
-            style={toggle ? { borderBottom: `1px solid ${theme.Sub3}` } : {}}
-          />
-        </UserInfo>
+              {/* 실제 프로필 이미지 요소 */}
+              {profileImg ? (
+                <ExistImgBox src={profileImg} alt="profileImg" />
+              ) : (
+                <HiMiniUser color="white" size="4.8rem" />
+              )}
+            </ImgBox>
+            {/* 유저 이름 */}
+            <Username
+              maxLength={15}
+              value={name}
+              disabled={!toggle}
+              placeholder="한글/영문/숫자 최대 15자"
+              onChange={handleName}
+              style={toggle ? { borderBottom: `1px solid ${theme.Sub3}` } : {}}
+            />
+          </UserInfo>
 
-        {/* 프로필편집 버튼 */}
-        {toggle ? (
-          <IoCheckmarkOutline
-            color={theme.Sub3}
-            size="1.7rem"
-            onClick={hanldeToggle}
-          />
-        ) : (
-          <LuPencilLine
-            color={theme.Sub3}
-            size="1.5rem"
-            onClick={hanldeToggle}
-          />
-        )}
-      </ProfileBox>
+          {/* 프로필편집 버튼 */}
+          {toggle ? (
+            <IoCheckmarkOutline
+              color={theme.Sub3}
+              size="1.7rem"
+              onClick={hanldeToggle}
+            />
+          ) : (
+            <LuPencilLine
+              color={theme.Sub3}
+              size="1.5rem"
+              onClick={hanldeToggle}
+            />
+          )}
+        </ProfileBox>
+      )}
 
       {/* 로그아웃 */}
       <Linkbox name="로그아웃" addr="/login" handler={logout} />
 
       {/* 회원탈퇴 */}
       <Linkbox name="회원탈퇴" addr="/login" handler={signout} />
+
+      {/* 관리자 페이지 */}
+      {isAdmin && (
+        <Linkbox name="관리자 페이지" addr="/admin" handler={() => {}} />
+      )}
     </Container>
   );
 }

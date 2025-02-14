@@ -8,7 +8,6 @@ import KakaoLogo from "../../assets/Kakao_Logo.svg";
 import LogoBox from "../../components/LogoBox";
 import { theme } from "../../styles/themes";
 import { TokenReq } from "../../apis/axiosInstance";
-import { Cookies, useCookies } from "react-cookie";
 
 const Wrapper = styled.div`
   background-color: ${theme.Text};
@@ -80,7 +79,6 @@ const Divider = styled.span`
 `;
 
 function Login() {
-  const [isActive, setIsActive] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -88,33 +86,37 @@ function Login() {
   const isButtonEnabled = email.trim() !== "" && password.trim() !== "";
 
   const navigate = useNavigate();
-  const [cookies, setCookies] = useCookies();
   const handleLogin = async () => {
     if (isButtonEnabled) {
       try {
-        const response = await TokenReq.post("/auth/login", {
+        await TokenReq.post("/auth/login", {
           principal: email,
           password,
-        });
-        if (response.status === 200) {
-          //const accessToken = response.headers["authorization"];
-          const accessToken = response.headers.authorization?.split(" ")[1];
-          console.log("access token: ", accessToken);
-          console.log(response.headers.authorization);
-          setCookies("accessToken", accessToken, { path: "/" });
-          TokenReq.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${accessToken}`;
-          console.log("✅ Refresh Token:", cookies["refreshToken"]);
-        }
+        })
+          .then((res) => {
+            console.log("🔍 전체 응답 객체:", res);
+          })
+          .then(() => {
+            console.log("로그인 성공");
+            TokenReq.post("/auth/me")
+              .then((res) => res.data)
+              .then((data) => console.log("체크:", data));
 
-        navigate("/");
-        console.log("응답 헤더:", response);
+            navigate("/");
+          });
+
+        // if (response.status === 200) {}
       } catch (error) {
         console.log("로그인 에러: ", error);
       }
     }
   };
+
+  const KakaoBtnClick = () => {
+    const baseURL = import.meta.env.VITE_BASE_URL;
+    window.location.href = `${baseURL}auth/oauth2/kakao`;
+  };
+
   return (
     <Wrapper>
       <Container>
@@ -153,17 +155,13 @@ function Login() {
           textColor={theme.KakaoBrown}
           borderColor={theme.KakaoYellow}
           imageSrc={KakaoLogo}
-          onClick={() => {
-            if (isButtonEnabled) {
-              setIsActive(!isActive);
-            }
-          }}
+          onClick={KakaoBtnClick}
         />
         <LinkCon>
           <div>
             <StyledLink to="/signup">회원가입</StyledLink>
             <Divider>/</Divider>
-            <StyledLink to="/setting">비밀번호 찾기</StyledLink>
+            <StyledLink to="/repassword">비밀번호 찾기</StyledLink>
           </div>
           <StyledLink to="/adminlogin">관리자 로그인</StyledLink>
         </LinkCon>

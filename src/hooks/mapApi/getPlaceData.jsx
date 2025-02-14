@@ -23,7 +23,7 @@ const getPlaceData = async (cate, maga, setplacearray, categoryarray, magazinear
     const response = await getApi.post("/places/nearby", {
       latitude: curlatitude,
       longitude: curlongitude,
-      distance: 1000,
+      distance: 1000000,
       categoryIds: arr1,
       magazineIds: arr2,
     });
