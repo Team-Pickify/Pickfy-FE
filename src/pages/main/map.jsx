@@ -1,71 +1,106 @@
-import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import { PiCompassRoseDuotone } from "react-icons/pi";
-import mapPermission from "../../hooks/mapApi/mapPermission";
+import mapPermission from '../../hooks/mapApi/mapPermission';
 import { theme } from "../../styles/themes";
-import axios from "axios";
-import Info from "../../components/Info";
-import createMap from "../../hooks/mapApi/createMap";
-import findLocation from "../../hooks/mapApi/findLocation";
-import getMagazinelist from "../../hooks/mapApi/getMagazinelist";
-import getCategorylist from "../../hooks/mapApi/getCategorylist";
-import getPlaceData from "../../hooks/mapApi/getPlaceData";
-import Marking from "../../hooks/mapApi/Marking";
+import axios from 'axios';
+import Info from '../../components/Info';
+import createMap from '../../hooks/mapApi/createMap';
+import findLocation from '../../hooks/mapApi/findLocation';
+import getMagazinelist from '../../hooks/mapApi/getMagazinelist';
+import getCategorylist from '../../hooks/mapApi/getCategorylist';
+import getPlaceData from '../../hooks/mapApi/getPlaceData';
+import Marking from '../../hooks/mapApi/Marking';
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { MdMyLocation } from "react-icons/md";
-import getMyplaceData from "../../hooks/mapApi/getMyPlcaeData";
-import selectarray from "../../hooks/mapApi/selectarray";
-import { useNavigate } from "react-router-dom";
-import { TokenReq } from "../../apis/axiosInstance";
+import getMyplaceData from '../../hooks/mapApi/getMyPlcaeData';
+import selectarray from '../../hooks/mapApi/selectarray';
+import InfoSmall from '../../components/InfoSmall';
+import redMarker from '../../assets/redmarker.svg'
+import blackMarker from "../../assets/black_marker.svg";
+
+const dummydata = [
+  {
+    id: 52,
+    name: "미카도스시 지축점",
+    address: "경기 고양시 덕양구 지축1로 41 110, 111호",
+    shortDescription: "지축역 도보 1분",
+    latitude: 37.6485,
+    longitude: 126.9137,
+    instagramLink: "",
+    naverLink: "",
+    imageUrls: [
+      "https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNTAyMDlfMjYw%2FMDAxNzM5MDk0NDcxMjg3.yN0i2-pEcpX5r7Hsnnav2T-Pq3krQw0H1sumHipWwCkg.OEaqXssfJrDN56c3am0GxRfA8t9V5dklygXnesZBAZgg.JPEG%2F20250209_184457.jpg%3Ftype%3Dw1500_60_sharpen",
+      "https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNTAyMDlfMTQ0%2FMDAxNzM5MDk0NDY5MjA1.nIFUHLTmZzYoVF-U11BeHVMEFALvFSpAW2MvuILd1Tkg.8zajoDbV4HLoTsAN81QRWfM2dLz9l2Rfv7_HYoCZWXMg.JPEG%2F20250209_184419.jpg%3Ftype%3Dw1500_60_sharpen",
+      "https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNTAyMDlfODAg%2FMDAxNzM5MDc5NDE2Njk2.DHLSMsYMpn9yiH-kgPeAECj771naGEn3ar7kQ-0QT8Ig.KYZoUmuFCVpFRhjr-cMTc5x0E_fprbbA61Rde_0uwG8g.JPEG%2FIMG_0089.jpeg%3Ftype%3Dw1500_60_sharpen",
+      "https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNTAyMDlfMTU2%2FMDAxNzM5MDc5NDE2OTc0.X5iocGYpW2tMBnnimVR3JD2H2OCfNTQyKJPmydQ2ehEg.VT5MSCn4A_6fxgDXeK3yzW8sQjIPjztJb1igA71fde8g.JPEG%2FIMG_0085.jpeg%3Ftype%3Dw1500_60_sharpen",
+      "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA0MDlfMTE3%2FMDAxNzEyNjcyNDY0NjMz.cNHk6PZ_fxC-a-JGLDxXJqsL4aSlj5u0VoSX47sSN3Ug.IOPXsSOvCsN94Towhlw424V-0Z4qPJgPAwxq71nlhuIg.JPEG%2F20240408_185200.jpg",
+      "https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNTAyMDhfMjMz%2FMDAxNzM4OTkzODgxOTA2.1n8edf8LOm4NMrml8D3eL9q5Yx4rd0l_6_muN9pbGCIg.K7T2bQ_AdiUZ1gHTJFSbSqS9o7cKzMcyGowLNsWHFmsg.JPEG%2FD2B56AC0-C92A-4410-8D4A-344BF420EA80.jpeg%3Ftype%3Dw1500_60_sharpen"
+
+
+    ],
+    categoryName:
+      "음식점",
+    magazines: [
+      "뉴뉴"
+    ]
+  },
+
+]
 
 function Mapview() {
   // 로그인 상태 체크
-  const navigate = useNavigate();
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const response = await TokenReq.post("/auth/me");
-        if (!response.data.result) {
-          navigate("/login");
-        }
-      } catch (err) {
-        navigate("/login");
-      }
-    };
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   const checkLoginStatus = async () => {
+  //     try {
+  //       const response = await TokenReq.post("/auth/me");
+  //       if (!response.data.result) {
+  //         navigate("/login");
+  //       }
+  //     } catch (err) {
+  //       navigate("/login");
+  //     }
+  //   };
 
-    checkLoginStatus();
-  }, [navigate]);
+  //   checkLoginStatus();
+  // }, [navigate]);
 
-  const [isClicked, setIsClicked] = useState(0);
 
-  const [curlatitude, setcurlatitude] = useState(33.450701);
-  const [curlongitude, setcurlongitude] = useState(126.570667);
+  const[isClicked,setIsClicked] = useState(0)
 
-  const [placearray, setplacearray] = useState([]);
-  const [myPlacearray, setmyPlacearray] = useState([]);
+  const [curlatitude,setcurlatitude] = useState(33.450701)
+  const [curlongitude,setcurlongitude] = useState(126.570667)
 
-  const [magazinearray, setmagazinearray] = useState([]);
+  const [placearray,setplacearray] = useState([])
+  const [Myplacearray,setMyplacearray] = useState([])
+
+  const [magazinearray,setmagazinearray] = useState([])
   const [magazinebtn, setmagazinebtn] = useState([]);
-  const [categoryarray, setcategoryarray] = useState([]);
+  const [categoryarray,setcategoryarray] = useState([])
   const [categorybtn, setcategorybtn] = useState([]);
+  
 
-  const [isloading, setloading] = useState(false);
+  const [isloading ,setloading] = useState(false);
 
-  const [curmap, setcurmap] = useState([]);
+  const [curmap,setcurmap] = useState([]);
 
   const mapRef = useRef(null);
 
   const bottomSheetRef = useRef(null);
 
-  const [infoData, setinfoData] = useState({
-    name: "",
-    categoryName: "",
-    shortDescription: "",
-    instagramLink: "",
-    naverPlaceLink: "",
-  });
+  const [infoData,setinfoData] = useState(
+    {
+      name:"",
+      categoryName:"",
+      shortDescription : "",
+      instagramLink:"",
+      naverPlaceLink:""
+    }
+  )
 
-  const [imagearray, setimagearray] = useState([]);
+  const [imagearray,setimagearray] = useState([])
 
   /////////////////////////////////
 
@@ -114,115 +149,86 @@ function Mapview() {
     setBottomSheetState("half");
   };
   ////////////////////////////
+  
 
-  const handleClick = async (id) => {
-    let newarr = [];
-    let newarr2 = [];
-    if (id === 0) {
-      if (categorybtn[0] === 1) {
-        newarr = categorybtn;
-      } else {
-        newarr = [1];
-        for (let i = 1; i < categorybtn.length; i++) {
-          newarr = [...newarr, 0];
-        }
-        newarr2 = magazinebtn.map((v) => {
-          return 0;
-        });
-        console.log(newarr2);
-        setmagazinebtn(newarr2);
+  const handleClick = async(id) => {
+    let newarr = []
+    let newarr2 = []
+    if(id === 0){
+      if(categorybtn[0] === 1){
+        newarr = categorybtn
       }
-    } else {
-      newarr = categorybtn.map((v, i) => {
-        if (i == id) {
-          return v ? 0 : 1;
-        } else {
-          return v;
+      else{
+        newarr = [1]
+        for(let i=1;i<categorybtn.length;i++){
+          newarr = [...newarr,0]
         }
-      });
-      if (newarr[0] === 1) {
+        newarr2 = magazinebtn.map((v)=>{return 0})
+        console.log(newarr2)
+        setmagazinebtn(newarr2)
+      }
+    }
+    else{
+      newarr = categorybtn.map((v,i)=>{
+        if(i == id){
+          return (v ? 0 : 1)
+        }
+        else{
+          return v
+        }
+       })
+       if(newarr[0] === 1){
         newarr[0] = 0;
-      }
+       }
     }
-    const container = mapRef.current;
-    setcategorybtn(newarr);
-    console.log(newarr);
-    console.log(magazinebtn);
-    const mapp = await createMap(
-      curlatitude,
-      curlongitude,
-      container,
-      setcurmap
-    );
-    if (isClicked) {
-      const newdata = selectarray(
-        myPlacearray,
-        categoryarray,
-        magazinearray,
-        newarr,
-        !id && newarr[0] ? newarr2 : magazinebtn
-      );
-      Marking(newdata, setinfoData, mapp, handleOpenBottomSheet, setimagearray);
-    } else {
-      const datas = await getPlaceData(
-        newarr,
-        !id && newarr[0] ? newarr2 : magazinebtn,
-        setplacearray,
-        categoryarray,
-        magazinearray,
-        curlatitude,
-        curlongitude
-      );
-      console.log(datas);
-      Marking(datas, setinfoData, mapp, handleOpenBottomSheet, setimagearray);
-    }
+     const container = mapRef.current;
+     setcategorybtn(newarr)
+     console.log(newarr)
+     console.log(magazinebtn)
+     const mapp = await createMap(curlatitude,curlongitude,container,setcurmap);
+     if(isClicked){
+        const newdata = selectarray(Myplacearray,categoryarray,magazinearray,newarr,(!id && newarr[0] ?newarr2:magazinebtn)) //
+        setplacearray(newdata)
+        Marking(newdata,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+     }
+     else{
+      const datas = await getPlaceData(newarr,(!id && newarr[0] ?newarr2:magazinebtn),setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
+      console.log(datas)
+      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+     }
   };
 
-  const handleClick2 = async (id) => {
-    const newarr = magazinebtn.map((v, i) => {
-      if (i == id) {
-        return v ? 0 : 1;
-      } else {
-        return v;
+
+  const handleClick2= async (id) => {
+    const newarr = magazinebtn.map((v,i)=>{
+      if(i == id){
+        return (v ? 0 : 1)
       }
-    });
-    const newarr2 = categorybtn.map((v, i) => {
-      if (i === 0) return 0;
-      return v;
-    });
-    const container = mapRef.current;
-    setcategorybtn(newarr2);
-    setmagazinebtn(newarr);
-    console.log(newarr2);
-    console.log(newarr);
-    const mapp = await createMap(
-      curlatitude,
-      curlongitude,
-      container,
-      setcurmap
-    );
-    if (isClicked) {
-      const newdata = selectarray(
-        myPlacearray,
-        categoryarray,
-        magazinearray,
-        newarr2,
-        newarr
-      );
-      Marking(newdata, setinfoData, mapp, handleOpenBottomSheet, setimagearray);
-    } else {
-      const datas = await getPlaceData(
-        newarr2,
-        newarr,
-        setplacearray,
-        categoryarray,
-        magazinearray,
-        curlatitude,
-        curlongitude
-      );
-      console.log(datas);
-      Marking(datas, setinfoData, mapp, handleOpenBottomSheet, setimagearray);
-    }
+      else{
+        return v
+      }
+     })
+     const newarr2 = categorybtn.map((v,i)=>{
+      if(i === 0)return 0
+      return v
+     })
+     const container = mapRef.current;
+     setcategorybtn(newarr2)
+     setmagazinebtn(newarr)
+     console.log(newarr2)
+     console.log(newarr)
+     const mapp = await createMap(curlatitude ,curlongitude ,container,setcurmap);
+     if(isClicked){
+      const newdata = selectarray(Myplacearray,categoryarray,magazinearray,newarr2,newarr)
+      setplacearray(newdata)
+      Marking(newdata,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+     }
+     else{
+      const datas = await getPlaceData(newarr2,newarr,setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
+      console.log(datas)
+      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+     }
+     
   };
 
   useEffect(() => {
@@ -230,203 +236,221 @@ function Mapview() {
       console.error("Kakao Maps API is not loaded!");
       return;
     }
-
+    
     const container = mapRef.current;
     // Kakao Maps API 로드 후 실행
     window.kakao.maps.load(async () => {
       mapPermission();
-      await getMagazinelist(setmagazinebtn, setmagazinearray);
-      await getCategorylist(setcategorybtn, setcategoryarray);
-      const { latitude, longitude } = await findLocation();
-      setcurlatitude(latitude);
-      setcurlongitude(longitude);
-      const mapp = await createMap(latitude, longitude, container, setcurmap);
-      const datas = await getPlaceData(
-        [1],
-        magazinebtn,
-        setplacearray,
-        [{ id: 52 }],
-        magazinearray,
-        latitude,
-        longitude
-      );
-      console.log(datas);
-      Marking(datas, setinfoData, mapp, handleOpenBottomSheet, setimagearray);
+      await getMagazinelist(setmagazinebtn,setmagazinearray);
+      await getCategorylist(setcategorybtn,setcategoryarray);
+      const {latitude,longitude} = await findLocation();
+      setcurlatitude(latitude )
+      setcurlongitude(longitude)
+      const mapp = await createMap(latitude,longitude,container,setcurmap);
+      let kk = []
+      for(let i=0;i<4;i++){
+        kk = [...kk,dummydata[0]]
+      }
+      Marking(kk,setinfoData,mapp,handleOpenBottomSheet,setimagearray) // test끝나면 삭제하기
+      setplacearray(kk) //test끝나면 삭제하기
+      const datas = await getPlaceData([1],magazinebtn,setplacearray,[{id:52}],magazinearray,latitude,longitude)
+      console.log(datas)
+      Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
     });
   }, []);
 
-  const switchTocur = () => {
+  const switchTocur = ()=>{
     const container = mapRef.current;
     curmap.setCenter(new kakao.maps.LatLng(curlatitude, curlongitude));
-  };
+  }
 
-  const getMyplace = async () => {
-    const mapp = await createMap(
-      curlatitude,
-      curlongitude,
-      mapRef.current,
-      setcurmap
-    );
-    if (!isClicked) {
+  const getMyplace = async ()=>{
+    const mapp = await createMap(curlatitude,curlongitude,mapRef.current,setcurmap);
+    if(!isClicked){
       const datas = await getMyplaceData();
-      console.log(datas);
-      const newarr = datas.map((v) => {
-        const x = [v.categoryName];
-        return { ...v, imageUrls: v.placeImageUrl, categories: x };
-      });
-      console.log(newarr);
-      setmyPlacearray(newarr);
-      const newdata = selectarray(
-        newarr,
-        categoryarray,
-        magazinearray,
-        categorybtn,
-        magazinebtn
-      );
-      console.log(newdata);
-      Marking(newdata, setinfoData, mapp, handleOpenBottomSheet, setimagearray);
-    } else {
-      const datas = await getPlaceData(
-        categorybtn,
-        magazinebtn,
-        setplacearray,
-        categoryarray,
-        magazinearray,
-        curlatitude,
-        curlongitude
-      );
-      console.log(datas);
-      Marking(datas, setinfoData, mapp, handleOpenBottomSheet, setimagearray);
+      console.log(datas)
+      if(datas[0] != null){
+        const newarr = datas.map((v)=>{
+          const x = [v.categoryName]
+          return {...v,imageUrls:v.placeImageUrl,categories:x}
+        })
+        console.log(newarr)
+        setMyplacearray(newarr)
+        const newdata = selectarray(newarr,categoryarray,magazinearray,categorybtn,magazinebtn);
+        console.log(newdata)
+        setplacearray(newdata)
+        Marking(newdata , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
+      }
+      else setMyplacearray([])
     }
+    else{
+      const datas  = await getPlaceData(categorybtn,magazinebtn,setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
+      console.log(datas)
+      Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
+    }
+    setIsClicked(isClicked ? 0:1 )
+    
+  }
 
-    setIsClicked(isClicked ? 0 : 1);
-  };
 
   return (
     <>
-      <Mapbox ref={mapRef}>
-        <Wrapper>
-          {categoryarray.map((item, i) => (
-            <Items
-              key={item.id}
-              onClick={() => {
-                handleClick(i);
-                setTranslateY(100);
-                setBottomSheetState("hidden");
-              }}
-              isActive={categorybtn[i] === 1}
-            >
-              {item.name}
-            </Items>
-          ))}
-        </Wrapper>
-        <Likebutton onClick={getMyplace}>
-          {isClicked ? (
-            <FaHeart color="FF4B4B" size={25} />
-          ) : (
-            <FaRegHeart size={25} color={theme.Sub1} />
-          )}
-        </Likebutton>
-
-        <Curdesbutton onClick={switchTocur}>
-          <MdMyLocation size={25} color="black" />
-        </Curdesbutton>
-        <Wrapper2>
-          {magazinearray.map((item, i) => (
-            <Items
-              key={item.id}
-              onClick={() => {
-                handleClick2(i);
-              }}
-              isActive={magazinebtn[i] === 1}
-            >
-              {item.title}
-            </Items>
-          ))}
-        </Wrapper2>
-        <BottomSheet
-          ref={bottomSheetRef}
-          style={{ transform: `translateY(${translateY}%)` }}
-          onTouchStart={handleStart}
-          onTouchEnd={handleEnd}
-          onMouseDown={handleStart}
-          onMouseUp={handleEnd}
+     <Mapbox ref = {mapRef} >
+     <Wrapper>
+      {categoryarray.map((item,i) => (
+        <Items
+          key={item.id}
+          onClick={()=>{handleClick(i)
+            setTranslateY(100);
+            setBottomSheetState("hidden");
+          }}
+          isActive={categorybtn[i] === 1}
         >
-          <BottomSheettop>
-            <div
-              style={{
-                width: "8%",
-                height: "7%",
-                backgroundColor: theme.Sub3,
-                marginTop: "2%",
-                borderRadius: "5% 5% 5% 5%",
-              }}
-            ></div>
-          </BottomSheettop>
-          {bottomSheetState === "full" ? (
-            <Listcontainer>
-              <div style={{ width: "90%", marginLeft: "5%" }}>
-                {placearray?.map((place) => (
-                  <div key={place.placeId}>
-                    <Info
-                      name={place.name}
-                      categoryName={place.categoryName}
-                      shortDescription={place.shortDescription}
-                      instagramLink={place.instagramLink}
-                      naverLink={place.naverLink}
-                    />
-                    <Imgcontainer2>
-                      {place.placeImageUrl?.map((image, index) => (
-                        <Img
-                          key={index}
-                          src={image}
-                          alt={`${place.name} 이미지`}
-                        />
-                      ))}
-                    </Imgcontainer2>
-                  </div>
-                ))}
-              </div>
-            </Listcontainer>
-          ) : (
-            <div style={{ width: "100%", height: "95%" }}>
-              <div style={{ width: "90%", height: "15%", marginLeft: "5%" }}>
-                <Info
-                  name={infoData.name}
-                  categoryName={infoData.categoryName}
-                  shortDescription={infoData.shortDescription}
-                  instagramLink={infoData.instagramLink}
-                  naverLink={infoData.naverLink}
-                ></Info>
-              </div>
-              <Imgcontainer>
-                {imagearray.map((v, i) => {
-                  return (
-                    <img
-                      src={v}
-                      key={i}
-                      style={{
-                        height: "90%",
-                        width: "40%",
-                        marginLeft: "5%",
-                        borderRadius: "5%",
-                      }}
-                    ></img>
-                  );
-                })}
-              </Imgcontainer>
+          {item.name}
+        </Items>
+      ))}
+    </Wrapper>
+      <Likebutton onClick={getMyplace}>
+        {isClicked ? (
+            <FaHeart color="FF4B4B" size={25}/>
+            ) : (
+            <FaRegHeart size={25} color={theme.Sub1}/>
+                )}
+      </Likebutton>
+      
+      <Curdesbutton onClick={switchTocur}>
+        <MdMyLocation size={25} color="black" />
+      </Curdesbutton>
+      <Wrapper2>
+      {magazinearray.map((item,i) => (
+        <Items
+          key={item.id}
+          onClick={()=>{handleClick2(i)}}
+          isActive={magazinebtn[i] === 1}
+        >
+          {item.title}
+        </Items>
+      ))}
+    </Wrapper2>
+       <BottomSheet ref={bottomSheetRef}
+      
+       style={{ transform: `translateY(${translateY}%)` }}
+       onTouchStart={handleStart}
+        onTouchEnd={handleEnd}
+        onMouseDown={handleStart}
+        onMouseUp={handleEnd}
+       > 
+        <BottomSheettop>
+          <div style={{ width: "8%", height: "7%" ,backgroundColor:theme.Sub3,marginTop:"2%" , borderRadius:"5% 5% 5% 5%"}}></div>
+        </BottomSheettop>
+        {bottomSheetState === "full" ? (
+           <Listcontainer>
+            <OrderBar></OrderBar>
+          {placearray.map((place)=>{return(
+            <div style={{width:"100%",height:"35%",flexShrink:"0"}}>
+                <div style={{ width: "90%", height: "40%",marginLeft:"5%"}} >
+                  <Info 
+                    name={place.name} 
+                    categoryName={place.categoryName} 
+                    shortDescription={place.shortDescription} 
+                    instagramLink={place.instagramLink} 
+                    naverLink={place.naverLink}
+                  >
+                  </Info>
+                </div>
+                <Imgcontainer2>
+                  {place.imageUrls.map((v,i)=>{
+                    return (<Img2 src={v} key={i}></Img2>)
+                  })}
+                </Imgcontainer2>
             </div>
-          )}
+          )})}
+            
+        </Listcontainer>
+        ) : <div style={{ width: "100%", height: "95%"}}>
+        
+         <div style={{ width: "90%", height: "13%",marginLeft:"5%"}} >
+         <Info 
+          name={infoData.name} categoryName={infoData.categoryName} shortDescription={infoData.shortDescription} instagramLink={infoData.instagramLink} naverLink={infoData.naverLink}
+         >
+         </Info>
+         </div>
+         <Imgcontainer>
+            {imagearray.map((v,i)=>{
+              return (<Img src={v} key={i}></Img>)
+            })}
+         </Imgcontainer>
+        
+     </div>}
         </BottomSheet>
-      </Mapbox>
+
+    </Mapbox>
+    
     </>
+      
   );
 }
 export default Mapview;
 
+
+const Imgcontainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items:center;
+  width: 100%;
+  height: 34%;
+  overflow-x: scroll; 
+  scroll-snap-type: x mandatory;
+`;
+const Imgcontainer2 = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  width:100%;
+  height:50%;
+`;
+const Img = styled.img`
+  width: 45%;
+  height: 90%;
+  border-radius: 0.25rem;
+  flex-shrink : 0;
+  margin-left:0.5rem;
+`;
+
+const Listcontainer = styled.div`
+width:100%;
+height:95%;
+display:flex;
+flex-direction : column;
+overflow: auto;
+scroll-snap-type: x mandatory;
+scrollbar-width: none;
+&::-webkit-scrollbar {
+  display: none;
+}
+`;
+
+const Img2 = styled.img`
+  width: 6.75rem;
+  height: 6.75rem;
+  margin-left:0.1875rem;
+  border-radius: 0.25rem;
+  flex-shrink : 0;
+`;
+
+const OrderBar = styled.div`
+width:100%;
+height:5%;
+background-color:none;
+flex-shrink:0;
+`
+
+
 const Wrapper = styled.div`
-  z-index: 100;
-  position: absolute;
+  z-index:100;
+  position:absolute;
   display: flex;
   flex-direction: row;
   top: 1.19rem;
@@ -440,8 +464,8 @@ const Wrapper = styled.div`
   }
 `;
 const Wrapper2 = styled.div`
-  z-index: 100;
-  position: absolute;
+  z-index:100;
+  position:absolute;
   display: flex;
   flex-direction: row;
   top: 90%;
@@ -471,21 +495,14 @@ const Items = styled.button`
   color: ${(props) => (props.isActive ? "#ffffff" : "#000000")};
 `;
 
-const Imgcontainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  height: 34%;
-  overflow: hidden;
-`;
+
 
 const Mapbox = styled.div`
   position: relative;
   width: 100%;
   height: 85%;
   z-index: 1;
-  overflow: hidden;
+  oveflow:hidden;
 `;
 
 const Curdesbutton = styled.button`
@@ -582,50 +599,27 @@ const CCC = styled.button`
 const BottomSheet = styled.div`
   position: absolute;
   background-color: white;
-  border-radius: 7% 7% 0 0;
-  display: flex;
-  flex-direction: column;
+  border-radius:7% 7% 0 0;
+  display:flex;
+  flex-direction:column;
   height: 100%;
   width: 100%;
   z-index: 100;
   bottom: 0;
   transform: translateY(100%); /* 기본값: 숨김 */
   transition: transform 0.3s ease;
+
+  
 `;
 
 const BottomSheettop = styled.div`
-  width: 100%;
-  height: 5%;
-  display: flex;
-  justify-content: center;
-`;
+width:100%;
+height:5%;
+display:flex;
+justify-content : center;
+`
 
-const Listcontainer = styled.div`
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-`;
-
-const Imgcontainer2 = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.1875rem;
-  margin: 0 0 1.5rem 0;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-const Img = styled.img`
-  width: 6.75rem;
-  height: 6.75rem;
-  border-radius: 0.25rem;
-`;
-
-// &.visible {
-//   transform: translateY(0); /* 보이게 하기 */
-// }
+// scrollbar-width: none;  나중에 imgcontainer에 스크롤바 없앨때 추가하기
+//   &::-webkit-scrollbar {
+//     display: none;
+//   }
