@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import { theme } from "../styles/themes";
 import { IoShareSocialOutline } from "react-icons/io5";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ShareModal from "./modal/shareUrl";
 import CheckMsg from "./toast/CheckMsg";
 import Toast from "./toast/Toast";
+import { TokenReq } from "../apis/axiosInstance";
 
 const InfoWrapper = styled.div`
   display: flex;
@@ -80,11 +81,23 @@ function Info({
   shortDescription,
   instagramLink,
   naverLink,
+  placeId,
 }) {
   const [isClicked, setIsClicked] = useState(false);
-  const handleClick = () => {
-    setIsClicked(!isClicked);
-  };
+  // const handleClick = () => {
+  //   setIsClicked(!isClicked);
+  // };
+
+  const toggleHeart = useCallback(async () => {
+    try {
+      await TokenReq.patch("/places/toggle", null, {
+        params: { placeId },
+      });
+      setIsClicked((prev) => !prev);
+    } catch (error) {
+      console.log("저장 실패: ", error);
+    }
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const ModalOpen = () => {
     setIsModalOpen(true);
@@ -158,9 +171,9 @@ function Info({
               </ShareButton>
               <ShareButton>
                 {isClicked ? (
-                  <FaRegHeart onClick={handleClick} />
+                  <FaRegHeart onClick={toggleHeart} />
                 ) : (
-                  <FaHeart onClick={handleClick} color="FF4B4B" />
+                  <FaHeart onClick={toggleHeart} color="FF4B4B" />
                 )}
               </ShareButton>
             </ButtonContainer>
