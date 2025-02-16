@@ -453,6 +453,7 @@ const Wrapper = styled.div`
   position:absolute;
   display: flex;
   flex-direction: row;
+  margin-left:5%;
   top: 1.19rem;
   gap: 0.25rem;
   overflow-x: auto;
@@ -468,6 +469,7 @@ const Wrapper2 = styled.div`
   position:absolute;
   display: flex;
   flex-direction: row;
+  margin-left:5%;
   top: 90%;
   gap: 0.25rem;
   overflow-x: auto;
