@@ -93,7 +93,6 @@ function Login() {
           principal: email,
           password,
         }).then(() => {
-          console.log("로그인 성공");
           TokenReq.post("/auth/me")
             .then((res) => res.data)
             .then((data) => {
