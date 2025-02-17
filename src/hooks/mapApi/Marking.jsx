@@ -61,6 +61,5 @@ const Marking = (datas,setinfoData,curmap,handleOpenBottomSheet,setimagearray)=>
     });
     customOverlay.setMap(curmap);
     })
-    
   }
   export default Marking

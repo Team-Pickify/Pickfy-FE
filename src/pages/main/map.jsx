@@ -19,35 +19,10 @@ import selectarray from '../../hooks/mapApi/selectarray';
 import InfoSmall from '../../components/InfoSmall';
 import redMarker from '../../assets/redmarker.svg'
 import blackMarker from "../../assets/black_marker.svg";
+import { IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
+import Dropdown_Order from '../../components/Dropdown_Order';
 
-const dummydata = [
-  {
-    id: 52,
-    name: "미카도스시 지축점",
-    address: "경기 고양시 덕양구 지축1로 41 110, 111호",
-    shortDescription: "지축역 도보 1분",
-    latitude: 37.6485,
-    longitude: 126.9137,
-    instagramLink: "",
-    naverLink: "",
-    imageUrls: [
-      "https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNTAyMDlfMjYw%2FMDAxNzM5MDk0NDcxMjg3.yN0i2-pEcpX5r7Hsnnav2T-Pq3krQw0H1sumHipWwCkg.OEaqXssfJrDN56c3am0GxRfA8t9V5dklygXnesZBAZgg.JPEG%2F20250209_184457.jpg%3Ftype%3Dw1500_60_sharpen",
-      "https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNTAyMDlfMTQ0%2FMDAxNzM5MDk0NDY5MjA1.nIFUHLTmZzYoVF-U11BeHVMEFALvFSpAW2MvuILd1Tkg.8zajoDbV4HLoTsAN81QRWfM2dLz9l2Rfv7_HYoCZWXMg.JPEG%2F20250209_184419.jpg%3Ftype%3Dw1500_60_sharpen",
-      "https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNTAyMDlfODAg%2FMDAxNzM5MDc5NDE2Njk2.DHLSMsYMpn9yiH-kgPeAECj771naGEn3ar7kQ-0QT8Ig.KYZoUmuFCVpFRhjr-cMTc5x0E_fprbbA61Rde_0uwG8g.JPEG%2FIMG_0089.jpeg%3Ftype%3Dw1500_60_sharpen",
-      "https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNTAyMDlfMTU2%2FMDAxNzM5MDc5NDE2OTc0.X5iocGYpW2tMBnnimVR3JD2H2OCfNTQyKJPmydQ2ehEg.VT5MSCn4A_6fxgDXeK3yzW8sQjIPjztJb1igA71fde8g.JPEG%2FIMG_0085.jpeg%3Ftype%3Dw1500_60_sharpen",
-      "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA0MDlfMTE3%2FMDAxNzEyNjcyNDY0NjMz.cNHk6PZ_fxC-a-JGLDxXJqsL4aSlj5u0VoSX47sSN3Ug.IOPXsSOvCsN94Towhlw424V-0Z4qPJgPAwxq71nlhuIg.JPEG%2F20240408_185200.jpg",
-      "https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNTAyMDhfMjMz%2FMDAxNzM4OTkzODgxOTA2.1n8edf8LOm4NMrml8D3eL9q5Yx4rd0l_6_muN9pbGCIg.K7T2bQ_AdiUZ1gHTJFSbSqS9o7cKzMcyGowLNsWHFmsg.JPEG%2FD2B56AC0-C92A-4410-8D4A-344BF420EA80.jpeg%3Ftype%3Dw1500_60_sharpen"
-
-
-    ],
-    categoryName:
-      "음식점",
-    magazines: [
-      "뉴뉴"
-    ]
-  },
-
-]
 
 function Mapview() {
   // 로그인 상태 체크
@@ -69,6 +44,8 @@ function Mapview() {
 
 
   const[isClicked,setIsClicked] = useState(0)
+  const [isDropdown,setisDropdown] = useState(0)
+  const [order,setorder] = useState("거리순")
 
   const [curlatitude,setcurlatitude] = useState(33.450701)
   const [curlongitude,setcurlongitude] = useState(126.570667)
@@ -247,12 +224,6 @@ function Mapview() {
       setcurlatitude(latitude )
       setcurlongitude(longitude)
       const mapp = await createMap(latitude,longitude,container,setcurmap);
-      let kk = []
-      for(let i=0;i<4;i++){
-        kk = [...kk,dummydata[0]]
-      }
-      Marking(kk,setinfoData,mapp,handleOpenBottomSheet,setimagearray) // test끝나면 삭제하기
-      setplacearray(kk) //test끝나면 삭제하기
       const datas = await getPlaceData([1],magazinebtn,setplacearray,[{id:52}],magazinearray,latitude,longitude)
       console.log(datas)
       Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
@@ -345,7 +316,21 @@ function Mapview() {
         </BottomSheettop>
         {bottomSheetState === "full" ? (
            <Listcontainer>
-            <OrderBar></OrderBar>
+            <Dropdown>
+              <div onClick={()=>{setisDropdown(isDropdown?0:1)}}>
+                {`${order} `}
+                {isDropdown?(<IoIosArrowUp />):<IoIosArrowDown />}
+          
+                </div>
+                {isDropdown ? <Dropdown_Order 
+                arr={placearray} 
+                setplacearray={setplacearray} 
+                setisDropdown={setisDropdown} 
+                setorder={setorder} 
+                lat={curlatitude}
+                long = {curlongitude}
+                />:<></>}
+            </Dropdown>
           {placearray.map((place)=>{return(
             <div style={{width:"100%",height:"35%",flexShrink:"0"}}>
                 <div style={{ width: "90%", height: "40%",marginLeft:"5%"}} >
@@ -440,11 +425,12 @@ const Img2 = styled.img`
   flex-shrink : 0;
 `;
 
-const OrderBar = styled.div`
+const Dropdown = styled.div`
 width:100%;
 height:5%;
 background-color:none;
 flex-shrink:0;
+margin-left:85%;
 `
 
 
