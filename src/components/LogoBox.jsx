@@ -17,7 +17,7 @@ const LogoCon = styled.div`
   align-items: flex-start;
   width: 100%;
   min-height: 8em;
-  margin-top: 3.56rem;
+  margin-top: 2.56rem;
   margin-bottom: 2.06rem;
 `;
 

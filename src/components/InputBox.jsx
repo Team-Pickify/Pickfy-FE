@@ -88,12 +88,18 @@ const ModalContainer = styled.div`
   border-radius: 10px;
   width: 80%;
   max-width: 400px;
-  text-align: center;
+  text-align: left;
+  color: #7E7E7E;
+`;
+
+const CloseButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center; 
 `;
 
 const CloseButton = styled.button`
   margin-top: 1rem;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 1rem;
   background: black;
   color: white;
   border: none;
@@ -165,9 +171,11 @@ const InputBox = ({
       {isModalOpen && (
         <ModalBackground onClick={() => setIsModalOpen(false)}> 
           <ModalContainer onClick={(e) => e.stopPropagation()}>
-            <h2>{value}</h2>
+            <p>{value}</p>
             <p>{modalContent}</p>
-            <CloseButton onClick={() => setIsModalOpen(false)}>닫기</CloseButton>
+            <CloseButtonWrapper>
+              <CloseButton onClick={() => setIsModalOpen(false)}>닫기</CloseButton>
+            </CloseButtonWrapper>
           </ModalContainer>
         </ModalBackground>
       )}
