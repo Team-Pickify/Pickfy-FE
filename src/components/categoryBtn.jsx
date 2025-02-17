@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "../styles/themes";
 
@@ -33,22 +33,32 @@ const Items = styled.button`
   color: ${(props) => (props.isActive ? "#ffffff" : "#000000")};
 `;
 
-const category = [
-  { id: 1, name: "전체" },
-  { id: 2, name: "음식점" },
-  { id: 3, name: "카페/베이커리" },
-  { id: 4, name: "바/펍" },
-  { id: 5, name: "도서/문구" },
-];
-
 function CategoryBtn() {
-  const [btnClick, setBtnClick] = useState(1);
+  const [categories, setCategories] = useState([]);
+  const [btnClick, setBtnClick] = useState();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await TokenReq.get("/categories");
+        setCategories(response.data); // API 응답 데이터 저장
+        if (response.data.length > 0) {
+          setBtnClick(response.data[0].id); // 첫 번째 카테고리를 기본 선택
+        }
+      } catch (error) {
+        console.error("카테고리 불러오기 실패: ", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const handleClick = (id) => {
     setBtnClick(id);
   };
   return (
     <Wrapper>
-      {category.map((item) => (
+      {categories.map((item) => (
         <Items
           key={item.id}
           onClick={() => handleClick(item.id)}
