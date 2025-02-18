@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import InfoSmall from "../../components/InfoSmall";
 import cafe1 from "../../assets/cafe1.svg";
-import CategoryBtn from "../../components/categoryBtn";
+import CategoryBtn from "../../components/categoryBtn"; // 이미 CategoryBtn 컴포넌트를 가져왔으므로 다른 부분에서 다시 호출할 필요 없음
 import Carousel from "../../components/carousel/Carousel";
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
@@ -14,18 +14,22 @@ const Wrapper = styled.div`
   height: auto;
   background-color: #ffffff;
 `;
+
 const Container = styled.div`
   margin: 1rem;
 `;
+
 const CarouselWrapper = styled.div`
   position: relative;
 `;
+
 const ButtonWrapper = styled.div`
   position: absolute;
   top: 1.19rem;
   margin-left: 0.94rem;
   z-index: 10;
 `;
+
 const DrowdownContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -38,6 +42,7 @@ const DrowdownContainer = styled.div`
   font-size: 0.875rem;
   font-weight: 600;
 `;
+
 const SelectedItem = styled.div`
   display: flex;
   align-items: center;
@@ -51,20 +56,27 @@ const DropdownWrapper = styled.div`
   left: -2rem; /* 끝나는 지점을 SelectedItem과 맞춤 */
   z-index: 99;
 `;
+
 const ListContainer = styled.div`
   padding: 0.5rem;
 `;
+
 function MyPlaceList() {
   const [places, setPlaces] = useState([]);
   const [magazines, setMagazines] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [selectedMagazine, setSelectedMagazine] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(null); // 추가
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const sortoptions = ["최신순", "좋아요순"];
   const [selectedSort, setSelectedSort] = useState("최신순");
   const [magazinesOpen, setMagazinesOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
+
+  // ✅ useEffect: 컴포넌트가 마운트될 때 데이터 불러오기
+  useEffect(() => {
+    fetchPlaces();
+    fetchData();
+  }, [selectedMagazine, selectedSort]); // 의존성 배열 수정
 
   // ✅ API 요청 함수 (장소 데이터 불러오기)
   const fetchPlaces = async () => {
@@ -89,46 +101,34 @@ function MyPlaceList() {
     }
   };
 
-  // ✅ API 요청 함수 (매거진 & 카테고리 불러오기)
+  // ✅ API 요청 함수 (매거진 데이터 불러오기)
   const fetchData = async () => {
     try {
-      const [magazineRes, categoryRes] = await Promise.all([
-        TokenReq.get("/magazines"),
-        TokenReq.get("/categories"),
-      ]);
+      const magazineRes = await TokenReq.get("/magazines");
 
       if (magazineRes.data.length > 0) {
         setMagazines(magazineRes.data);
         setSelectedMagazine(magazineRes.data[0].id); // 기본값 설정
-      }
-
-      if (categoryRes.data.length > 0) {
-        setCategories(categoryRes.data);
-        setSelectedCategory(categoryRes.data[0].id); // 기본값 설정
       }
     } catch (error) {
       console.error("데이터 불러오기 실패: ", error);
     }
   };
 
-  // ✅ useEffect: 컴포넌트가 마운트될 때 데이터 불러오기
-  useEffect(() => {
-    fetchPlaces();
-    fetchData();
-  }, [selectedMagazine, selectedSort]); // 의존성 배열 수정
-
   return (
     <Wrapper>
       <CarouselWrapper>
         <Carousel />
         <ButtonWrapper>
+          {/* 카테고리 버튼 */}
           <CategoryBtn
-            categories={categories}
+            categories={places} // 카테고리는 이제 fetchPlaces에서 받아온 곳으로 전달
             selectedCategory={selectedCategory}
             onCategoryClick={setSelectedCategory}
           />
         </ButtonWrapper>
       </CarouselWrapper>
+
       <Container>
         <DrowdownContainer>
           {/* 매거진 선택 드롭다운 */}
@@ -182,7 +182,6 @@ function MyPlaceList() {
           </SelectedItem>
         </DrowdownContainer>
 
-        {/* 장소 리스트 */}
         <ListContainer>
           <InfoSmall places={places} />
         </ListContainer>
