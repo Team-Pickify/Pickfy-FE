@@ -57,43 +57,39 @@ const ListContainer = styled.div`
 function MyPlaceList() {
   const [places, setPlaces] = useState([]);
   const [magazines, setMagazines] = useState([]);
-  const [categories, setCategories] = useState([]); // 카테고리 상태 추가
+  const [categories, setCategories] = useState([]);
   const [selectedMagazine, setSelectedMagazine] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null); // 추가
 
   const sortoptions = ["최신순", "좋아요순"];
-
   const [selectedSort, setSelectedSort] = useState("최신순");
   const [magazinesOpen, setMagazinesOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
+  // ✅ API 요청 함수 (장소 데이터 불러오기)
   const fetchPlaces = async () => {
     try {
       const response = await TokenReq.get("/places", {
-        headers: {
-          "Cache-Control": "no-cache",
-          Pragma: "no-cache",
-        },
+        headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
       });
 
       if (response?.data) {
-        const placeData = response.data.result;
-
+        let placeData = response.data.result;
         if (selectedSort === "좋아요순") {
           placeData.sort((a, b) => b.likeCount - a.likeCount);
-        } else if (selectedSort === "최신순") {
+        } else {
           placeData.sort(
             (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
           );
         }
         setPlaces(placeData);
-      } else {
-        console.log("응답 데이터가 없습니다.");
       }
     } catch (error) {
       console.error("API 요청 오류:", error);
     }
   };
 
+  // ✅ API 요청 함수 (매거진 & 카테고리 불러오기)
   const fetchData = async () => {
     try {
       const [magazineRes, categoryRes] = await Promise.all([
@@ -103,88 +99,96 @@ function MyPlaceList() {
 
       if (magazineRes.data.length > 0) {
         setMagazines(magazineRes.data);
-        setSelectedMagazine(magazineRes.data[0].id); // 기본 선택
+        setSelectedMagazine(magazineRes.data[0].id); // 기본값 설정
       }
 
       if (categoryRes.data.length > 0) {
         setCategories(categoryRes.data);
-        setSelectedCategory(categoryRes.data[0].id); // 기본 선택
+        setSelectedCategory(categoryRes.data[0].id); // 기본값 설정
       }
     } catch (error) {
       console.error("데이터 불러오기 실패: ", error);
     }
-
-    useEffect(() => {
-      fetchPlaces();
-      fetchData();
-    }, [selectedMagazine, selectedSort]);
-
-    return (
-      <Wrapper>
-        <CarouselWrapper>
-          <Carousel />
-          <ButtonWrapper>
-            <CategoryBtn
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onCategoryClick={setSelectedCategory} // 선택 변경 함수 전달
-            />
-          </ButtonWrapper>
-        </CarouselWrapper>
-        <Container>
-          <DrowdownContainer>
-            <SelectedItem onClick={() => setMagazinesOpen(!magazinesOpen)}>
-              {magazines.find((m) => m.id === selectedMagazine)?.title ||
-                "전체"}
-              {magazinesOpen ? (
-                <IoIosArrowUp size="1rem" />
-              ) : (
-                <IoIosArrowDown size="1rem" />
-              )}
-              {magazinesOpen && (
-                <DropdownWrapper>
-                  <DropdownOptions
-                    setVal={(id) => {
-                      setSelectedMagazine(id);
-                      setMagazinesOpen(false);
-                    }}
-                    options={magazines.map((m) => ({
-                      value: m.id,
-                      label: m.title,
-                    }))}
-                    wd="6rem"
-                  />
-                </DropdownWrapper>
-              )}
-            </SelectedItem>
-
-            <SelectedItem onClick={() => setSortOpen(!sortOpen)}>
-              {selectedSort}
-              {sortOpen ? (
-                <IoIosArrowUp size="1rem" />
-              ) : (
-                <IoIosArrowDown size="1rem" />
-              )}
-              {sortOpen && (
-                <DropdownWrapper>
-                  <DropdownOptions
-                    setVal={(val) => {
-                      setSelectedSort(val);
-                      setSortOpen(false);
-                    }}
-                    options={sortoptions}
-                    wd="6rem"
-                  />
-                </DropdownWrapper>
-              )}
-            </SelectedItem>
-          </DrowdownContainer>
-          <ListContainer>
-            <InfoSmall places={places} />
-          </ListContainer>
-        </Container>
-      </Wrapper>
-    );
   };
+
+  // ✅ useEffect: 컴포넌트가 마운트될 때 데이터 불러오기
+  useEffect(() => {
+    fetchPlaces();
+    fetchData();
+  }, [selectedMagazine, selectedSort]); // 의존성 배열 수정
+
+  return (
+    <Wrapper>
+      <CarouselWrapper>
+        <Carousel />
+        <ButtonWrapper>
+          <CategoryBtn
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategoryClick={setSelectedCategory}
+          />
+        </ButtonWrapper>
+      </CarouselWrapper>
+      <Container>
+        <DrowdownContainer>
+          {/* 매거진 선택 드롭다운 */}
+          <SelectedItem onClick={() => setMagazinesOpen(!magazinesOpen)}>
+            {magazines.find((m) => m.id === selectedMagazine)?.title || "전체"}
+            {magazinesOpen ? (
+              <IoIosArrowUp size="1rem" />
+            ) : (
+              <IoIosArrowDown size="1rem" />
+            )}
+            {magazinesOpen && (
+              <DropdownWrapper>
+                <DropdownOptions
+                  setVal={(id) => {
+                    setSelectedMagazine(id);
+                    setMagazinesOpen(false);
+                  }}
+                  options={magazines.map((m) => ({
+                    value: m.id,
+                    label: m.title,
+                  }))}
+                  wd="6rem"
+                />
+              </DropdownWrapper>
+            )}
+          </SelectedItem>
+
+          {/* 정렬 기준 선택 드롭다운 */}
+          <SelectedItem onClick={() => setSortOpen(!sortOpen)}>
+            {selectedSort}
+            {sortOpen ? (
+              <IoIosArrowUp size="1rem" />
+            ) : (
+              <IoIosArrowDown size="1rem" />
+            )}
+            {sortOpen && (
+              <DropdownWrapper>
+                <DropdownOptions
+                  setVal={(val) => {
+                    setSelectedSort(val);
+                    setSortOpen(false);
+                  }}
+                  options={sortoptions.map((opt) => ({
+                    value: opt,
+                    label: opt,
+                  }))}
+                  wd="6rem"
+                />
+              </DropdownWrapper>
+            )}
+          </SelectedItem>
+        </DrowdownContainer>
+
+        {/* 장소 리스트 */}
+        <ListContainer>
+          <InfoSmall places={places} />
+        </ListContainer>
+      </Container>
+    </Wrapper>
+  );
 }
+
 export default MyPlaceList;
