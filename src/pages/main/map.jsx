@@ -488,7 +488,7 @@ const Items = styled.button`
 const Mapbox = styled.div`
   position: relative; 
   width: 100%;
-  height: calc(100vh-104px);
+  height: 90%;
   z-index: 1;
   overflow:hidden;
 `;
