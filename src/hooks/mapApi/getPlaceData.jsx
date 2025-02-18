@@ -29,7 +29,7 @@ const getPlaceData = async (cate, maga, setplacearray, categoryarray, magazinear
     });
     console.log(response.data);
     const newdata = response.data.result.map((v)=>{
-      const kk = {...v,categoryName:v.categories[0],iconUrl:magazineInfo[0].iconUrl}
+      const kk = {...v,categoryName:v.categories[0],iconUrl:v.magazineInfo[0].iconUrl}
       return kk
     })
     setplacearray(newdata);
