@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { PiCompassRoseDuotone } from "react-icons/pi";
 import mapPermission from '../../hooks/mapApi/mapPermission';
 import { theme } from "../../styles/themes";
-import axios from 'axios';
 import Info from '../../components/Info';
 import createMap from '../../hooks/mapApi/createMap';
 import findLocation from '../../hooks/mapApi/findLocation';
@@ -22,6 +21,8 @@ import blackMarker from "../../assets/black_marker.svg";
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import Dropdown_Order from '../../components/Dropdown_Order';
+import { TokenReq } from '../../apis/axiosInstance';
+
 
 
 function Mapview() {
