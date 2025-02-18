@@ -491,7 +491,7 @@ const Mapbox = styled.div`
   width: 100%;
   height: calc(100vh-104px);
   z-index: 1;
-  oveflow:hidden;
+  overflow:hidden;
 `;
 
 const Curdesbutton = styled.button`
