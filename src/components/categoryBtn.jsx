@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { theme } from "../styles/themes";
 import getCategorylist from "../hooks/mapApi/getCategorylist";
 
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;

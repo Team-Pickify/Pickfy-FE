@@ -26,21 +26,21 @@ import Dropdown_Order from '../../components/Dropdown_Order';
 
 function Mapview() {
   // 로그인 상태 체크
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   const checkLoginStatus = async () => {
-  //     try {
-  //       const response = await TokenReq.post("/auth/me");
-  //       if (!response.data.result) {
-  //         navigate("/login");
-  //       }
-  //     } catch (err) {
-  //       navigate("/login");
-  //     }
-  //   };
+  const navigate = useNavigate();
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const response = await TokenReq.post("/auth/me");
+        if (!response.data.result) {
+          navigate("/login");
+        }
+      } catch (err) {
+        navigate("/login");
+      }
+    };
 
-  //   checkLoginStatus();
-  // }, [navigate]);
+    checkLoginStatus();
+  }, [navigate]);
 
 
   const[isClicked,setIsClicked] = useState(0)
@@ -488,7 +488,7 @@ const Items = styled.button`
 const Mapbox = styled.div`
   position: relative;
   width: 100%;
-  height: 85%;
+  height: 100%;
   z-index: 1;
   oveflow:hidden;
 `;
@@ -497,8 +497,7 @@ const Curdesbutton = styled.button`
   background-color: white;
   border: none;
   border-radius: 100%;
-  height: 6vh;
-  width: 3vw;
+  padding : 1rem;
   position: absolute;
   top: 75%;
   left: 80%;
@@ -513,8 +512,7 @@ const Likebutton = styled.button`
   background-color: white;
   border: none;
   border-radius: 100%;
-  height: 6vh;
-  width: 3vw;
+  padding : 1rem;
   position: absolute;
   top: 65%;
   left: 80%;
