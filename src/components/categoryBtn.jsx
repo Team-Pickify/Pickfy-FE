@@ -33,36 +33,14 @@ const Items = styled.button`
   color: ${(props) => (props.isActive ? "#ffffff" : "#000000")};
 `;
 
-function CategoryBtn() {
-  const [categories, setCategories] = useState([]);
-  const [btnClick, setBtnClick] = useState();
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await TokenReq.get("/categories");
-        setCategories(response.data); // API 응답 데이터 저장
-        if (response.data.length > 0) {
-          setBtnClick(response.data[0].id); // 첫 번째 카테고리를 기본 선택
-        }
-      } catch (error) {
-        console.error("카테고리 불러오기 실패: ", error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  const handleClick = (id) => {
-    setBtnClick(id);
-  };
+function CategoryBtn({ categories, selectedCategory, onCategoryClick }) {
   return (
     <Wrapper>
       {categories.map((item) => (
         <Items
           key={item.id}
-          onClick={() => handleClick(item.id)}
-          isActive={btnClick === item.id}
+          onClick={() => onCategoryClick(item.id)}
+          isActive={selectedCategory === item.id}
         >
           {item.name}
         </Items>

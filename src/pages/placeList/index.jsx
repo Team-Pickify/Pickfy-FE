@@ -8,7 +8,6 @@ import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { theme } from "../../styles/themes";
 import DropdownOptions from "../../components/DropdownOptions";
-import axios from "axios";
 import { TokenReq } from "../../apis/axiosInstance";
 
 const Wrapper = styled.div`
@@ -57,13 +56,14 @@ const ListContainer = styled.div`
 `;
 function MyPlaceList() {
   const [places, setPlaces] = useState([]);
+  const [magazines, setMagazines] = useState([]);
+  const [categories, setCategories] = useState([]); // 카테고리 상태 추가
+  const [selectedMagazine, setSelectedMagazine] = useState(null);
 
-  const categoryoptions = ["전체", "매거진A", "매거진B", "매거진C", "매거진D"];
   const sortoptions = ["최신순", "좋아요순"];
 
-  const [selectedCategory, setSelectedCategory] = useState("전체");
   const [selectedSort, setSelectedSort] = useState("최신순");
-  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [magazinesOpen, setMagazinesOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
   const fetchPlaces = async () => {
@@ -75,9 +75,17 @@ function MyPlaceList() {
         },
       });
 
-      // 데이터가 성공적으로 왔을 때, 상태에 저장
-      if (response && response.data) {
-        setPlaces(response.data.result); // 받은 데이터를 상태에 저장
+      if (response?.data) {
+        const placeData = response.data.result;
+
+        if (selectedSort === "좋아요순") {
+          placeData.sort((a, b) => b.likeCount - a.likeCount);
+        } else if (selectedSort === "최신순") {
+          placeData.sort(
+            (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+          );
+        }
+        setPlaces(placeData);
       } else {
         console.log("응답 데이터가 없습니다.");
       }
@@ -86,67 +94,97 @@ function MyPlaceList() {
     }
   };
 
-  useEffect(() => {
-    fetchPlaces();
-  }, []);
+  const fetchData = async () => {
+    try {
+      const [magazineRes, categoryRes] = await Promise.all([
+        TokenReq.get("/magazines"),
+        TokenReq.get("/categories"),
+      ]);
 
-  return (
-    <Wrapper>
-      <CarouselWrapper>
-        <Carousel />
-        <ButtonWrapper>
-          <CategoryBtn />
-        </ButtonWrapper>
-      </CarouselWrapper>
-      <Container>
-        <DrowdownContainer>
-          <SelectedItem onClick={() => setCategoryOpen(!categoryOpen)}>
-            {selectedCategory}
-            {categoryOpen ? (
-              <IoIosArrowUp size="1rem" />
-            ) : (
-              <IoIosArrowDown size="1rem" />
-            )}
-            {categoryOpen && (
-              <DropdownWrapper>
-                <DropdownOptions
-                  setVal={(val) => {
-                    setSelectedCategory(val);
-                    setCategoryOpen(false);
-                  }}
-                  options={categoryoptions}
-                  wd="6rem"
-                />
-              </DropdownWrapper>
-            )}
-          </SelectedItem>
+      if (magazineRes.data.length > 0) {
+        setMagazines(magazineRes.data);
+        setSelectedMagazine(magazineRes.data[0].id); // 기본 선택
+      }
 
-          <SelectedItem onClick={() => setSortOpen(!sortOpen)}>
-            {selectedSort}
-            {sortOpen ? (
-              <IoIosArrowUp size="1rem" />
-            ) : (
-              <IoIosArrowDown size="1rem" />
-            )}
-            {sortOpen && (
-              <DropdownWrapper>
-                <DropdownOptions
-                  setVal={(val) => {
-                    setSelectedSort(val);
-                    setSortOpen(false);
-                  }}
-                  options={sortoptions}
-                  wd="6rem"
-                />
-              </DropdownWrapper>
-            )}
-          </SelectedItem>
-        </DrowdownContainer>
-        <ListContainer>
-          <InfoSmall places={places} />
-        </ListContainer>
-      </Container>
-    </Wrapper>
-  );
+      if (categoryRes.data.length > 0) {
+        setCategories(categoryRes.data);
+        setSelectedCategory(categoryRes.data[0].id); // 기본 선택
+      }
+    } catch (error) {
+      console.error("데이터 불러오기 실패: ", error);
+    }
+
+    useEffect(() => {
+      fetchPlaces();
+      fetchData();
+    }, [selectedMagazine, selectedSort]);
+
+    return (
+      <Wrapper>
+        <CarouselWrapper>
+          <Carousel />
+          <ButtonWrapper>
+            <CategoryBtn
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onCategoryClick={setSelectedCategory} // 선택 변경 함수 전달
+            />
+          </ButtonWrapper>
+        </CarouselWrapper>
+        <Container>
+          <DrowdownContainer>
+            <SelectedItem onClick={() => setMagazinesOpen(!magazinesOpen)}>
+              {magazines.find((m) => m.id === selectedMagazine)?.title ||
+                "전체"}
+              {magazinesOpen ? (
+                <IoIosArrowUp size="1rem" />
+              ) : (
+                <IoIosArrowDown size="1rem" />
+              )}
+              {magazinesOpen && (
+                <DropdownWrapper>
+                  <DropdownOptions
+                    setVal={(id) => {
+                      setSelectedMagazine(id);
+                      setMagazinesOpen(false);
+                    }}
+                    options={magazines.map((m) => ({
+                      value: m.id,
+                      label: m.title,
+                    }))}
+                    wd="6rem"
+                  />
+                </DropdownWrapper>
+              )}
+            </SelectedItem>
+
+            <SelectedItem onClick={() => setSortOpen(!sortOpen)}>
+              {selectedSort}
+              {sortOpen ? (
+                <IoIosArrowUp size="1rem" />
+              ) : (
+                <IoIosArrowDown size="1rem" />
+              )}
+              {sortOpen && (
+                <DropdownWrapper>
+                  <DropdownOptions
+                    setVal={(val) => {
+                      setSelectedSort(val);
+                      setSortOpen(false);
+                    }}
+                    options={sortoptions}
+                    wd="6rem"
+                  />
+                </DropdownWrapper>
+              )}
+            </SelectedItem>
+          </DrowdownContainer>
+          <ListContainer>
+            <InfoSmall places={places} />
+          </ListContainer>
+        </Container>
+      </Wrapper>
+    );
+  };
 }
 export default MyPlaceList;
