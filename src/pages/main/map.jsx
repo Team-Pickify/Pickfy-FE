@@ -22,6 +22,7 @@ import blackMarker from "../../assets/black_marker.svg";
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import Dropdown_Order from '../../components/Dropdown_Order';
+import { TokenReq } from '../../apis/axiosInstance';
 
 
 function Mapview() {
@@ -486,9 +487,9 @@ const Items = styled.button`
 
 
 const Mapbox = styled.div`
-  position: relative;
+  position: relative; 
   width: 100%;
-  height: 100%;
+  height: calc(100vh-104px);
   z-index: 1;
   oveflow:hidden;
 `;
