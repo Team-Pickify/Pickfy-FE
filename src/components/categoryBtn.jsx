@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "../styles/themes";
+import getCategorylist from "../hooks/mapApi/getCategorylist";
 
 const Wrapper = styled.div`
   display: flex;
@@ -34,13 +35,20 @@ const Items = styled.button`
 `;
 
 function CategoryBtn({ categories, selectedCategory, onCategoryClick }) {
+  const [categorybtn, setCategoryBtn] = useState([]); // '전체' 여부를 저장
+  const [categoryarray, setCategoryArray] = useState([]); // 전체 카테고리 배열
+
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 카테고리 데이터 불러오기
+    getCategorylist(setCategoryBtn, setCategoryArray);
+  }, []);
   return (
     <Wrapper>
       {categories.map((item) => (
         <Items
           key={item.id}
           onClick={() => onCategoryClick(item.id)}
-          isActive={selectedCategory === item.id}
+          isActive={selectedCategory === item.id || categorybtn[index] === 1}
         >
           {item.name}
         </Items>
