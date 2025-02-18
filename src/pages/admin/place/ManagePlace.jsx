@@ -11,6 +11,11 @@ import FixPlace from "./FixPlace";
 import PlaceBox from "../../../components/admin/PlaceBox";
 import { TokenReq } from "../../../apis/axiosInstance";
 
+const Wrapper = styled.div`
+  background-color: white;
+  padding-bottom: 1rem;
+`;
+
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
@@ -55,7 +60,7 @@ export default function ManagePlace() {
   };
 
   return (
-    <div>
+    <Wrapper>
       {page === "main" ? (
         <div>
           <Header>
@@ -67,6 +72,7 @@ export default function ManagePlace() {
               <GoPlus size={28} color={theme.Sub1} />
             </Btn>
           </Header>
+
           {place.map((v) => {
             return (
               <div key={v.placeId} onClick={() => HandlePlace(v.placeId)}>
@@ -83,6 +89,6 @@ export default function ManagePlace() {
           setPage={setPage}
         />
       )}
-    </div>
+    </Wrapper>
   );
 }
