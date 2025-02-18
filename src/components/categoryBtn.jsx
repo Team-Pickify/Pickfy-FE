@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "../styles/themes";
+import { TokenReq } from '../apis/axiosInstance';
 
 const Wrapper = styled.div`
   display: flex;

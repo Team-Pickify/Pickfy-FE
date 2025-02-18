@@ -41,7 +41,6 @@ function Login() {
         }).then((res) => {
           // 관리자 표시
           setCookies("userRole", res.data.role, { path: "/" });
-          console.log("로그인 성공");
 
           TokenReq.post("/auth/me")
             .then((res) => res.data)

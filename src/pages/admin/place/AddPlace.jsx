@@ -92,7 +92,7 @@ export default function AddPlace({ setPage }) {
         formData.append("image", file);
       });
 
-      await TokenReq.post("/places/admin", formData, {
+      await TokenReq.post("/admin/places", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
