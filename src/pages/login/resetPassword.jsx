@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import WhiteLogo from "../../assets/Logo_White.svg";
+import WhiteLogo from "../../assets/whiteLogo.png";
 import LogoBox from "../../components/LogoBox";
 import InputBox from "../../components/InputBox";
 import SignupBtn from "../../components/SignupBtn";
