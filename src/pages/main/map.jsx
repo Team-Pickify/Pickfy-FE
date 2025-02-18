@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { PiCompassRoseDuotone } from "react-icons/pi";
 import mapPermission from '../../hooks/mapApi/mapPermission';
 import { theme } from "../../styles/themes";
-import axios from 'axios';
 import Info from '../../components/Info';
 import createMap from '../../hooks/mapApi/createMap';
 import findLocation from '../../hooks/mapApi/findLocation';
