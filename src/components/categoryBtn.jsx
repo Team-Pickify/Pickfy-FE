@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "../styles/themes";
-import getCategorylist from "../hooks/mapApi/getCategorylist";
-
+import getCategorylist from "../hooks/mapApi/getCategorylist"; // ✅ API Hook 가져오기
 
 const Wrapper = styled.div`
   display: flex;
@@ -35,25 +34,39 @@ const Items = styled.button`
   color: ${(props) => (props.isActive ? "#ffffff" : "#000000")};
 `;
 
-function CategoryBtn({ categories, selectedCategory, onCategoryClick }) {
-  const [categorybtn, setCategoryBtn] = useState([]); // '전체' 여부를 저장
-  const [categoryarray, setCategoryArray] = useState([]); // 전체 카테고리 배열
+function CategoryBtn() {
+  const [categories, setCategories] = useState([]); // ✅ 카테고리 리스트 상태
+  const [btnClick, setBtnClick] = useState(1); // ✅ 기본 선택값 (전체)
 
   useEffect(() => {
-    // 컴포넌트가 마운트될 때 카테고리 데이터 불러오기
-    getCategorylist(setCategoryBtn, setCategoryArray);
+    getCategorylist(setBtnClick, setCategories);
   }, []);
+
+  // ✅ categories 상태가 업데이트될 때마다 콘솔 찍기
+  useEffect(() => {
+    console.log("✅ 업데이트된 카테고리 목록:", categories);
+  }, [categories]);
+
+  const handleClick = (id) => {
+    setBtnClick(id);
+    console.log(`🔘 선택한 카테고리 ID: ${id}`);
+  };
+
   return (
     <Wrapper>
-      {categories.map((item) => (
-        <Items
-          key={item.id}
-          onClick={() => onCategoryClick(item.id)}
-          isActive={selectedCategory === item.id || categorybtn[index] === 1}
-        >
-          {item.name}
-        </Items>
-      ))}
+      {categories.length > 0 ? (
+        categories.map((item) => (
+          <Items
+            key={item.id}
+            onClick={() => handleClick(item.id)}
+            isActive={btnClick === item.id}
+          >
+            {item.name}
+          </Items>
+        ))
+      ) : (
+        <p>⏳ 카테고리 불러오는 중...</p> // ✅ 데이터 로딩 확인용
+      )}
     </Wrapper>
   );
 }

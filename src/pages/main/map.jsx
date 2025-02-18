@@ -24,7 +24,6 @@ import Dropdown_Order from '../../components/Dropdown_Order';
 import { TokenReq } from '../../apis/axiosInstance';
 
 
-
 function Mapview() {
   // 로그인 상태 체크
   const navigate = useNavigate();
@@ -487,11 +486,11 @@ const Items = styled.button`
 
 
 const Mapbox = styled.div`
-  position: relative;
+  position: relative; 
   width: 100%;
-  height: 100%;
+  height: calc(100vh-104px);
   z-index: 1;
-  oveflow:hidden;
+  overflow:hidden;
 `;
 
 const Curdesbutton = styled.button`
