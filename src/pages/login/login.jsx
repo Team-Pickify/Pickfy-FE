@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import LoginBtn from "../../components/LoginBtn";
 import InputBox from "../../components/InputBox";
-import WhiteLogo from "../../assets/Logo_White.svg";
+import WhiteLogo from "../../assets/whiteLogo.png";
 import KakaoLogo from "../../assets/Kakao_Logo.svg";
 import LogoBox from "../../components/LogoBox";
 import { theme } from "../../styles/themes";
