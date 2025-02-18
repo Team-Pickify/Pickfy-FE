@@ -8,7 +8,6 @@ import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { theme } from "../../styles/themes";
 import DropdownOptions from "../../components/DropdownOptions";
-import axios from "axios";
 import { TokenReq } from "../../apis/axiosInstance";
 
 const Wrapper = styled.div`
@@ -57,11 +56,12 @@ const ListContainer = styled.div`
 `;
 function MyPlaceList() {
   const [places, setPlaces] = useState([]);
+  const [categories, setCategories] = useState([]); // 카테고리 상태 추가
+  const [selectedCategory, setSelectedCategory] = useState(null); // 선택된 카테고리 상태 추가
 
   const categoryoptions = ["전체", "매거진A", "매거진B", "매거진C", "매거진D"];
   const sortoptions = ["최신순", "좋아요순"];
 
-  const [selectedCategory, setSelectedCategory] = useState("전체");
   const [selectedSort, setSelectedSort] = useState("최신순");
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
@@ -86,8 +86,21 @@ function MyPlaceList() {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await TokenReq.get("/categories");
+      if (response.data.length > 0) {
+        setCategories(response.data);
+        setSelectedCategory(response.data[0].id); // 첫 번째 카테고리를 기본 선택
+      }
+    } catch (error) {
+      console.error("카테고리 불러오기 실패: ", error);
+    }
+  };
+
   useEffect(() => {
     fetchPlaces();
+    fetchCategories();
   }, []);
 
   return (
@@ -95,7 +108,11 @@ function MyPlaceList() {
       <CarouselWrapper>
         <Carousel />
         <ButtonWrapper>
-          <CategoryBtn />
+          <CategoryBtn
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategoryClick={setSelectedCategory} // 선택 변경 함수 전달
+          />
         </ButtonWrapper>
       </CarouselWrapper>
       <Container>
