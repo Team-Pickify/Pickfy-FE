@@ -90,22 +90,21 @@ function Info({
   //   setIsClicked(!isClicked);
   // };
   // ✅ 하트 클릭 핸들러
-  const placeIdRef = useRef(placeId); // ✅ placeId를 ref에 저장
 
   useEffect(() => {
-    placeIdRef.current = placeId; // ✅ placeId 변경 시 ref 업데이트
-  }, [placeId]);
+    setIsClicked(isHeartFilled);
+  }, [placeId, isHeartFilled]);
 
   const handleHeartClick = useCallback(async () => {
     try {
-      const res = await toggleHeartAPI(placeIdRef.current); // ✅ ref를 통해 placeId 참조
+      const res = await toggleHeartAPI(placeId); // ✅ ref를 통해 placeId 참조
       setIsClicked((prev) => !prev);
       handleToast(res.message || "하트 상태가 변경되었습니다! ❤️");
     } catch (error) {
       handleToast("하트 변경 중 문제가 발생했습니다. 😢");
-      console.log("클릭한 id: ", placeIdRef.current);
+      console.log("클릭한 id: ", placeId);
     }
-  }, []);
+  }, [placeId]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const ModalOpen = () => {
     setIsModalOpen(true);
