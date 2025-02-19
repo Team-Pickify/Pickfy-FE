@@ -825,7 +825,7 @@ justify-content : center;
   border: ${n=>n.isActive?"none":" 1px solid #e6e6e6"};
   background-color: ${n=>n.isActive?te.Text:"rgba(255, 255, 255, 0.7)"};
   color: ${n=>n.isActive?"#ffffff":"#000000"};
-`;function zS(){const[n,r]=T.useState([]),[o,l]=T.useState(1);T.useEffect(()=>{pg((c,f)=>{r([{id:1,name:"전체"},...f])})},[]),T.useEffect(()=>{n.length>0&&l("전체")},[n]);const a=c=>{l(c),console.log(`🔘 선택한 카테고리 ID: ${c}`)};return h.jsx(NS,{children:n.length>0?n.map(c=>h.jsx(IS,{onClick:()=>a(c.id),isActive:o===c.id,children:c.name},c.id)):""})}const Wu=[uo,uo,uo,uo,uo],DS=A.div`
+`;function zS(){const[n,r]=T.useState([]),[o,l]=T.useState(1);T.useEffect(()=>{pg(l,r)},[]),T.useEffect(()=>{n.length>0&&o===1&&l(1)},[n]);const a=c=>{l(c),console.log(`🔘 선택한 카테고리 ID: ${c}`)};return h.jsx(NS,{children:n.length>0?n.map(c=>h.jsx(IS,{onClick:()=>a(c.id),isActive:o===c.id,children:c.name},c.id)):""})}const Wu=[uo,uo,uo,uo,uo],DS=A.div`
   width: 100%;
   height: 23.44rem;
   overflow: hidden;
