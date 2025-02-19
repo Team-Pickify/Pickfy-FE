@@ -42,7 +42,7 @@ function CategoryBtn() {
     getCategorylist((categorybtn, categoryarray) => {
       setCategories(categoryarray); // 카테고리 배열 상태 업데이트
       // 전체 카테고리를 선택하도록 기본값 설정
-      setBtnClick(categorybtn);
+      setBtnClick(1);
     }); // categorybtn이 1인 "전체"가 기본으로 선택됨
   }, []);
 
@@ -53,18 +53,19 @@ function CategoryBtn() {
 
   return (
     <Wrapper>
-      {categories.length > 0
-        ? categories.map((item) => (
-            <Items
-              key={item.id}
-              onClick={() => handleClick(item.id)}
-              isActive={btnClick === item.id}
-            >
-              {item.name}
-            </Items>
-          ))
-        : // <p>⏳ 카테고리 불러오는 중...</p> // ✅ 데이터 로딩 확인용
-          ""}
+      {categories.length > 0 ? (
+        categories.map((item) => (
+          <Items
+            key={item.id}
+            onClick={() => handleClick(item.id)}
+            isActive={btnClick === item.id}
+          >
+            {item.name}
+          </Items>
+        ))
+      ) : (
+        <p></p> // ✅ 데이터 로딩 확인용
+      )}
     </Wrapper>
   );
 }
