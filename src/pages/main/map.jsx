@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { PiCompassRoseDuotone } from "react-icons/pi";
 import mapPermission from '../../hooks/mapApi/mapPermission';
 import { theme } from "../../styles/themes";
 import Info from '../../components/Info';
@@ -15,9 +14,6 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { MdMyLocation } from "react-icons/md";
 import getMyplaceData from '../../hooks/mapApi/getMyPlcaeData';
 import selectarray from '../../hooks/mapApi/selectarray';
-import InfoSmall from '../../components/InfoSmall';
-import redMarker from '../../assets/redmarker.svg'
-import blackMarker from "../../assets/black_marker.svg";
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import Dropdown_Order from '../../components/Dropdown_Order';
@@ -57,9 +53,6 @@ function Mapview() {
   const [magazinebtn, setmagazinebtn] = useState([]);
   const [categoryarray,setcategoryarray] = useState([])
   const [categorybtn, setcategorybtn] = useState([]);
-  
-
-  const [isloading ,setloading] = useState(false);
 
   const [curmap,setcurmap] = useState([]);
 
@@ -531,64 +524,6 @@ const Likebutton = styled.button`
   }
 `;
 
-const CategorieBar = styled.div`
-  display: flex;
-  overflow-x: scroll;
-  scroll-behavior: smooth;
-  z-index: 10;
-  position: absolute;
-  top: 10%;
-  width: 100%;
-  height: 5vh;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const MagazineBar = styled.div`
-  display: flex;
-  overflow-x: scroll;
-  scroll-behavior: smooth;
-  z-index: 10;
-  position: absolute;
-  top: 86%;
-  width: 100%;
-  height: 5vh;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const CategorieBox = styled.button`
-  border: none;
-  border-radius: 42%;
-  flex: 0 0 auto;
-  height: 100%;
-  width: 8vw;
-  background-color: white;
-  margin-left: 0.3vw;
-  &:hover {
-    color: white;
-    background-color: black;
-    transition: 0;
-  }
-`;
-
-const CCC = styled.button`
-  background-color: red;
-  border: none;
-  border-radius: 100%;
-  height: 6vh;
-  width: 3vw;
-  position: absolute;
-  top: 40%;
-  left: 20%;
-  z-index: 10;
-  &:hover {
-    background-color: grey;
-    transition: 0.7s;
-  }
-`;
 
 const BottomSheet = styled.div`
   position: absolute;
