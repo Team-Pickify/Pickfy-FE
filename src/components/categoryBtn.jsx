@@ -44,7 +44,9 @@ function CategoryBtn() {
 
   // ✅ categories 상태가 업데이트될 때마다 콘솔 찍기
   useEffect(() => {
-    console.log("✅ 업데이트된 카테고리 목록:", categories);
+    if (categories.length > 0) {
+      setBtnClick("전체");
+    }
   }, [categories]);
 
   const handleClick = (id) => {
@@ -54,19 +56,18 @@ function CategoryBtn() {
 
   return (
     <Wrapper>
-      {categories.length > 0 ? (
-        categories.map((item) => (
-          <Items
-            key={item.id}
-            onClick={() => handleClick(item.id)}
-            isActive={btnClick === item.id}
-          >
-            {item.name}
-          </Items>
-        ))
-      ) : (
-        <p>⏳ 카테고리 불러오는 중...</p> // ✅ 데이터 로딩 확인용
-      )}
+      {categories.length > 0
+        ? categories.map((item) => (
+            <Items
+              key={item.id}
+              onClick={() => handleClick(item.id)}
+              isActive={btnClick === item.id}
+            >
+              {item.name}
+            </Items>
+          ))
+        : // <p>⏳ 카테고리 불러오는 중...</p> // ✅ 데이터 로딩 확인용
+          ""}
     </Wrapper>
   );
 }
