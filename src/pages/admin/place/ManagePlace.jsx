@@ -72,6 +72,7 @@ export default function ManagePlace() {
               <GoPlus size={28} color={theme.Sub1} />
             </Btn>
           </Header>
+
           {place.map((v) => {
             return (
               <div key={v.placeId} onClick={() => HandlePlace(v.placeId)}>
