@@ -43,6 +43,8 @@ function Mapview() {
   const [isDropdown,setisDropdown] = useState(0)
   const [order,setorder] = useState("거리순")
 
+  const [isMark , setisMark] = useState(0)
+
   const [curlatitude,setcurlatitude] = useState(33.450701)
   const [curlongitude,setcurlongitude] = useState(126.570667)
 
@@ -76,7 +78,7 @@ function Mapview() {
   /////////////////////////////////
 
   const [startY, setStartY] = useState(0);
-  const [translateY, setTranslateY] = useState(100); // 기본적으로 숨김
+  const [translateY, setTranslateY] = useState(95); // 기본적으로 숨김
   const [bottomSheetState, setBottomSheetState] = useState("hidden"); // "hidden" | "half" | "full"
   const [isDragging, setIsDragging] = useState(false);
 
@@ -97,7 +99,8 @@ function Mapview() {
     const endY = getClientY(e);
     const deltaY = endY - startY;
 
-    // 📌 **위로 스와이프하면 100%로 이동**
+    if(isMark){
+      // 📌 **위로 스와이프하면 100%로 이동**
     if (deltaY < -50) {
       setTranslateY(0);
       setBottomSheetState("full");
@@ -108,7 +111,20 @@ function Mapview() {
         setTranslateY(50); // 100% → 50%로 내려감
         setBottomSheetState("half");
       } else {
-        setTranslateY(100); // 50% → 숨김
+        setTranslateY(95); // 50% → 숨김
+        setBottomSheetState("hidden");
+        setisMark(0)
+      }
+    }
+    
+    }
+    else{
+      if (deltaY < -50) {
+        setTranslateY(0);
+        setBottomSheetState("full");
+      }
+      else if (deltaY > 50) {
+        setTranslateY(95); // 50% → 숨김
         setBottomSheetState("hidden");
       }
     }
@@ -160,12 +176,12 @@ function Mapview() {
      if(isClicked){
         const newdata = selectarray(Myplacearray,categoryarray,magazinearray,newarr,(!id && newarr[0] ?newarr2:magazinebtn)) //
         setplacearray(newdata)
-        Marking(newdata,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+        Marking(newdata,setinfoData,mapp,handleOpenBottomSheet,setimagearray,setisMark)
      }
      else{
       const datas = await getPlaceData(newarr,(!id && newarr[0] ?newarr2:magazinebtn),setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
       console.log(datas)
-      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray,setisMark)
      }
   };
 
@@ -192,12 +208,12 @@ function Mapview() {
      if(isClicked){
       const newdata = selectarray(Myplacearray,categoryarray,magazinearray,newarr2,newarr)
       setplacearray(newdata)
-      Marking(newdata,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+      Marking(newdata,setinfoData,mapp,handleOpenBottomSheet,setimagearray,setisMark)
      }
      else{
       const datas = await getPlaceData(newarr2,newarr,setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
       console.log(datas)
-      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray,setisMark)
      }
      
   };
@@ -220,7 +236,7 @@ function Mapview() {
       const mapp = await createMap(latitude,longitude,container,setcurmap);
       const datas = await getPlaceData([1],magazinebtn,setplacearray,[{id:1}],magazinearray,latitude,longitude)
       console.log(datas)
-      Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
+      Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray,setisMark)
     });
   }, []);
 
@@ -244,14 +260,14 @@ function Mapview() {
         const newdata = selectarray(newarr,categoryarray,magazinearray,categorybtn,magazinebtn);
         console.log(newdata)
         setplacearray(newdata)
-        Marking(newdata , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
+        Marking(newdata , setinfoData , mapp,handleOpenBottomSheet,setimagearray,setisMark)
       }
       else setMyplacearray([])
     }
     else{
       const datas  = await getPlaceData(categorybtn,magazinebtn,setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
       console.log(datas)
-      Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
+      Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray,setisMark)
     }
     setIsClicked(isClicked ? 0:1 )
     
@@ -266,7 +282,7 @@ function Mapview() {
         <Items
           key={item.id}
           onClick={()=>{handleClick(i)
-            setTranslateY(100);
+            setTranslateY(95);
             setBottomSheetState("hidden");
           }}
           isActive={categorybtn[i] === 1}
