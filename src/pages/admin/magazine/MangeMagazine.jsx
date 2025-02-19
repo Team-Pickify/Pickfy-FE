@@ -11,6 +11,11 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { TokenReq } from "../../../apis/axiosInstance";
 
+const Wrapper = styled.div`
+  background-color: white;
+  padding-bottom: 1rem;
+`;
+
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
@@ -67,7 +72,7 @@ export default function MangeMagazine() {
   };
 
   return (
-    <div>
+    <Wrapper>
       {page === "main" ? (
         <div>
           <Header>
@@ -93,6 +98,6 @@ export default function MangeMagazine() {
           setPage={setPage}
         />
       )}
-    </div>
+    </Wrapper>
   );
 }

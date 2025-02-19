@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "../styles/themes";
+import getCategorylist from "../hooks/mapApi/getCategorylist"; // ✅ API Hook 가져오기
 
 const Wrapper = styled.div`
   display: flex;
@@ -34,39 +35,42 @@ const Items = styled.button`
 `;
 
 function CategoryBtn() {
-  const [categories, setCategories] = useState([]);
-  const [btnClick, setBtnClick] = useState();
+  const [categories, setCategories] = useState([]); // ✅ 카테고리 리스트 상태
+  const [btnClick, setBtnClick] = useState(1); // ✅ 기본 선택값 (전체)
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await TokenReq.get("/categories");
-        setCategories(response.data); // API 응답 데이터 저장
-        if (response.data.length > 0) {
-          setBtnClick(response.data[0].id); // 첫 번째 카테고리를 기본 선택
-        }
-      } catch (error) {
-        console.error("카테고리 불러오기 실패: ", error);
-      }
-    };
-
-    fetchCategories();
+    getCategorylist(setBtnClick, setCategories);
+    // getCategorylist((_, categories) => {
+    //   setCategories([{ id: 1, name: "전체" }, ...categories]);
+    // });
   }, []);
+
+  // ✅ categories 상태가 업데이트될 때마다 콘솔 찍기
+  useEffect(() => {
+    if (categories.length > 0 && btnClick === 1) {
+      setBtnClick(1); // 카테고리 불러오기 완료 후, 기본적으로 id 1로 설정
+    }
+  }, [categories]);
 
   const handleClick = (id) => {
     setBtnClick(id);
+    console.log(`🔘 선택한 카테고리 ID: ${id}`);
   };
+
   return (
     <Wrapper>
-      {categories.map((item) => (
-        <Items
-          key={item.id}
-          onClick={() => handleClick(item.id)}
-          isActive={btnClick === item.id}
-        >
-          {item.name}
-        </Items>
-      ))}
+      {categories.length > 0
+        ? categories.map((item) => (
+            <Items
+              key={item.id}
+              onClick={() => handleClick(item.id)}
+              isActive={btnClick === item.id}
+            >
+              {item.name}
+            </Items>
+          ))
+        : // <p>⏳ 카테고리 불러오는 중...</p> // ✅ 데이터 로딩 확인용
+          ""}
     </Wrapper>
   );
 }

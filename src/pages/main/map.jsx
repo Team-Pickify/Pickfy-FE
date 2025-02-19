@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { PiCompassRoseDuotone } from "react-icons/pi";
 import mapPermission from '../../hooks/mapApi/mapPermission';
 import { theme } from "../../styles/themes";
-import axios from 'axios';
 import Info from '../../components/Info';
 import createMap from '../../hooks/mapApi/createMap';
 import findLocation from '../../hooks/mapApi/findLocation';
@@ -16,31 +14,29 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { MdMyLocation } from "react-icons/md";
 import getMyplaceData from '../../hooks/mapApi/getMyPlcaeData';
 import selectarray from '../../hooks/mapApi/selectarray';
-import InfoSmall from '../../components/InfoSmall';
-import redMarker from '../../assets/redmarker.svg'
-import blackMarker from "../../assets/black_marker.svg";
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import Dropdown_Order from '../../components/Dropdown_Order';
+import { TokenReq } from '../../apis/axiosInstance';
 
 
 function Mapview() {
   // 로그인 상태 체크
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   const checkLoginStatus = async () => {
-  //     try {
-  //       const response = await TokenReq.post("/auth/me");
-  //       if (!response.data.result) {
-  //         navigate("/login");
-  //       }
-  //     } catch (err) {
-  //       navigate("/login");
-  //     }
-  //   };
+  const navigate = useNavigate();
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const response = await TokenReq.post("/auth/me");
+        if (!response.data.result) {
+          navigate("/login");
+        }
+      } catch (err) {
+        navigate("/login");
+      }
+    };
 
-  //   checkLoginStatus();
-  // }, [navigate]);
+    checkLoginStatus();
+  }, [navigate]);
 
 
   const[isClicked,setIsClicked] = useState(0)
@@ -57,9 +53,6 @@ function Mapview() {
   const [magazinebtn, setmagazinebtn] = useState([]);
   const [categoryarray,setcategoryarray] = useState([])
   const [categorybtn, setcategorybtn] = useState([]);
-  
-
-  const [isloading ,setloading] = useState(false);
 
   const [curmap,setcurmap] = useState([]);
 
@@ -73,7 +66,8 @@ function Mapview() {
       categoryName:"",
       shortDescription : "",
       instagramLink:"",
-      naverPlaceLink:""
+      naverPlaceLink:"",
+      placeId : ""
     }
   )
 
@@ -224,7 +218,7 @@ function Mapview() {
       setcurlatitude(latitude )
       setcurlongitude(longitude)
       const mapp = await createMap(latitude,longitude,container,setcurmap);
-      const datas = await getPlaceData([1],magazinebtn,setplacearray,[{id:52}],magazinearray,latitude,longitude)
+      const datas = await getPlaceData([1],magazinebtn,setplacearray,[{id:1}],magazinearray,latitude,longitude)
       console.log(datas)
       Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
     });
@@ -340,6 +334,7 @@ function Mapview() {
                     shortDescription={place.shortDescription} 
                     instagramLink={place.instagramLink} 
                     naverLink={place.naverLink}
+                    placeId={place.placeId}
                   >
                   </Info>
                 </div>
@@ -356,7 +351,12 @@ function Mapview() {
         
          <div style={{ width: "90%", height: "13%",marginLeft:"5%"}} >
          <Info 
-          name={infoData.name} categoryName={infoData.categoryName} shortDescription={infoData.shortDescription} instagramLink={infoData.instagramLink} naverLink={infoData.naverLink}
+          name={infoData.name} 
+          categoryName={infoData.categoryName} 
+          shortDescription={infoData.shortDescription} 
+          instagramLink={infoData.instagramLink} 
+          naverLink={infoData.naverLink}
+          placeId={infoData.placeId}
          >
          </Info>
          </div>
@@ -395,6 +395,7 @@ const Imgcontainer2 = styled.div`
   scroll-snap-type: x mandatory;
   width:100%;
   height:50%;
+  margin-left:5%;
 `;
 const Img = styled.img`
   width: 45%;
@@ -439,7 +440,7 @@ const Wrapper = styled.div`
   position:absolute;
   display: flex;
   flex-direction: row;
-  margin-left:5%;
+  margin-left:3%;
   top: 1.19rem;
   gap: 0.25rem;
   overflow-x: auto;
@@ -455,7 +456,7 @@ const Wrapper2 = styled.div`
   position:absolute;
   display: flex;
   flex-direction: row;
-  margin-left:5%;
+  margin-left:3%;
   top: 90%;
   gap: 0.25rem;
   overflow-x: auto;
@@ -486,19 +487,18 @@ const Items = styled.button`
 
 
 const Mapbox = styled.div`
-  position: relative;
+  position: relative; 
   width: 100%;
-  height: 85%;
+  height: 88%;
   z-index: 1;
-  oveflow:hidden;
+  overflow:hidden;
 `;
 
 const Curdesbutton = styled.button`
   background-color: white;
   border: none;
   border-radius: 100%;
-  height: 6vh;
-  width: 3vw;
+  padding : 1rem;
   position: absolute;
   top: 75%;
   left: 80%;
@@ -513,8 +513,7 @@ const Likebutton = styled.button`
   background-color: white;
   border: none;
   border-radius: 100%;
-  height: 6vh;
-  width: 3vw;
+  padding : 1rem;
   position: absolute;
   top: 65%;
   left: 80%;
@@ -525,64 +524,6 @@ const Likebutton = styled.button`
   }
 `;
 
-const CategorieBar = styled.div`
-  display: flex;
-  overflow-x: scroll;
-  scroll-behavior: smooth;
-  z-index: 10;
-  position: absolute;
-  top: 10%;
-  width: 100%;
-  height: 5vh;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const MagazineBar = styled.div`
-  display: flex;
-  overflow-x: scroll;
-  scroll-behavior: smooth;
-  z-index: 10;
-  position: absolute;
-  top: 86%;
-  width: 100%;
-  height: 5vh;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const CategorieBox = styled.button`
-  border: none;
-  border-radius: 42%;
-  flex: 0 0 auto;
-  height: 100%;
-  width: 8vw;
-  background-color: white;
-  margin-left: 0.3vw;
-  &:hover {
-    color: white;
-    background-color: black;
-    transition: 0;
-  }
-`;
-
-const CCC = styled.button`
-  background-color: red;
-  border: none;
-  border-radius: 100%;
-  height: 6vh;
-  width: 3vw;
-  position: absolute;
-  top: 40%;
-  left: 20%;
-  z-index: 10;
-  &:hover {
-    background-color: grey;
-    transition: 0.7s;
-  }
-`;
 
 const BottomSheet = styled.div`
   position: absolute;
