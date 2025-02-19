@@ -43,7 +43,6 @@ function CategoryBtn() {
     const fetchCategories = async () => {
       try {
         const response = await TokenReq.get("/categories"); // ✅ GET 요청
-        if (!response.ok) throw new Error("카테고리 불러오기 실패 💥");
         const data = await response.json();
         setCategories(data);
         if (data.some((item) => item.id === 1)) {
