@@ -860,7 +860,7 @@ justify-content : center;
   border: ${n=>n.isActive?"none":" 1px solid #e6e6e6"};
   background-color: ${n=>n.isActive?te.Text:"rgba(255, 255, 255, 0.7)"};
   color: ${n=>n.isActive?"#ffffff":"#000000"};
-`;function zS(){const[n,r]=T.useState([]),[o,l]=T.useState(1);T.useEffect(()=>{(async()=>{try{const p=await(await Ae.get("/categories")).json();r(p),p.some(y=>y.id===1)?l(1):p.length>0&&l(p[0].id)}catch(f){console.error("❌ 카테고리 가져오기 에러:",f)}})()},[]),T.useEffect(()=>{console.log("✅ 업데이트된 카테고리 목록:",n)},[n]);const a=c=>{l(c),console.log(`🔘 선택한 카테고리 ID: ${c}`)};return h.jsx(IS,{children:n.length>0?n.map(c=>h.jsx(NS,{onClick:()=>a(c.id),isActive:o===c.id,children:c.name},c.id)):h.jsx("p",{children:"⏳ 카테고리 불러오는 중..."})})}const Wu=[uo,uo,uo,uo,uo],DS=N.div`
+`;function zS(){const[n,r]=T.useState([]),[o,l]=T.useState(1);T.useEffect(()=>{(async()=>{try{const f=await Ae.get("/categories");console.log("response: ",f);const p=await f.result;r(p),p.some(y=>y.id===1)?l(1):p.length>0&&l(p[0].id)}catch(f){console.error("❌ 카테고리 가져오기 에러:",f)}})()},[]),T.useEffect(()=>{console.log("✅ 업데이트된 카테고리 목록:",n)},[n]);const a=c=>{l(c),console.log(`🔘 선택한 카테고리 ID: ${c}`)};return h.jsx(IS,{children:n.length>0?n.map(c=>h.jsx(NS,{onClick:()=>a(c.id),isActive:o===c.id,children:c.name},c.id)):h.jsx("p",{children:"⏳ 카테고리 불러오는 중..."})})}const Wu=[uo,uo,uo,uo,uo],DS=N.div`
   width: 100%;
   height: 23.44rem;
   overflow: hidden;
