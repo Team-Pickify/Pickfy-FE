@@ -83,8 +83,9 @@ function Info({
   instagramLink,
   naverLink,
   placeId,
+  isHeartFilled,
 }) {
-  const [isClicked, setIsClicked] = useState(false);
+  const [isClicked, setIsClicked] = useState(isHeartFilled);
   // const handleClick = () => {
   //   setIsClicked(!isClicked);
   // };
