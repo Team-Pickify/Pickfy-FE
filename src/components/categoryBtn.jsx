@@ -39,18 +39,12 @@ function CategoryBtn() {
   const [btnClick, setBtnClick] = useState(1); // ✅ 기본 선택값 (전체)
 
   useEffect(() => {
-    getCategorylist(setBtnClick, setCategories);
-    // getCategorylist((_, categories) => {
-    //   setCategories([{ id: 1, name: "전체" }, ...categories]);
-    // });
+    getCategorylist((categorybtn, categoryarray) => {
+      setCategories(categoryarray); // 카테고리 배열 상태 업데이트
+      // 전체 카테고리를 선택하도록 기본값 설정
+      setBtnClick(categorybtn);
+    }); // categorybtn이 1인 "전체"가 기본으로 선택됨
   }, []);
-
-  // ✅ categories 상태가 업데이트될 때마다 콘솔 찍기
-  useEffect(() => {
-    if (categories.length > 0 && btnClick === 1) {
-      setBtnClick(1); // 카테고리 불러오기 완료 후, 기본적으로 id 1로 설정
-    }
-  }, [categories]);
 
   const handleClick = (id) => {
     setBtnClick(id);

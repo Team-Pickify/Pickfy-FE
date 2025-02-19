@@ -86,6 +86,7 @@ function MyPlaceList() {
   const [magazineOpen, setMagazineOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
+  const [isHeartFilled, setIsHeartFilled] = useState(true);
   const fetchPlaces = async () => {
     try {
       const response = await TokenReq.get("/places", {
@@ -198,6 +199,7 @@ function MyPlaceList() {
         <ListContainer>
           <InfoSmall
             places={places.map((place) => ({ ...place, liked: true }))}
+            isHeartFilled={isHeartFilled}
           />
         </ListContainer>
       </Container>
