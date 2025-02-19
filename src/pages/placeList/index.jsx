@@ -97,7 +97,12 @@ function MyPlaceList() {
 
       // 데이터가 성공적으로 왔을 때, 상태에 저장
       if (response && response.data) {
-        setPlaces(response.data.result); // 받은 데이터를 상태에 저장
+        const updatedPlaces = response.data.result.map((place) => ({
+          ...place,
+          liked: true,
+        }));
+        //setPlaces(response.data.result); // 받은 데이터를 상태에 저장
+        setPlaces(updatedPlaces);
       } else {
         console.log("응답 데이터가 없습니다.");
       }
@@ -191,7 +196,9 @@ function MyPlaceList() {
           </SelectedItem>
         </DrowdownContainer>
         <ListContainer>
-          <InfoSmall places={places} />
+          <InfoSmall
+            places={places.map((place) => ({ ...place, liked: true }))}
+          />
         </ListContainer>
       </Container>
     </Wrapper>
