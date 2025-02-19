@@ -24,7 +24,8 @@ const Marking = (datas,setinfoData,curmap,handleOpenBottomSheet,setimagearray)=>
           categoryName:v.categoryName,
           shortDescription : v.shortDescription,
           instagramLink:v.instagramLink,
-          naverLink:v.naverLink
+          naverLink:v.naverLink,
+          placeId : v.placeId
         })
         handleOpenBottomSheet();
       });
@@ -49,7 +50,8 @@ const Marking = (datas,setinfoData,curmap,handleOpenBottomSheet,setimagearray)=>
           categoryName:v.categoryName,
           shortDescription : v.shortDescription,
           instagramLink:v.instagramLink,
-          naverLink:v.naverLink
+          naverLink:v.naverLink,
+          placeId : v.placeId
         })
         handleOpenBottomSheet();
     });
