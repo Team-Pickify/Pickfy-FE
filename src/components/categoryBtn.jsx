@@ -43,7 +43,9 @@ function CategoryBtn() {
     const fetchCategories = async () => {
       try {
         const response = await TokenReq.get("/categories"); // ✅ GET 요청
-        const data = await response.json();
+        console.log("response: ", response);
+
+        const data = await response.result;
         setCategories(data);
         if (data.some((item) => item.id === 1)) {
           setBtnClick(1); // ✅ ID가 1인 항목이 있으면 기본 선택
