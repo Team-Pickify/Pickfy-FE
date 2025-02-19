@@ -536,7 +536,7 @@ justify-content : center;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-`,St=({type:n="text",placeholder:r,value:o,onChange:l,isReadOnly:a=!1,isIcon:c=!1,iconType:f="eye",onIconClick:p,onBtnClick:y,isIBtnActive:m=!1,BtnText:v,isClicked:w})=>{const[C,j]=T.useState(!1),[x,_]=T.useState(""),k=R=>{if(R==="1.서비스이용약관")_(""`제 1 조 (목적)
+`,St=({type:n="text",placeholder:r,value:o,onChange:l,isReadOnly:a=!1,isIcon:c=!1,iconType:f="eye",onIconClick:p,onBtnClick:y,isIBtnActive:m=!1,BtnText:v,isClicked:w})=>{const[C,j]=T.useState(!1),[x,_]=T.useState(""),k=R=>{if(R==="1.서비스이용약관")_(`제 1 조 (목적)
 본 약관은 Pickify(피키파이) 애플리케이션(이하 "서비스")와 이용자(이하 "회원") 간의 권리, 의무 및 책임사항을 규정하는 것을 목적으로 합니다.
 
 제 2 조 (용어 정의)
@@ -576,7 +576,7 @@ justify-content : center;
 2. 회원이 서비스 이용 과정에서 발생하는 법적 문제에 대한 책임은 회원 본인에게 있습니다.
 
 제 9 조 (준거법 및 분쟁 해결)
-본 약관은 대한민국 법률에 따라 해석되며, 서비스 이용과 관련한 분쟁이 발생할 경우 회사의 소재지를 관할하는 법원을 전속 관할법원으로 합니다.```);else if(R==="2.개인정보처리방침")_(""`제 1 조 (목적)
+본 약관은 대한민국 법률에 따라 해석되며, 서비스 이용과 관련한 분쟁이 발생할 경우 회사의 소재지를 관할하는 법원을 전속 관할법원으로 합니다.`);else if(R==="2.개인정보처리방침")_(`제 1 조 (목적)
 본 개인정보 처리방침은 Pickify(피키파이) 서비스(이하 "서비스")를 이용하는 회원의 개인정보를 보호하고, 이를 적절히 처리하는 방법을 안내하기 위해 마련되었습니다.
 
 제 2 조 (수집하는 개인정보 항목)
@@ -621,7 +621,7 @@ justify-content : center;
 
 - 인스타그램 @pickify_official
 
-본 개인정보 처리방침은 2025년 2월 21일부터 적용됩니다.```);else return;j(!0)},P=()=>{switch(f){case"eye":return h.jsx(kx,{size:20});case"eye-off":return h.jsx(Sx,{size:20});default:return null}};return h.jsxs(h.Fragment,{children:[h.jsxs(Mx,{children:[a?h.jsxs(Bx,{onClick:()=>k(o),children:[o,h.jsx(pg,{size:12})]}):h.jsx(Ux,{type:n,placeholder:r,value:o,onChange:l}),c&&h.jsx(Vx,{onClick:p,children:P()}),m&&h.jsx(Hx,{isClicked:w,onClick:y,children:v})]}),C&&h.jsx(Wx,{onClick:()=>j(!1),children:h.jsxs(Kx,{onClick:R=>R.stopPropagation(),children:[h.jsx("p",{children:o}),h.jsx(qx,{children:x}),h.jsx(Qx,{children:h.jsx(Yx,{onClick:()=>j(!1),children:"닫기"})})]})})]})},nn="/assets/whiteLogo-VWWdmbxU.png",Gx=I.div`
+본 개인정보 처리방침은 2025년 2월 21일부터 적용됩니다.`);else return;j(!0)},P=()=>{switch(f){case"eye":return h.jsx(kx,{size:20});case"eye-off":return h.jsx(Sx,{size:20});default:return null}};return h.jsxs(h.Fragment,{children:[h.jsxs(Mx,{children:[a?h.jsxs(Bx,{onClick:()=>k(o),children:[o,h.jsx(pg,{size:12})]}):h.jsx(Ux,{type:n,placeholder:r,value:o,onChange:l}),c&&h.jsx(Vx,{onClick:p,children:P()}),m&&h.jsx(Hx,{isClicked:w,onClick:y,children:v})]}),C&&h.jsx(Wx,{onClick:()=>j(!1),children:h.jsxs(Kx,{onClick:R=>R.stopPropagation(),children:[h.jsx("p",{children:o}),h.jsx(qx,{children:x}),h.jsx(Qx,{children:h.jsx(Yx,{onClick:()=>j(!1),children:"닫기"})})]})})]})},nn="/assets/whiteLogo-VWWdmbxU.png",Gx=I.div`
   display: flex;
   flex-direction: column;
   background-color: #000;
