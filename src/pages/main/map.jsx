@@ -73,7 +73,8 @@ function Mapview() {
       categoryName:"",
       shortDescription : "",
       instagramLink:"",
-      naverPlaceLink:""
+      naverPlaceLink:"",
+      placeId : ""
     }
   )
 
@@ -224,7 +225,7 @@ function Mapview() {
       setcurlatitude(latitude )
       setcurlongitude(longitude)
       const mapp = await createMap(latitude,longitude,container,setcurmap);
-      const datas = await getPlaceData([1],magazinebtn,setplacearray,[{id:52}],magazinearray,latitude,longitude)
+      const datas = await getPlaceData([1],magazinebtn,setplacearray,[{id:1}],magazinearray,latitude,longitude)
       console.log(datas)
       Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
     });
@@ -340,6 +341,7 @@ function Mapview() {
                     shortDescription={place.shortDescription} 
                     instagramLink={place.instagramLink} 
                     naverLink={place.naverLink}
+                    placeId={place.placeId}
                   >
                   </Info>
                 </div>
@@ -356,7 +358,12 @@ function Mapview() {
         
          <div style={{ width: "90%", height: "13%",marginLeft:"5%"}} >
          <Info 
-          name={infoData.name} categoryName={infoData.categoryName} shortDescription={infoData.shortDescription} instagramLink={infoData.instagramLink} naverLink={infoData.naverLink}
+          name={infoData.name} 
+          categoryName={infoData.categoryName} 
+          shortDescription={infoData.shortDescription} 
+          instagramLink={infoData.instagramLink} 
+          naverLink={infoData.naverLink}
+          placeId={infoData.placeId}
          >
          </Info>
          </div>
@@ -395,6 +402,7 @@ const Imgcontainer2 = styled.div`
   scroll-snap-type: x mandatory;
   width:100%;
   height:50%;
+  margin-left:5%;
 `;
 const Img = styled.img`
   width: 45%;
@@ -439,7 +447,7 @@ const Wrapper = styled.div`
   position:absolute;
   display: flex;
   flex-direction: row;
-  margin-left:5%;
+  margin-left:3%;
   top: 1.19rem;
   gap: 0.25rem;
   overflow-x: auto;
@@ -455,7 +463,7 @@ const Wrapper2 = styled.div`
   position:absolute;
   display: flex;
   flex-direction: row;
-  margin-left:5%;
+  margin-left:3%;
   top: 90%;
   gap: 0.25rem;
   overflow-x: auto;
@@ -488,7 +496,7 @@ const Items = styled.button`
 const Mapbox = styled.div`
   position: relative; 
   width: 100%;
-  height: 90%;
+  height: 88%;
   z-index: 1;
   overflow:hidden;
 `;
