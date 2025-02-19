@@ -90,14 +90,17 @@ function Info({
 
   const toggleHeart = useCallback(async () => {
     try {
-      await TokenReq.patch("/places/toggle", null, {
+      const res = await TokenReq.patch("/places/toggle", null, {
         params: { placeId },
       });
+      console.log("하트 상태 변경:", res.data);
       setIsClicked((prev) => !prev);
+      console.log("저장된 id : ", placeId);
     } catch (error) {
-      console.log("저장 실패: ", error);
+      console.error("하트 저장 실패:", error);
     }
-  });
+  }, [placeId]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const ModalOpen = () => {
     setIsModalOpen(true);
