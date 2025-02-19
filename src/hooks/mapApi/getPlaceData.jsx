@@ -17,7 +17,7 @@ const getPlaceData = async (cate, maga, setplacearray, categoryarray, magazinear
       }
       console.log(arr1,arr2)
       if(arr1.length === 0 && arr2.length === 0) return []
-      if(arr1.length === 1 && arr1[0] === 52 && arr2.length === 0){
+      if(arr1.length === 1 && arr1[0] === 1 && arr2.length === 0){
         arr1 = []
       }
     const response = await getApi.post("/places/nearby", {
@@ -29,7 +29,7 @@ const getPlaceData = async (cate, maga, setplacearray, categoryarray, magazinear
     });
     console.log(response.data);
     const newdata = response.data.result.map((v)=>{
-      const kk = {...v,categoryName:v.categories[0],iconUrl:v.magazineInfo[0].iconUrl}
+      const kk = {...v,categoryName:v.categories[0],iconUrl:v.magazineInfo[0].iconUrl,placeId : v.id}
       return kk
     })
     setplacearray(newdata);

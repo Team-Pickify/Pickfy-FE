@@ -20,7 +20,7 @@ const Img = styled.img`
   height: 6.75rem;
   border-radius: 0.25rem;
 `;
-function InfoSmall({ places }) {
+function InfoSmall({ places, isHeartFilled }) {
   console.log(places);
   return (
     <>
@@ -32,6 +32,8 @@ function InfoSmall({ places }) {
             shortDescription={place.shortDescription}
             instagramLink={place.instagramLink}
             naverLink={place.naverLink}
+            placeId={place.placeId}
+            isHeartFilled={isHeartFilled}
           />
           <Imgcontainer>
             {place.placeImageUrl?.map((image, index) => (

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { PiCompassRoseDuotone } from "react-icons/pi";
 import mapPermission from '../../hooks/mapApi/mapPermission';
 import { theme } from "../../styles/themes";
 import Info from '../../components/Info';
@@ -15,9 +14,6 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { MdMyLocation } from "react-icons/md";
 import getMyplaceData from '../../hooks/mapApi/getMyPlcaeData';
 import selectarray from '../../hooks/mapApi/selectarray';
-import InfoSmall from '../../components/InfoSmall';
-import redMarker from '../../assets/redmarker.svg'
-import blackMarker from "../../assets/black_marker.svg";
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import Dropdown_Order from '../../components/Dropdown_Order';
@@ -47,6 +43,8 @@ function Mapview() {
   const [isDropdown,setisDropdown] = useState(0)
   const [order,setorder] = useState("거리순")
 
+  const [isMark , setisMark] = useState(0)
+
   const [curlatitude,setcurlatitude] = useState(33.450701)
   const [curlongitude,setcurlongitude] = useState(126.570667)
 
@@ -57,9 +55,6 @@ function Mapview() {
   const [magazinebtn, setmagazinebtn] = useState([]);
   const [categoryarray,setcategoryarray] = useState([])
   const [categorybtn, setcategorybtn] = useState([]);
-  
-
-  const [isloading ,setloading] = useState(false);
 
   const [curmap,setcurmap] = useState([]);
 
@@ -73,7 +68,8 @@ function Mapview() {
       categoryName:"",
       shortDescription : "",
       instagramLink:"",
-      naverPlaceLink:""
+      naverPlaceLink:"",
+      placeId : ""
     }
   )
 
@@ -82,7 +78,7 @@ function Mapview() {
   /////////////////////////////////
 
   const [startY, setStartY] = useState(0);
-  const [translateY, setTranslateY] = useState(100); // 기본적으로 숨김
+  const [translateY, setTranslateY] = useState(95); // 기본적으로 숨김
   const [bottomSheetState, setBottomSheetState] = useState("hidden"); // "hidden" | "half" | "full"
   const [isDragging, setIsDragging] = useState(false);
 
@@ -103,7 +99,8 @@ function Mapview() {
     const endY = getClientY(e);
     const deltaY = endY - startY;
 
-    // 📌 **위로 스와이프하면 100%로 이동**
+    if(isMark){
+      // 📌 **위로 스와이프하면 100%로 이동**
     if (deltaY < -50) {
       setTranslateY(0);
       setBottomSheetState("full");
@@ -114,7 +111,20 @@ function Mapview() {
         setTranslateY(50); // 100% → 50%로 내려감
         setBottomSheetState("half");
       } else {
-        setTranslateY(100); // 50% → 숨김
+        setTranslateY(95); // 50% → 숨김
+        setBottomSheetState("hidden");
+        setisMark(0)
+      }
+    }
+    
+    }
+    else{
+      if (deltaY < -50) {
+        setTranslateY(0);
+        setBottomSheetState("full");
+      }
+      else if (deltaY > 50) {
+        setTranslateY(95); // 50% → 숨김
         setBottomSheetState("hidden");
       }
     }
@@ -166,12 +176,12 @@ function Mapview() {
      if(isClicked){
         const newdata = selectarray(Myplacearray,categoryarray,magazinearray,newarr,(!id && newarr[0] ?newarr2:magazinebtn)) //
         setplacearray(newdata)
-        Marking(newdata,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+        Marking(newdata,setinfoData,mapp,handleOpenBottomSheet,setimagearray,setisMark)
      }
      else{
       const datas = await getPlaceData(newarr,(!id && newarr[0] ?newarr2:magazinebtn),setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
       console.log(datas)
-      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray,setisMark)
      }
   };
 
@@ -198,12 +208,12 @@ function Mapview() {
      if(isClicked){
       const newdata = selectarray(Myplacearray,categoryarray,magazinearray,newarr2,newarr)
       setplacearray(newdata)
-      Marking(newdata,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+      Marking(newdata,setinfoData,mapp,handleOpenBottomSheet,setimagearray,setisMark)
      }
      else{
       const datas = await getPlaceData(newarr2,newarr,setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
       console.log(datas)
-      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray)
+      Marking(datas,setinfoData,mapp,handleOpenBottomSheet,setimagearray,setisMark)
      }
      
   };
@@ -224,9 +234,9 @@ function Mapview() {
       setcurlatitude(latitude )
       setcurlongitude(longitude)
       const mapp = await createMap(latitude,longitude,container,setcurmap);
-      const datas = await getPlaceData([1],magazinebtn,setplacearray,[{id:52}],magazinearray,latitude,longitude)
+      const datas = await getPlaceData([1],magazinebtn,setplacearray,[{id:1}],magazinearray,latitude,longitude)
       console.log(datas)
-      Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
+      Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray,setisMark)
     });
   }, []);
 
@@ -250,14 +260,14 @@ function Mapview() {
         const newdata = selectarray(newarr,categoryarray,magazinearray,categorybtn,magazinebtn);
         console.log(newdata)
         setplacearray(newdata)
-        Marking(newdata , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
+        Marking(newdata , setinfoData , mapp,handleOpenBottomSheet,setimagearray,setisMark)
       }
       else setMyplacearray([])
     }
     else{
       const datas  = await getPlaceData(categorybtn,magazinebtn,setplacearray,categoryarray,magazinearray,curlatitude,curlongitude)
       console.log(datas)
-      Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray)
+      Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray,setisMark)
     }
     setIsClicked(isClicked ? 0:1 )
     
@@ -272,7 +282,7 @@ function Mapview() {
         <Items
           key={item.id}
           onClick={()=>{handleClick(i)
-            setTranslateY(100);
+            setTranslateY(95);
             setBottomSheetState("hidden");
           }}
           isActive={categorybtn[i] === 1}
@@ -340,6 +350,7 @@ function Mapview() {
                     shortDescription={place.shortDescription} 
                     instagramLink={place.instagramLink} 
                     naverLink={place.naverLink}
+                    placeId={place.placeId}
                   >
                   </Info>
                 </div>
@@ -356,7 +367,12 @@ function Mapview() {
         
          <div style={{ width: "90%", height: "13%",marginLeft:"5%"}} >
          <Info 
-          name={infoData.name} categoryName={infoData.categoryName} shortDescription={infoData.shortDescription} instagramLink={infoData.instagramLink} naverLink={infoData.naverLink}
+          name={infoData.name} 
+          categoryName={infoData.categoryName} 
+          shortDescription={infoData.shortDescription} 
+          instagramLink={infoData.instagramLink} 
+          naverLink={infoData.naverLink}
+          placeId={infoData.placeId}
          >
          </Info>
          </div>
@@ -395,6 +411,7 @@ const Imgcontainer2 = styled.div`
   scroll-snap-type: x mandatory;
   width:100%;
   height:50%;
+  margin-left:5%;
 `;
 const Img = styled.img`
   width: 45%;
@@ -439,7 +456,7 @@ const Wrapper = styled.div`
   position:absolute;
   display: flex;
   flex-direction: row;
-  margin-left:5%;
+  margin-left:3%;
   top: 1.19rem;
   gap: 0.25rem;
   overflow-x: auto;
@@ -455,7 +472,7 @@ const Wrapper2 = styled.div`
   position:absolute;
   display: flex;
   flex-direction: row;
-  margin-left:5%;
+  margin-left:3%;
   top: 90%;
   gap: 0.25rem;
   overflow-x: auto;
@@ -488,7 +505,7 @@ const Items = styled.button`
 const Mapbox = styled.div`
   position: relative; 
   width: 100%;
-  height: calc(100vh-104px);
+  height: 88%;
   z-index: 1;
   overflow:hidden;
 `;
@@ -523,64 +540,6 @@ const Likebutton = styled.button`
   }
 `;
 
-const CategorieBar = styled.div`
-  display: flex;
-  overflow-x: scroll;
-  scroll-behavior: smooth;
-  z-index: 10;
-  position: absolute;
-  top: 10%;
-  width: 100%;
-  height: 5vh;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const MagazineBar = styled.div`
-  display: flex;
-  overflow-x: scroll;
-  scroll-behavior: smooth;
-  z-index: 10;
-  position: absolute;
-  top: 86%;
-  width: 100%;
-  height: 5vh;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const CategorieBox = styled.button`
-  border: none;
-  border-radius: 42%;
-  flex: 0 0 auto;
-  height: 100%;
-  width: 8vw;
-  background-color: white;
-  margin-left: 0.3vw;
-  &:hover {
-    color: white;
-    background-color: black;
-    transition: 0;
-  }
-`;
-
-const CCC = styled.button`
-  background-color: red;
-  border: none;
-  border-radius: 100%;
-  height: 6vh;
-  width: 3vw;
-  position: absolute;
-  top: 40%;
-  left: 20%;
-  z-index: 10;
-  &:hover {
-    background-color: grey;
-    transition: 0.7s;
-  }
-`;
 
 const BottomSheet = styled.div`
   position: absolute;

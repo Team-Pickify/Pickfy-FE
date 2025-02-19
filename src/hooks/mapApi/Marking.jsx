@@ -1,7 +1,7 @@
 import redMarker from "../../assets/redmarker.svg"
 import blackMarker from "../../assets/black_marker.svg"
 
-const Marking = (datas,setinfoData,curmap,handleOpenBottomSheet,setimagearray)=>{
+const Marking = (datas,setinfoData,curmap,handleOpenBottomSheet,setimagearray,setisMark)=>{
 
     const places = new kakao.maps.services.Places();
 
@@ -24,8 +24,10 @@ const Marking = (datas,setinfoData,curmap,handleOpenBottomSheet,setimagearray)=>
           categoryName:v.categoryName,
           shortDescription : v.shortDescription,
           instagramLink:v.instagramLink,
-          naverLink:v.naverLink
+          naverLink:v.naverLink,
+          placeId : v.placeId
         })
+        setisMark(1)
         handleOpenBottomSheet();
       });
       marker.setMap(curmap)
@@ -49,8 +51,10 @@ const Marking = (datas,setinfoData,curmap,handleOpenBottomSheet,setimagearray)=>
           categoryName:v.categoryName,
           shortDescription : v.shortDescription,
           instagramLink:v.instagramLink,
-          naverLink:v.naverLink
+          naverLink:v.naverLink,
+          placeId : v.placeId
         })
+        setisMark(1)
         handleOpenBottomSheet();
     });
 

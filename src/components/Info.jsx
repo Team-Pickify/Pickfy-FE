@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import { theme } from "../styles/themes";
 import { IoShareSocialOutline } from "react-icons/io5";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ShareModal from "./modal/shareUrl";
 import CheckMsg from "./toast/CheckMsg";
 import Toast from "./toast/Toast";
 import { TokenReq } from "../apis/axiosInstance";
+import { toggleHeartAPI } from "../apis/placelist/heartToggle";
 
 const InfoWrapper = styled.div`
   display: flex;
@@ -82,22 +83,29 @@ function Info({
   instagramLink,
   naverLink,
   placeId,
+  isHeartFilled,
 }) {
-  const [isClicked, setIsClicked] = useState(false);
+  const [isClicked, setIsClicked] = useState(isHeartFilled);
   // const handleClick = () => {
   //   setIsClicked(!isClicked);
   // };
+  // ✅ 하트 클릭 핸들러
+  const placeIdRef = useRef(placeId); // ✅ placeId를 ref에 저장
 
-  const toggleHeart = useCallback(async () => {
+  useEffect(() => {
+    placeIdRef.current = placeId; // ✅ placeId 변경 시 ref 업데이트
+  }, [placeId]);
+
+  const handleHeartClick = useCallback(async () => {
     try {
-      await TokenReq.patch("/places/toggle", null, {
-        params: { placeId },
-      });
+      const res = await toggleHeartAPI(placeIdRef.current); // ✅ ref를 통해 placeId 참조
       setIsClicked((prev) => !prev);
+      handleToast(res.message || "하트 상태가 변경되었습니다! ❤️");
     } catch (error) {
-      console.log("저장 실패: ", error);
+      handleToast("하트 변경 중 문제가 발생했습니다. 😢");
+      console.log("클릭한 id: ", placeIdRef.current);
     }
-  });
+  }, []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const ModalOpen = () => {
     setIsModalOpen(true);
@@ -171,9 +179,9 @@ function Info({
               </ShareButton>
               <ShareButton>
                 {isClicked ? (
-                  <FaRegHeart onClick={toggleHeart} />
+                  <FaHeart onClick={handleHeartClick} color="FF4B4B" />
                 ) : (
-                  <FaHeart onClick={toggleHeart} color="FF4B4B" />
+                  <FaRegHeart onClick={handleHeartClick} />
                 )}
               </ShareButton>
             </ButtonContainer>

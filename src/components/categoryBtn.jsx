@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "../styles/themes";
 import getCategorylist from "../hooks/mapApi/getCategorylist"; // ✅ API Hook 가져오기
+import { TokenReq } from "../apis/axiosInstance";
 
 const Wrapper = styled.div`
   display: flex;
@@ -39,10 +40,25 @@ function CategoryBtn() {
   const [btnClick, setBtnClick] = useState(1); // ✅ 기본 선택값 (전체)
 
   useEffect(() => {
-    getCategorylist(setBtnClick, setCategories);
+    const fetchCategories = async () => {
+      try {
+        const response = await TokenReq.get("/categories"); // ✅ GET 요청
+        if (!response.ok) throw new Error("카테고리 불러오기 실패 💥");
+        const data = await response.json();
+        setCategories(data);
+        if (data.some((item) => item.id === 1)) {
+          setBtnClick(1); // ✅ ID가 1인 항목이 있으면 기본 선택
+        } else if (data.length > 0) {
+          setBtnClick(data[0].id); // ✅ 없으면 첫 번째 항목 선택
+        }
+      } catch (error) {
+        console.error("❌ 카테고리 가져오기 에러:", error);
+      }
+    };
+    fetchCategories();
   }, []);
 
-  // ✅ categories 상태가 업데이트될 때마다 콘솔 찍기
+  // ✅ 카테고리 상태 업데이트 확인용 로그
   useEffect(() => {
     console.log("✅ 업데이트된 카테고리 목록:", categories);
   }, [categories]);
@@ -51,7 +67,6 @@ function CategoryBtn() {
     setBtnClick(id);
     console.log(`🔘 선택한 카테고리 ID: ${id}`);
   };
-
   return (
     <Wrapper>
       {categories.length > 0 ? (
