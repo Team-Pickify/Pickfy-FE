@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { theme } from "../styles/themes";
 import { IoShareSocialOutline } from "react-icons/io5";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ShareModal from "./modal/shareUrl";
 import CheckMsg from "./toast/CheckMsg";
@@ -89,27 +89,22 @@ function Info({
   //   setIsClicked(!isClicked);
   // };
   // ✅ 하트 클릭 핸들러
+  const placeIdRef = useRef(placeId); // ✅ placeId를 ref에 저장
+
+  useEffect(() => {
+    placeIdRef.current = placeId; // ✅ placeId 변경 시 ref 업데이트
+  }, [placeId]);
+
   const handleHeartClick = useCallback(async () => {
     try {
-      // 하트 상태 토글을 위한 API 호출
-      const res = await toggleHeartAPI(placeId);
-
-      // 서버 응답에 따라 하트 상태 업데이트
-      if (res.success) {
-        // 응답이 성공적인 경우
-        setIsClicked((prev) => !prev); // 하트 상태 반전
-        handleToast(res.message || "하트 상태가 변경되었습니다! ❤️");
-      } else {
-        handleToast("하트 상태 변경 실패 😢");
-      }
+      const res = await toggleHeartAPI(placeIdRef.current); // ✅ ref를 통해 placeId 참조
+      setIsClicked((prev) => !prev);
+      handleToast(res.message || "하트 상태가 변경되었습니다! ❤️");
     } catch (error) {
       handleToast("하트 변경 중 문제가 발생했습니다. 😢");
-      console.log("클릭한 id: ", placeId);
+      console.log("클릭한 id: ", placeIdRef.current);
     }
-  }, [placeId]);
-  useEffect(() => {
-    console.log(isClicked); // 상태 변화 확인
-  }, [isClicked]);
+  }, []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const ModalOpen = () => {
     setIsModalOpen(true);

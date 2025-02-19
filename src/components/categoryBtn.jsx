@@ -40,11 +40,16 @@ function CategoryBtn() {
 
   useEffect(() => {
     getCategorylist(setBtnClick, setCategories);
+    // getCategorylist((_, categories) => {
+    //   setCategories([{ id: 1, name: "전체" }, ...categories]);
+    // });
   }, []);
 
   // ✅ categories 상태가 업데이트될 때마다 콘솔 찍기
   useEffect(() => {
-    console.log("✅ 업데이트된 카테고리 목록:", categories);
+    if (categories.length > 0 && btnClick === 1) {
+      setBtnClick(1); // 카테고리 불러오기 완료 후, 기본적으로 id 1로 설정
+    }
   }, [categories]);
 
   const handleClick = (id) => {
@@ -54,19 +59,18 @@ function CategoryBtn() {
 
   return (
     <Wrapper>
-      {categories.length > 0 ? (
-        categories.map((item) => (
-          <Items
-            key={item.id}
-            onClick={() => handleClick(item.id)}
-            isActive={btnClick === item.id}
-          >
-            {item.name}
-          </Items>
-        ))
-      ) : (
-        <p>⏳ 카테고리 불러오는 중...</p> // ✅ 데이터 로딩 확인용
-      )}
+      {categories.length > 0
+        ? categories.map((item) => (
+            <Items
+              key={item.id}
+              onClick={() => handleClick(item.id)}
+              isActive={btnClick === item.id}
+            >
+              {item.name}
+            </Items>
+          ))
+        : // <p>⏳ 카테고리 불러오는 중...</p> // ✅ 데이터 로딩 확인용
+          ""}
     </Wrapper>
   );
 }
