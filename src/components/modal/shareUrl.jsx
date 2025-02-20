@@ -73,7 +73,7 @@ const KakaoShareBtn = styled.div`
 
 export default function ShareModal({ isOpen, onClose, onToast, placeId }) {
   //const url = window.location.href; //현재 url 가져오기
-  const url = `${window.location.origin}/${placeId}`;
+  const url = `${window.location.origin}/?id=${placeId}`;
   if (!isOpen) return null;
   const copyToClipboard = () => {
     navigator.clipboard.writeText(url).then(() => {
