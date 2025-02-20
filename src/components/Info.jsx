@@ -92,7 +92,8 @@ function Info({
   // ✅ 하트 클릭 핸들러
 
   useEffect(() => {
-    setIsClicked(isHeartFilled);
+    //setIsClicked(isHeartFilled);
+    handleHeartClick();
   }, [placeId, isHeartFilled]);
 
   const handleHeartClick = useCallback(async () => {
