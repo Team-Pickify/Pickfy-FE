@@ -28,7 +28,7 @@ const Marking = (datas,setinfoData,curmap,handleOpenBottomSheet,setimagearray,se
           placeId : v.placeId
         })
         setisMark(1)
-        handleOpenBottomSheet();
+        handleOpenBottomSheet(v.placeId);
       });
       marker.setMap(curmap)
       const overlayDiv = document.createElement("div");
@@ -55,7 +55,7 @@ const Marking = (datas,setinfoData,curmap,handleOpenBottomSheet,setimagearray,se
           placeId : v.placeId
         })
         setisMark(1)
-        handleOpenBottomSheet();
+        handleOpenBottomSheet(v.placeId);
     });
 
     const customOverlay = new window.kakao.maps.CustomOverlay({
