@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import LoginBtn from "../../components/LoginBtn";
 import InputBox from "../../components/InputBox";
-import WhiteLogo from "../../assets/whiteLogo.png";
+import WhiteLogo from "../../../public/assets/whiteLogo.png";
 import KakaoLogo from "../../assets/Kakao_Logo.svg";
 import LogoBox from "../../components/LogoBox";
 import { theme } from "../../styles/themes";
@@ -109,7 +109,7 @@ function Login() {
 
   const KakaoBtnClick = () => {
     const baseURL = import.meta.env.VITE_BASE_URL;
-    window.location.href = `${baseURL}/auth/oauth2/kakao`;
+    window.location.href = `${baseURL}auth/oauth2/kakao`;
   };
 
   return (

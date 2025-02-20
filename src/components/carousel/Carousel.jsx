@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
-import cafe1 from "../../assets/cafe1.png";
-import cafe2 from "../../assets/cafe2.png";
-import cafe3 from "../../assets/cafe3.png";
-import cafe4 from "../../assets/cafe4.png";
-import cafe5 from "../../assets/cafe5.png";
+import cafe1 from "../../../public/assets/cafe1.png";
+import cafe2 from "../../../public/assets/cafe2.png";
+import cafe3 from "../../../public/assets/cafe3.png";
+import cafe4 from "../../../public/assets/cafe4.png";
+import cafe5 from "../../../public/assets/cafe5.png";
 import { theme } from "../../styles/themes";
 
 const images = [cafe1, cafe2, cafe3, cafe4, cafe5]; // 이미지 배열
+console.log(images);
 
 const CarouselContainer = styled.div`
   width: 100%;
