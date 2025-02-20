@@ -220,6 +220,22 @@ function Mapview() {
      
   };
 
+  const gett = async (id) =>{
+    const data = await TokenReq.get(`places/${id}`);
+    console.log(data.data.result)
+    setinfoData({
+      name:data.data.result.name,
+      categoryName:data.data.result.categoryName,
+      shortDescription : data.data.result.shortDescription,
+      instagramLink:data.data.result.instagramLink,
+      naverLink:data.data.result.naverLink,
+      placeId :data.data.result.placeId
+    })
+    setimagearray(data.data.result.placeImageUrl)
+    setisMark(1)
+    handleOpenBottomSheet(id)
+  }
+
   useEffect(() => {
     if (!window.kakao || !window.kakao.maps) {
       console.error("Kakao Maps API is not loaded!");
@@ -239,6 +255,12 @@ function Mapview() {
       const datas = await getPlaceData([1],magazinebtn,setplacearray,[{id:1}],magazinearray,latitude,longitude)
       console.log(datas)
       Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray,setisMark)
+      const url = new URL(window.location.href);
+      const id = url.searchParams.get('id');
+      console.log(id);
+      if(id != null){
+        gett(id);
+      }
     });
   }, []);
 
