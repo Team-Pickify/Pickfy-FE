@@ -175,16 +175,6 @@ function MyPlaceList() {
             ) : (
               <IoIosArrowDown size="1rem" />
             )}
-            {/* {sortOpen && (
-              <DropdownWrapper>
-                <DropdownOptions
-                  setVal={(val) => {
-                    setSelectedSort(val);
-                    setSortOpen(false);
-                  }}
-                  options={sortoptions}
-                  wd="6rem"
-                /> */}
             {sortOpen && (
               <DropdownWrapper>
                 {sortoptions.map((option, index) => (
@@ -200,6 +190,7 @@ function MyPlaceList() {
           <InfoSmall
             places={places.map((place) => ({ ...place, liked: true }))}
             isHeartFilled={isHeartFilled}
+            setIsHeartFilled={setIsHeartFilled}
           />
         </ListContainer>
       </Container>

@@ -84,8 +84,9 @@ function Info({
   naverLink,
   placeId,
   isHeartFilled,
+  onHeartToggle,
 }) {
-  const [isClicked, setIsClicked] = useState(isHeartFilled);
+  //const [isClicked, setIsClicked] = useState(isHeartFilled);
   // const handleClick = () => {
   //   setIsClicked(!isClicked);
   // };
@@ -99,13 +100,14 @@ function Info({
   const handleHeartClick = useCallback(async () => {
     try {
       const res = await toggleHeartAPI(placeId); // ✅ ref를 통해 placeId 참조
-      setIsClicked((prev) => !prev);
+      onHeartToggle();
+      //setIsClicked((prev) => !prev);
       handleToast(res.message || "하트 상태가 변경되었습니다! ❤️");
     } catch (error) {
       handleToast("하트 변경 중 문제가 발생했습니다. 😢");
       console.log("클릭한 id: ", placeId);
     }
-  }, [placeId]);
+  }, [placeId, onHeartToggle]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const ModalOpen = () => {
     setIsModalOpen(true);
@@ -178,7 +180,7 @@ function Info({
                 <IoShareSocialOutline />
               </ShareButton>
               <ShareButton>
-                {isClicked ? (
+                {isHeartFilled ? (
                   <FaHeart onClick={handleHeartClick} color="FF4B4B" />
                 ) : (
                   <FaRegHeart onClick={handleHeartClick} />

@@ -20,8 +20,21 @@ const Img = styled.img`
   height: 6.75rem;
   border-radius: 0.25rem;
 `;
-function InfoSmall({ places, isHeartFilled }) {
+function InfoSmall({ places }) {
   console.log(places);
+  const [heartState, setHeartState] = useState(
+    places.reduce((acc, place) => {
+      acc[place.placeId] = place.isHeartFilled || false;
+      return acc;
+    }, {})
+  );
+
+  const handleHeartToggle = (placeId) => {
+    setHeartState((prev) => ({
+      ...prev,
+      [placeId]: !prev[placeId],
+    }));
+  };
   return (
     <>
       {places?.map((place) => (
@@ -33,7 +46,8 @@ function InfoSmall({ places, isHeartFilled }) {
             instagramLink={place.instagramLink}
             naverLink={place.naverLink}
             placeId={place.placeId}
-            isHeartFilled={isHeartFilled}
+            isHeartFilled={heartState[place.placeId]}
+            onHeartToggle={() => handleHeartToggle(place.placeId)}
           />
           <Imgcontainer>
             {place.placeImageUrl?.map((image, index) => (

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-//import cafe1 from "../../assets/cafe1.svg";
 import cafe1 from "../../assets/cafe1.png";
 import cafe2 from "../../assets/cafe2.png";
 import cafe3 from "../../assets/cafe3.png";
