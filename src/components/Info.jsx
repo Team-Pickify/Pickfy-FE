@@ -194,6 +194,7 @@ function Info({
           isOpen={ModalOpen}
           onClose={ModalClose}
           onToast={handleToast}
+          placeId={placeId}
         />
       )}
     </>
