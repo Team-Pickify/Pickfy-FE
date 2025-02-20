@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Info from "./Info";
-import cafe1 from "../assets/cafe1.svg";
+
 const Imgcontainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -20,8 +20,9 @@ const Img = styled.img`
   height: 6.75rem;
   border-radius: 0.25rem;
 `;
-function InfoSmall({ places }) {
+function InfoSmall({ places, initialHeartState, onRemovePlace }) {
   console.log(places);
+
   return (
     <>
       {places?.map((place) => (
@@ -32,6 +33,9 @@ function InfoSmall({ places }) {
             shortDescription={place.shortDescription}
             instagramLink={place.instagramLink}
             naverLink={place.naverLink}
+            placeId={place.placeId}
+            initialHeartState={initialHeartState}
+            onRemovePlace={onRemovePlace}
           />
           <Imgcontainer>
             {place.placeImageUrl?.map((image, index) => (

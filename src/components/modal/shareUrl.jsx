@@ -71,9 +71,9 @@ const KakaoShareBtn = styled.div`
   font-weight: 600;
 `;
 
-export default function ShareModal({ isOpen, onClose, onToast }) {
-  const url = window.location.href; //현재 url 가져오기
-
+export default function ShareModal({ isOpen, onClose, onToast, placeId }) {
+  //const url = window.location.href; //현재 url 가져오기
+  const url = `${window.location.origin}/?id=${placeId}`;
   if (!isOpen) return null;
   const copyToClipboard = () => {
     navigator.clipboard.writeText(url).then(() => {

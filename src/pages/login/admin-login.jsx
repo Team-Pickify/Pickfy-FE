@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import LoginBtn from "../../components/LoginBtn";
 import InputBox from "../../components/InputBox";
-import WhiteLogo from "../../assets/whiteLogo.png";
+import WhiteLogo from "../../../public/assets/whiteLogo.png";
 import LogoBox from "../../components/LogoBox";
 import { theme } from "../../styles/themes";
 import { TokenReq } from "../../apis/axiosInstance";

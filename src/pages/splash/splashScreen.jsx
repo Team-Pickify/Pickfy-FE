@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
-import LogoImg from "../../assets/whiteLogo.png";
+import LogoImg from "../../../public/assets/whiteLogo.png";
 import GlobalStyles from "../../styles/GlobalStyles"; // 전역 스타일 가져오기
 
 const SplashWrapper = styled.div`

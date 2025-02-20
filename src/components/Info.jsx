@@ -6,7 +6,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ShareModal from "./modal/shareUrl";
 import CheckMsg from "./toast/CheckMsg";
 import Toast from "./toast/Toast";
-import { TokenReq } from "../apis/axiosInstance";
+import { toggleHeartAPI } from "../apis/placelist/heartToggle";
 
 const InfoWrapper = styled.div`
   display: flex;
@@ -82,40 +82,49 @@ function Info({
   instagramLink,
   naverLink,
   placeId,
+  initialHeartState,
+  onRemovePlace,
 }) {
-  const [isClicked, setIsClicked] = useState(false);
-  // const handleClick = () => {
-  //   setIsClicked(!isClicked);
-  // };
-
-  const toggleHeart = useCallback(async () => {
-    try {
-      await TokenReq.patch("/places/toggle", null, {
-        params: { placeId },
-      });
-      setIsClicked((prev) => !prev);
-    } catch (error) {
-      console.log("저장 실패: ", error);
-    }
-  });
+  const [isHeartFilled, setIsHeartFilled] = useState(!!initialHeartState);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [message, setMessage] = useState("");
+
   const ModalOpen = () => {
     setIsModalOpen(true);
   };
+
   const ModalClose = () => {
     setIsModalOpen(false);
   };
-  const [toastVisible, setToastVisible] = useState(false);
-  const [message, setMessage] = useState("");
+
   const handleToast = (msg) => {
     setMessage(<CheckMsg msg={msg} />);
     setToastVisible(true);
   };
+
+  const handleHeartClick = useCallback(async () => {
+    try {
+      const res = await toggleHeartAPI(placeId);
+      handleToast(res.message || "하트 상태가 변경되었습니다! ❤️");
+      setIsHeartFilled((prev) => !prev); // API 호출 성공 시에만 상태 변경
+
+      // 하트가 해제되었을 때만 장소를 제거
+      if (isHeartFilled) {
+        onRemovePlace(placeId);
+      }
+    } catch (error) {
+      handleToast("하트 변경 중 문제가 발생했습니다. 😢");
+      console.log("클릭한 id: ", placeId);
+    }
+  }, [placeId, isHeartFilled, onRemovePlace]);
+
   const center = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   };
+
   return (
     <>
       <div style={center}>
@@ -170,10 +179,10 @@ function Info({
                 <IoShareSocialOutline />
               </ShareButton>
               <ShareButton>
-                {isClicked ? (
-                  <FaRegHeart onClick={toggleHeart} />
+                {isHeartFilled ? (
+                  <FaHeart onClick={handleHeartClick} color="FF4B4B" />
                 ) : (
-                  <FaHeart onClick={toggleHeart} color="FF4B4B" />
+                  <FaRegHeart onClick={handleHeartClick} />
                 )}
               </ShareButton>
             </ButtonContainer>
@@ -185,6 +194,7 @@ function Info({
           isOpen={ModalOpen}
           onClose={ModalClose}
           onToast={handleToast}
+          placeId={placeId}
         />
       )}
     </>
