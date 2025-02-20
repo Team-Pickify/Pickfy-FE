@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "../styles/themes";
 import getCategorylist from "../hooks/mapApi/getCategorylist"; // ✅ API Hook 가져오기
@@ -35,7 +35,7 @@ const Items = styled.button`
   color: ${(props) => (props.isActive ? "#ffffff" : "#000000")};
 `;
 
-function CategoryBtn() {
+function CategoryBtn({ onCategoryChange }) {
   const [categories, setCategories] = useState([]); // ✅ 카테고리 리스트 상태
   const [btnClick, setBtnClick] = useState(1); // ✅ 기본 선택값 (전체)
 
@@ -64,10 +64,20 @@ function CategoryBtn() {
     console.log("✅ 업데이트된 카테고리 목록:", categories);
   }, [categories]);
 
-  const handleClick = (id) => {
-    setBtnClick(id);
-    console.log(`🔘 선택한 카테고리 ID: ${id}`);
-  };
+  const handleClick = useCallback(
+    (id) => {
+      setBtnClick(id);
+      const selectedCategory = categories.find(
+        (category) => category.id === id
+      );
+      if (selectedCategory) {
+        onCategoryChange(selectedCategory.name); // ✅ index.jsx로 카테고리 이름 전달
+        console.log(`✅ 선택된 카테고리 이름: ${selectedCategory.name}`);
+      }
+      console.log(`🔘 선택한 카테고리 ID: ${id}`);
+    },
+    [categories, onCategoryChange]
+  );
   return (
     <Wrapper>
       {categories.length > 0 ? (
