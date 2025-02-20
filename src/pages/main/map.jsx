@@ -101,17 +101,17 @@ function Mapview() {
 
     if(isMark){
       // 📌 **위로 스와이프하면 100%로 이동**
-    if (deltaY < -50) {
+    if (deltaY < -20) {
       setTranslateY(0);
       setBottomSheetState("full");
     }
     // 📌 **아래로 스와이프하면 50% 또는 숨김**
-    else if (deltaY > 50) {
+    else if (deltaY > 20) {
       if (bottomSheetState === "full") {
-        setTranslateY(50); // 100% → 50%로 내려감
+        setTranslateY(20); // 100% → 50%로 내려감
         setBottomSheetState("half");
       } else {
-        setTranslateY(95); // 50% → 숨김
+        setTranslateY(20); // 50% → 숨김
         setBottomSheetState("hidden");
         setisMark(0)
       }
@@ -119,11 +119,11 @@ function Mapview() {
     
     }
     else{
-      if (deltaY < -50) {
+      if (deltaY < -20) {
         setTranslateY(0);
         setBottomSheetState("full");
       }
-      else if (deltaY > 50) {
+      else if (deltaY > 20) {
         setTranslateY(95); // 50% → 숨김
         setBottomSheetState("hidden");
       }
@@ -131,9 +131,10 @@ function Mapview() {
   };
 
   // 📌 버튼 클릭하면 바텀시트 50%까지 올림
-  const handleOpenBottomSheet = () => {
+  const handleOpenBottomSheet = (id) => {
     setTranslateY(50);
     setBottomSheetState("half");
+    navigate(`/?id=${id}`,{replace : true});
   };
   ////////////////////////////
   
