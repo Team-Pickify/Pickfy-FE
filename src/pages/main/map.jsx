@@ -108,12 +108,13 @@ function Mapview() {
     // 📌 **아래로 스와이프하면 50% 또는 숨김**
     else if (deltaY > 20) {
       if (bottomSheetState === "full") {
-        setTranslateY(20); // 100% → 50%로 내려감
+        setTranslateY(50); // 100% → 50%로 내려감
         setBottomSheetState("half");
       } else {
-        setTranslateY(20); // 50% → 숨김
+        setTranslateY(95); // 50% → 숨김
         setBottomSheetState("hidden");
         setisMark(0)
+        navigate(`/`,{replace : true});
       }
     }
     
@@ -240,6 +241,12 @@ function Mapview() {
       Marking(datas , setinfoData , mapp,handleOpenBottomSheet,setimagearray,setisMark)
     });
   }, []);
+
+  useEffect(()=>{
+    if (performance.getEntriesByType("navigation") === 1) {
+      // 새로고침이 감지되면
+      navigate("/", { replace: true });} // URL을/로 변경 (쿼리 파라미터 삭제)
+  },[navigate,location])
 
   const switchTocur = ()=>{
     const container = mapRef.current;
