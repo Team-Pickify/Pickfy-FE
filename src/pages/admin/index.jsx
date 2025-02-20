@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import logoImg from "../../assets/logo.png";
+import logoImg from "../../../public/assets/logo.png";
 import Linkbox from "../../components/Linkbox";
 import { GoArrowLeft } from "react-icons/go";
 import { useNavigate } from "react-router-dom";

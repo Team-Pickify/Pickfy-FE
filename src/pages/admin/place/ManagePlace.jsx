@@ -39,9 +39,31 @@ const Btn = styled.div`
   align-items: center;
 `;
 
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+`;
+
+const PageButton = styled.button`
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: ${theme.Sub1};
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+`;
+
 export default function ManagePlace() {
   const [place, setPlace] = useState([]);
   const [page, setPage] = useState("main");
+  const [pageNum, setPageNum] = useState(1); // 현재 페이지 번호
+  const itemsPerPage = 10; // 한 페이지에 보여줄 개수
   const [selectedPlace, setSelectedPlace] = useState();
   const navigate = useNavigate();
   const handleNav = (address) => navigate(address);
@@ -53,6 +75,12 @@ export default function ManagePlace() {
         setPlace(data);
       });
   }, [page, setPage]);
+
+  const totalPages = Math.ceil(place.length / itemsPerPage); // 전체 페이지 수
+  const currentPageData = place.slice(
+    (pageNum - 1) * itemsPerPage,
+    pageNum * itemsPerPage
+  ); // 현재 페이지 데이터
 
   const HandlePlace = (placeId) => {
     setSelectedPlace(placeId);
@@ -72,13 +100,33 @@ export default function ManagePlace() {
               <GoPlus size={28} color={theme.Sub1} />
             </Btn>
           </Header>
-          {place.map((v) => {
+
+          {currentPageData.map((v) => {
             return (
               <div key={v.placeId} onClick={() => HandlePlace(v.placeId)}>
                 <PlaceBox name={v.name} addr={v.shortDescription} />
               </div>
             );
           })}
+
+          {/* 페이지네이션 */}
+          <Pagination>
+            <PageButton
+              onClick={() => setPageNum(pageNum - 1)}
+              disabled={pageNum === 1}
+            >
+              이전
+            </PageButton>
+            <span>
+              {pageNum} / {totalPages}
+            </span>
+            <PageButton
+              onClick={() => setPageNum(pageNum + 1)}
+              disabled={pageNum === totalPages}
+            >
+              다음
+            </PageButton>
+          </Pagination>
         </div>
       ) : page === "add" ? (
         <AddPlace setPage={setPage} />

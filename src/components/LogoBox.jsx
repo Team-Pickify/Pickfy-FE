@@ -28,18 +28,18 @@ const Logo = styled.img`
 `;
 
 const LogoText = styled.span`
-  color: #FFF;
+  color: #fff;
   font-family: Pretendard;
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 600;
   text-align: left;
   margin-left: 1.5rem;
-  white-space: pre-line; 
+  white-space: pre-line;
 `;
 
 const MiniText = styled.span`
-  color: #7E7E7E;
+  color: #7e7e7e;
   font-family: Pretendard;
   font-size: 0.875rem;
   font-style: normal;
@@ -47,7 +47,6 @@ const MiniText = styled.span`
   text-align: center;
   margin-left: 1.5rem;
   height: 1rem; /* 높이 고정 */
-  
 `;
 
 const IconWrapper = styled.div`
@@ -56,16 +55,17 @@ const IconWrapper = styled.div`
   margin-bottom: 1rem;
   cursor: pointer;
 
-  width: 1.5rem; 
+  width: 1.5rem;
   height: 1.5rem;
 `;
 
 function LogoBox({ showIcon = true, logoSrc, logoText, miniText }) {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleGoBack = () => {
-    navigate(-1); 
+    navigate(-1);
   };
+  console.log(logoSrc);
 
   return (
     <Wrapper>
