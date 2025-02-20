@@ -86,7 +86,6 @@ function MyPlaceList() {
   const [magazineOpen, setMagazineOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
-  const [isHeartFilled, setIsHeartFilled] = useState(true);
   const fetchPlaces = async () => {
     try {
       const response = await TokenReq.get("/places", {
@@ -100,7 +99,7 @@ function MyPlaceList() {
       if (response && response.data) {
         const updatedPlaces = response.data.result.map((place) => ({
           ...place,
-          liked: true,
+          isHeartFilled: true,
         }));
         //setPlaces(response.data.result); // 받은 데이터를 상태에 저장
         setPlaces(updatedPlaces);
@@ -136,6 +135,12 @@ function MyPlaceList() {
   const handleSortChange = (option) => {
     setSelectedSort(option);
     setSortOpen(false); // 선택한 후 드롭다운 닫기
+  };
+  // Info 에서 삭제된 장소를 제외하고 렌더링
+  const handleRemovePlace = (placeId) => {
+    setPlaces((prevPlaces) =>
+      prevPlaces.filter((place) => place.placeId !== placeId)
+    );
   };
   return (
     <Wrapper>
@@ -175,16 +180,6 @@ function MyPlaceList() {
             ) : (
               <IoIosArrowDown size="1rem" />
             )}
-            {/* {sortOpen && (
-              <DropdownWrapper>
-                <DropdownOptions
-                  setVal={(val) => {
-                    setSelectedSort(val);
-                    setSortOpen(false);
-                  }}
-                  options={sortoptions}
-                  wd="6rem"
-                /> */}
             {sortOpen && (
               <DropdownWrapper>
                 {sortoptions.map((option, index) => (
@@ -199,7 +194,8 @@ function MyPlaceList() {
         <ListContainer>
           <InfoSmall
             places={places.map((place) => ({ ...place, liked: true }))}
-            isHeartFilled={isHeartFilled}
+            initialHeartState={true}
+            onRemovePlace={handleRemovePlace}
           />
         </ListContainer>
       </Container>

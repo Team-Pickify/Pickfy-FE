@@ -1,12 +1,11 @@
 import styled from "styled-components";
 import { theme } from "../styles/themes";
 import { IoShareSocialOutline } from "react-icons/io5";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ShareModal from "./modal/shareUrl";
 import CheckMsg from "./toast/CheckMsg";
 import Toast from "./toast/Toast";
-import { TokenReq } from "../apis/axiosInstance";
 import { toggleHeartAPI } from "../apis/placelist/heartToggle";
 
 const InfoWrapper = styled.div`
@@ -83,46 +82,49 @@ function Info({
   instagramLink,
   naverLink,
   placeId,
-  isHeartFilled,
+  initialHeartState,
+  onRemovePlace,
 }) {
-  const [isClicked, setIsClicked] = useState(isHeartFilled);
-  // const handleClick = () => {
-  //   setIsClicked(!isClicked);
-  // };
-  // ✅ 하트 클릭 핸들러
-
-  useEffect(() => {
-    setIsClicked(isHeartFilled);
-  }, [placeId, isHeartFilled]);
-
-  const handleHeartClick = useCallback(async () => {
-    try {
-      const res = await toggleHeartAPI(placeId); // ✅ ref를 통해 placeId 참조
-      setIsClicked((prev) => !prev);
-      handleToast(res.message || "하트 상태가 변경되었습니다! ❤️");
-    } catch (error) {
-      handleToast("하트 변경 중 문제가 발생했습니다. 😢");
-      console.log("클릭한 id: ", placeId);
-    }
-  }, [placeId]);
+  const [isHeartFilled, setIsHeartFilled] = useState(!!initialHeartState);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [message, setMessage] = useState("");
+
   const ModalOpen = () => {
     setIsModalOpen(true);
   };
+
   const ModalClose = () => {
     setIsModalOpen(false);
   };
-  const [toastVisible, setToastVisible] = useState(false);
-  const [message, setMessage] = useState("");
+
   const handleToast = (msg) => {
     setMessage(<CheckMsg msg={msg} />);
     setToastVisible(true);
   };
+
+  const handleHeartClick = useCallback(async () => {
+    try {
+      const res = await toggleHeartAPI(placeId);
+      handleToast(res.message || "하트 상태가 변경되었습니다! ❤️");
+      setIsHeartFilled((prev) => !prev); // API 호출 성공 시에만 상태 변경
+
+      // 하트가 해제되었을 때만 장소를 제거
+      if (isHeartFilled) {
+        onRemovePlace(placeId);
+      }
+    } catch (error) {
+      handleToast("하트 변경 중 문제가 발생했습니다. 😢");
+      console.log("클릭한 id: ", placeId);
+    }
+  }, [placeId, isHeartFilled, onRemovePlace]);
+
   const center = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   };
+
   return (
     <>
       <div style={center}>
@@ -177,7 +179,7 @@ function Info({
                 <IoShareSocialOutline />
               </ShareButton>
               <ShareButton>
-                {isClicked ? (
+                {isHeartFilled ? (
                   <FaHeart onClick={handleHeartClick} color="FF4B4B" />
                 ) : (
                   <FaRegHeart onClick={handleHeartClick} />
