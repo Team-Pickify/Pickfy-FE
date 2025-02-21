@@ -109,8 +109,13 @@ function Login() {
   const handleLogin = async () => {
     if (isButtonEnabled) {
       try {
-        console.log("로그인 성공");
-        navigate("/");
+        await TokenReq.post("/auth/login", {
+          principal: email,
+          password,
+        }).then(() => {
+          console.log("로그인 성공");
+          navigate("/");
+        });
       } catch (error) {
         console.log("로그인 에러: ", error);
       }

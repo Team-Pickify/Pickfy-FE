@@ -21,8 +21,8 @@ import { TokenReq } from '../../apis/axiosInstance';
 
 
 function Mapview() {
-  // // 로그인 상태 체크
-  // const navigate = useNavigate();
+  // 로그인 상태 체크
+  const navigate = useNavigate();
   // useEffect(() => {
   //   const checkLoginStatus = async () => {
   //     try {
