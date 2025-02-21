@@ -21,22 +21,22 @@ import { TokenReq } from '../../apis/axiosInstance';
 
 
 function Mapview() {
-  // 로그인 상태 체크
-  const navigate = useNavigate();
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const response = await TokenReq.post("/auth/me");
-        if (!response.data.result) {
-          navigate("/login");
-        }
-      } catch (err) {
-        navigate("/login");
-      }
-    };
+  // // 로그인 상태 체크
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   const checkLoginStatus = async () => {
+  //     try {
+  //       const response = await TokenReq.post("/auth/me");
+  //       if (!response.data.result) {
+  //         navigate("/login");
+  //       }
+  //     } catch (err) {
+  //       navigate("/login");
+  //     }
+  //   };
 
-    checkLoginStatus();
-  }, [navigate]);
+  //   checkLoginStatus();
+  // }, [navigate]);
 
 
   const[isClicked,setIsClicked] = useState(0)

@@ -86,21 +86,31 @@ function Login() {
   const isButtonEnabled = email.trim() !== "" && password.trim() !== "";
 
   const navigate = useNavigate();
+  // const handleLogin = async () => {
+  //   if (isButtonEnabled) {
+  //     try {
+  //       await TokenReq.post("/auth/login", {
+  //         principal: email,
+  //         password,
+  //       }).then(() => {
+  //         TokenReq.post("/auth/me")
+  //           .then((res) => res.data)
+  //           .then((data) => {
+  //             console.log("체크:", data);
+  //             if (data.result) navigate("/");
+  //             else console.log("로그인 실패");
+  //           });
+  //       });
+  //     } catch (error) {
+  //       console.log("로그인 에러: ", error);
+  //     }
+  //   }
+  // };
   const handleLogin = async () => {
     if (isButtonEnabled) {
       try {
-        await TokenReq.post("/auth/login", {
-          principal: email,
-          password,
-        }).then(() => {
-          TokenReq.post("/auth/me")
-            .then((res) => res.data)
-            .then((data) => {
-              console.log("체크:", data);
-              if (data.result) navigate("/");
-              else console.log("로그인 실패");
-            });
-        });
+        console.log("로그인 성공");
+        navigate("/");
       } catch (error) {
         console.log("로그인 에러: ", error);
       }
